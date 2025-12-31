@@ -31,77 +31,83 @@ const PrivacyPolicyModal = ({ trigger, open, onOpenChange }: PrivacyPolicyModalP
       )}
       <DialogContent className="max-w-md max-h-[85vh] p-0">
         <DialogHeader className="px-6 pt-6 pb-2">
-          <DialogTitle>Política de Privacidade</DialogTitle>
+          <DialogTitle>Política de Privacidade de Dados</DialogTitle>
           <DialogDescription>
-            Associação de Moradores do Bairro Jardim Embaré
+            AMBJE - Associação de Moradores do Bairro Jardim Embaré
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="px-6 max-h-[60vh]">
           <div className="text-sm text-muted-foreground leading-relaxed space-y-4 pb-4">
-            <p>
-              <strong>1. Introdução</strong><br />
-              A Associação de Moradores do Bairro Jardim Embaré (AMBJE), inscrita no CNPJ nº 33.764.618/0001-87, 
-              está comprometida com a proteção da privacidade e dos dados pessoais de seus associados e usuários 
-              deste aplicativo, em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018).
-            </p>
-            
-            <p>
-              <strong>2. Dados Coletados</strong><br />
-              Coletamos apenas os dados necessários para:
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Cadastro de associados (nome, RG, data de nascimento, endereço, contatos)</li>
-              <li>Registro de chamados e ocorrências no bairro</li>
-              <li>Comunicação sobre atividades da associação</li>
-            </ul>
-            
-            <p>
-              <strong>3. Uso dos Dados</strong><br />
-              Os dados coletados são utilizados exclusivamente para:
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Gestão do cadastro de associados</li>
-              <li>Encaminhamento de ocorrências aos órgãos competentes</li>
-              <li>Comunicação de reuniões, eventos e informações relevantes do bairro</li>
-              <li>Controle financeiro das contribuições</li>
-            </ul>
-            
-            <p>
-              <strong>4. Compartilhamento</strong><br />
-              Seus dados podem ser compartilhados apenas com:
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Órgãos públicos municipais (Prefeitura, GCM, SAAE) para resolução de ocorrências</li>
-              <li>Polícia Militar do Estado de São Paulo, quando aplicável</li>
-              <li>Concessionárias de serviços públicos (CPFL) para reparos</li>
-            </ul>
-            
-            <p>
-              <strong>5. Armazenamento e Segurança</strong><br />
-              Os dados são armazenados em plataformas seguras e protegidos por medidas técnicas adequadas. 
-              O acesso é restrito aos membros da diretoria da associação.
-            </p>
-            
-            <p>
-              <strong>6. Seus Direitos</strong><br />
-              Você tem direito a:
-            </p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Acessar seus dados pessoais</li>
-              <li>Corrigir dados incompletos ou incorretos</li>
-              <li>Solicitar a exclusão de seus dados</li>
-              <li>Revogar o consentimento a qualquer momento</li>
-            </ul>
-            
-            <p>
-              <strong>7. Contato</strong><br />
-              Para exercer seus direitos ou esclarecer dúvidas, entre em contato pelo e-mail: 
-              bairrojardimembaresc@gmail.com
-            </p>
-            
             <p className="text-xs text-muted-foreground/70">
-              Última atualização: Dezembro de 2024
+              <strong>Última atualização:</strong> 31 de dezembro de 2025
             </p>
+            
+            <p>
+              A <strong>ASSOCIAÇÃO DE MORADORES DO BAIRRO JARDIM EMBARÉ – AMBJE</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº <strong>33.764.618/0001-87</strong>, reafirma seu compromisso com a segurança, privacidade e transparência no tratamento das informações de seus moradores e associados.
+            </p>
+            
+            <p>
+              Esta Política de Privacidade descreve como coletamos, usamos e protegemos seus dados pessoais ao utilizar o aplicativo <strong>"Zeladoria Jd. Embaré"</strong> (zeladoriaembare.com).
+            </p>
+
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">1. Quais dados coletamos?</h4>
+              <p className="mb-2">Para viabilizar os serviços de zeladoria e a gestão associativa, coletamos as seguintes categorias de dados:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Para Relato de Problemas (Zeladoria):</strong> Nome completo, endereço da ocorrência, descrição do problema e imagens (fotos) enviadas voluntariamente.</li>
+                <li>
+                  <strong>Para Associação (Cadastro de Sócio):</strong>
+                  <ul className="list-disc pl-5 mt-1 space-y-1">
+                    <li><strong>Dados Pessoais:</strong> Nome completo, RG, Órgão Expedidor, Data de Nascimento, Naturalidade, Nacionalidade, Estado Civil e Profissão.</li>
+                    <li><strong>Dados de Contato:</strong> Endereço completo, e-mail, telefone residencial e celular/WhatsApp.</li>
+                    <li><strong>Dados Familiares:</strong> Informação sobre residência de maiores de idade e quantidade de menores no domicílio.</li>
+                    <li><strong>Dados de Pagamento:</strong> Informações relacionadas à escolha do método de contribuição.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">2. Para que usamos seus dados?</h4>
+              <p className="mb-2">O tratamento dos dados tem as seguintes finalidades específicas:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Gestão Administrativa:</strong> Formalizar sua adesão à AMBJE e manter o livro de associados atualizado.</li>
+                <li><strong>Zeladoria Municipal:</strong> Encaminhar demandas de infraestrutura (buracos, iluminação, limpeza) aos órgãos competentes da Prefeitura Municipal.</li>
+                <li><strong>Comunicação:</strong> Enviar comunicados importantes, convocações para assembleias e atualizações sobre o bairro.</li>
+                <li><strong>Segurança:</strong> Validar a residência no bairro para acesso aos grupos de segurança comunitária.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">3. Compartilhamento de Dados</h4>
+              <p className="mb-2">A AMBJE preza pela confidencialidade. Seus dados <strong>não</strong> serão vendidos. O compartilhamento ocorre apenas nas seguintes situações estritas:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Prefeitura Municipal e Órgãos Públicos:</strong> Compartilhamos apenas os dados estritamente necessários (como endereço e relato) para a resolução de problemas de infraestrutura junto à Prefeitura, SAAE, CPFL ou Polícia.</li>
+                <li>
+                  <strong>Operadores de Tecnologia:</strong> Utilizamos serviços de terceiros confiáveis para o funcionamento do app, que atuam como operadores de dados sob sigilo:
+                  <ul className="list-disc pl-5 mt-1 space-y-1">
+                    <li><strong>Google:</strong> Armazenamento seguro de banco de dados e arquivos.</li>
+                    <li><strong>Meta (WhatsApp):</strong> Integração de canais de comunicação.</li>
+                    <li><strong>Vercel/Lovable:</strong> Hospedagem da plataforma digital.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">4. Armazenamento e Segurança</h4>
+              <p>Os dados são armazenados em servidores seguros em nuvem, protegidos por criptografia e medidas técnicas adequadas para evitar acessos não autorizados, conforme exigido pela Lei Geral de Proteção de Dados (LGPD).</p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">5. Seus Direitos</h4>
+              <p>Você tem o direito de solicitar à AMBJE, a qualquer momento, o acesso aos seus dados, a correção de informações incompletas ou a exclusão de seu cadastro (ressalvadas as obrigações legais).</p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-foreground mb-2">6. Contato</h4>
+              <p>Para dúvidas sobre esta política, entre em contato diretamente com a diretoria da AMBJE através dos canais oficiais no aplicativo.</p>
+            </div>
           </div>
         </ScrollArea>
         <div className="px-6 pb-6 pt-2">
