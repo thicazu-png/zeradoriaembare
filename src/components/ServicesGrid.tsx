@@ -9,7 +9,7 @@ const ServicesGrid = () => {
       subtitle: "CPFL",
       iconColor: "text-cpfl",
       bgColor: "bg-cpfl-bg",
-      href: "https://wa.me/551999908888?text=Ola,gostaria+de+reportar+falta+de+energia",
+      href: "https://wa.me/551999908888?text=Ola,%20gostaria%20de%20reportar%20falta%20de%20energia",
       isExternal: true,
     },
     {
@@ -18,7 +18,7 @@ const ServicesGrid = () => {
       subtitle: "SAAE",
       iconColor: "text-saae",
       bgColor: "bg-saae-bg",
-      href: "https://wa.me/558003001520?text=Ola,preciso+de+atendimento",
+      href: "https://wa.me/558003001520?text=Ola,%20preciso%20de%20atendimento",
       isExternal: true,
     },
     {
