@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, Home, Zap, Megaphone, UserPlus, Users, Facebook, Instagram } from "lucide-react";
+import { Menu, Home, Zap, Megaphone, UserPlus, Users, Facebook, Instagram, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -93,6 +93,12 @@ const Header = () => {
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
                 >
                   <Instagram className="w-5 h-5" />
+                </a>
+                <a
+                  href="mailto:bairrojardimembaresc@gmail.com"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                >
+                  <Mail className="w-5 h-5" />
                 </a>
               </div>
             </div>

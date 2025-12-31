@@ -5,6 +5,8 @@ import ReportForm from "@/components/ReportForm";
 import AssociationCard from "@/components/AssociationCard";
 import CommunityGroups from "@/components/CommunityGroups";
 import Footer from "@/components/Footer";
+import InstallGuideModal from "@/components/InstallGuideModal";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
@@ -39,6 +41,17 @@ const Index = () => {
           </section>
           <section id="grupos">
             <CommunityGroups />
+          </section>
+          
+          {/* Install Guide Button */}
+          <section className="px-4 py-6 flex justify-center">
+            <InstallGuideModal
+              trigger={
+                <Button variant="outline" className="gap-2">
+                  📲 Como instalar este App
+                </Button>
+              }
+            />
           </section>
         </main>
         <Footer />

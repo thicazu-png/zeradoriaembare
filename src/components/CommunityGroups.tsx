@@ -20,7 +20,7 @@ const CommunityGroupCard = ({ icon: Icon, title, subtitle, href }: CommunityGrou
         "bg-card shadow-card hover:shadow-elevated transition-all duration-200",
         "hover:-translate-y-0.5 hover:border-[#25D366] active:scale-[0.98]",
         "focus:outline-none focus:ring-2 focus:ring-[#25D366]/50 focus:ring-offset-2",
-        "no-underline h-[140px]"
+        "no-underline h-[155px]"
       )}
     >
       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#25D366]/10 mb-2 flex-shrink-0">
