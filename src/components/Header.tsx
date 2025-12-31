@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import logoAmbje from "@/assets/logo-ambje.png";
+import InstallGuideModal from "./InstallGuideModal";
 
 const menuItems = [
   { label: "Início", target: "#inicio", icon: Home },
@@ -74,6 +75,17 @@ const Header = () => {
                 </button>
               ))}
             </nav>
+
+            {/* Install Guide Link */}
+            <div className="mt-4 px-4">
+              <InstallGuideModal
+                trigger={
+                  <button className="flex items-center gap-3 w-full px-4 py-4 rounded-lg text-foreground hover:bg-secondary transition-colors text-left text-base font-medium">
+                    📲 Como instalar o App
+                  </button>
+                }
+              />
+            </div>
             
             <div className="mt-auto pt-6 border-t border-border/50">
               <p className="text-xs text-muted-foreground text-center mb-3">Siga-nos</p>

@@ -53,7 +53,7 @@ const Footer = () => {
 
         {/* Credits */}
         <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/70">
-          <span>App criado por Thiago Cazu</span>
+          <span>App desenvolvido por Thiago Cazu</span>
           <a
             href="https://www.instagram.com/drthiagocazu/"
             target="_blank"

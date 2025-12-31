@@ -1,9 +1,9 @@
 import ServiceCard from "./ServiceCard";
-import { FileText } from "lucide-react";
 import logoCpfl from "@/assets/logo-cpfl.png";
 import logoSaae from "@/assets/logo-saae.png";
 import logoPmesp from "@/assets/logo-pmesp.png";
 import logoGcm from "@/assets/logo-gcm.png";
+import logoOuvidoria from "@/assets/logo-ouvidoria.png";
 
 const ServicesGrid = () => {
   const services = [
@@ -40,10 +40,10 @@ const ServicesGrid = () => {
       isExternal: false,
     },
     {
-      icon: FileText,
+      imageSrc: logoOuvidoria,
       title: "Ouvidoria",
       subtitle: "Prefeitura",
-      bgColor: "bg-muted",
+      bgColor: "bg-background",
       href: "https://servico.saocarlos.sp.gov.br/ouvidoria/",
       isExternal: true,
     },
