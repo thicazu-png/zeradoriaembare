@@ -15,7 +15,9 @@ const Index = () => {
       <div className="min-h-screen bg-background/85 backdrop-blur-sm">
         <Header />
         <main className="max-w-lg mx-auto pb-safe">
-          <HeroSection />
+          <section id="inicio">
+            <HeroSection />
+          </section>
           
           <section className="px-4 py-4 text-center">
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -25,10 +27,18 @@ const Index = () => {
             </p>
           </section>
           
-          <ServicesGrid />
-          <ReportForm />
-          <AssociationCard />
-          <CommunityGroups />
+          <section id="servicos">
+            <ServicesGrid />
+          </section>
+          <section id="reportar">
+            <ReportForm />
+          </section>
+          <section id="associacao">
+            <AssociationCard />
+          </section>
+          <section id="grupos">
+            <CommunityGroups />
+          </section>
         </main>
         <Footer />
       </div>

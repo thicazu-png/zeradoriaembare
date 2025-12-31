@@ -1,4 +1,5 @@
-import { Menu } from "lucide-react";
+import { useState } from "react";
+import { Menu, Home, Zap, Megaphone, UserPlus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,7 +10,27 @@ import {
 } from "@/components/ui/sheet";
 import logoAmbje from "@/assets/logo-ambje.png";
 
+const menuItems = [
+  { label: "Início", target: "#inicio", icon: Home },
+  { label: "Serviços Essenciais", target: "#servicos", icon: Zap },
+  { label: "Reportar Problema", target: "#reportar", icon: Megaphone },
+  { label: "Seja Sócio", target: "#associacao", icon: UserPlus },
+  { label: "Grupos do Bairro", target: "#grupos", icon: Users },
+];
+
 const Header = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleNavClick = (target: string) => {
+    setOpen(false);
+    setTimeout(() => {
+      const element = document.querySelector(target);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 150);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
       <div className="container flex items-center justify-between h-16 px-4">
@@ -27,7 +48,7 @@ const Header = () => {
           </div>
         </div>
 
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-xl">
               <Menu className="w-5 h-5" />
@@ -42,30 +63,16 @@ const Header = () => {
               </SheetTitle>
             </SheetHeader>
             <nav className="mt-6 space-y-2">
-              <a
-                href="#"
-                className="flex items-center px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
-              >
-                Início
-              </a>
-              <a
-                href="#servicos"
-                className="flex items-center px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
-              >
-                Serviços Essenciais
-              </a>
-              <a
-                href="#chamado"
-                className="flex items-center px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
-              >
-                Reportar Problema
-              </a>
-              <a
-                href="#associacao"
-                className="flex items-center px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
-              >
-                Associação
-              </a>
+              {menuItems.map((item) => (
+                <button
+                  key={item.target}
+                  onClick={() => handleNavClick(item.target)}
+                  className="flex items-center gap-3 w-full px-4 py-4 rounded-lg text-foreground hover:bg-secondary transition-colors text-left text-base font-medium"
+                >
+                  <item.icon className="w-5 h-5 text-primary" />
+                  {item.label}
+                </button>
+              ))}
             </nav>
           </SheetContent>
         </Sheet>
