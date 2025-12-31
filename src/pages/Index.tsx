@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import ServicesGrid from "@/components/ServicesGrid";
 import ReportForm from "@/components/ReportForm";
 import AssociationCard from "@/components/AssociationCard";
+import CommunityGroups from "@/components/CommunityGroups";
 
 const Index = () => {
   return (
@@ -26,6 +27,7 @@ const Index = () => {
           <ServicesGrid />
           <ReportForm />
           <AssociationCard />
+          <CommunityGroups />
         </main>
       </div>
     </div>
