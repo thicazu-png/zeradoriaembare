@@ -84,7 +84,7 @@ const CommunityGroups = () => {
 
   return (
     <section className="px-4 py-6">
-      <h3 className="text-lg font-bold text-foreground mb-2">
+      <h3 className="text-lg font-bold text-foreground mb-2 uppercase text-center">
         Outros Grupos do Bairro
       </h3>
       <p className="text-sm text-muted-foreground mb-4">

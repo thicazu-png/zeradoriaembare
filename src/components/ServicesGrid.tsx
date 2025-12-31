@@ -42,7 +42,7 @@ const ServicesGrid = () => {
 
   return (
     <section id="servicos" className="px-4 py-6">
-      <h3 className="text-lg font-bold text-foreground mb-4">
+      <h3 className="text-lg font-bold text-foreground mb-4 uppercase text-center">
         Serviços Essenciais
       </h3>
       <div className="grid grid-cols-2 gap-3">
