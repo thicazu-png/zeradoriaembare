@@ -12,6 +12,13 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import LocationPicker from "./LocationPicker";
 
 const occurrenceTypes = [
@@ -27,6 +34,7 @@ const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2Lki
 const ReportForm = () => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     type: "",
     name: "",
@@ -83,6 +91,18 @@ const ReportForm = () => {
       img.onerror = reject;
       reader.readAsDataURL(file);
     });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      type: "",
+      name: "",
+      address: "",
+      description: "",
+      lat: undefined,
+      lng: undefined,
+    });
+    setSelectedFile(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -154,15 +174,8 @@ const ReportForm = () => {
           "Sua ocorrência foi registrada com sucesso. Acompanhe pelo seu e-mail.",
       });
 
-      setFormData({
-        type: "",
-        name: "",
-        address: "",
-        description: "",
-        lat: undefined,
-        lng: undefined,
-      });
-      setSelectedFile(null);
+      resetForm();
+      setIsOpen(false);
     } catch (error) {
       toast({
         title: "Erro ao enviar",
@@ -211,142 +224,155 @@ const ReportForm = () => {
             Reportar Problema
           </h3>
         </div>
-        <p className="text-sm text-muted-foreground mb-5">
+        <p className="text-sm text-muted-foreground mb-5 text-center">
           Preencha os dados abaixo. Seu relato será encaminhado diretamente à secretaria municipal responsável para agilizar a solução.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="type" className="text-sm font-medium">
-              Tipo de Ocorrência <span className="text-destructive">*</span>
-            </Label>
-            <Select
-              value={formData.type}
-              onValueChange={(value) =>
-                setFormData({ ...formData, type: value })
-              }
-              required
-            >
-              <SelectTrigger id="type" className="h-12 rounded-xl">
-                <SelectValue placeholder="Selecione o tipo..." />
-              </SelectTrigger>
-              <SelectContent>
-                {occurrenceTypes.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
+            <Button size="full" className="gap-2">
+              📝 Abrir Formulário de Ocorrência
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-center">Relatar Problema</DialogTitle>
+            </DialogHeader>
 
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium">
-              Seu Nome <span className="text-destructive">*</span>
-            </Label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                id="name"
-                placeholder="Digite seu nome"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="h-12 pl-10 rounded-xl"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">
-              Endereço / Localização <span className="text-destructive">*</span>
-            </Label>
-            <LocationPicker
-              value={formData.address}
-              onChange={handleLocationChange}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium">
-              Descrição do problema <span className="text-destructive">*</span>
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="Descreva o problema com detalhes..."
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="min-h-[100px] rounded-xl resize-none"
-              required
-            />
-          </div>
-
-          <p className="text-xs text-muted-foreground">
-            <span className="text-destructive">*</span> Campos obrigatórios
-          </p>
-
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Foto do local</Label>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/jpeg,image/png"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            {selectedFile ? (
-              <div className="border border-border rounded-xl p-3 bg-muted/30 flex items-center justify-between">
-                <div className="flex items-center gap-2 overflow-hidden">
-                  <Camera className="w-5 h-5 text-primary flex-shrink-0" />
-                  <span className="text-sm text-foreground truncate">{selectedFile.name}</span>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 flex-shrink-0"
-                  onClick={handleRemoveFile}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="type" className="text-sm font-medium">
+                  Tipo de Ocorrência <span className="text-destructive">*</span>
+                </Label>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, type: value })
+                  }
+                  required
                 >
-                  <X className="w-4 h-4" />
-                </Button>
+                  <SelectTrigger id="type" className="h-12 rounded-xl">
+                    <SelectValue placeholder="Selecione o tipo..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {occurrenceTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ) : (
-              <div 
-                className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">
-                  Toque para adicionar foto
-                </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">
-                  JPG, PNG até 5MB
-                </p>
-              </div>
-            )}
-          </div>
 
-          <Button
-            type="submit"
-            size="full"
-            className="mt-2"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <span className="animate-pulse-soft">Enviando...</span>
-            ) : (
-              <>
-                <Send className="w-4 h-4" />
-                Enviar Solicitação
-              </>
-            )}
-          </Button>
-        </form>
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm font-medium">
+                  Seu Nome <span className="text-destructive">*</span>
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    id="name"
+                    placeholder="Digite seu nome"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className="h-12 pl-10 rounded-xl"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Endereço / Localização <span className="text-destructive">*</span>
+                </Label>
+                <LocationPicker
+                  value={formData.address}
+                  onChange={handleLocationChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-sm font-medium">
+                  Descrição do problema <span className="text-destructive">*</span>
+                </Label>
+                <Textarea
+                  id="description"
+                  placeholder="Descreva o problema com detalhes..."
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="min-h-[100px] rounded-xl resize-none"
+                  required
+                />
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                <span className="text-destructive">*</span> Campos obrigatórios
+              </p>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Foto do local</Label>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/jpeg,image/png"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                {selectedFile ? (
+                  <div className="border border-border rounded-xl p-3 bg-muted/30 flex items-center justify-between">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <Camera className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-sm text-foreground truncate">{selectedFile.name}</span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 flex-shrink-0"
+                      onClick={handleRemoveFile}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div 
+                    className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">
+                      Toque para adicionar foto
+                    </p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">
+                      JPG, PNG até 5MB
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                size="full"
+                className="mt-2"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <span className="animate-pulse-soft">Enviando...</span>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Enviar Solicitação
+                  </>
+                )}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
