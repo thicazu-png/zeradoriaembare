@@ -2,28 +2,6 @@ import { Zap, Droplet, ShieldAlert, Car } from "lucide-react";
 import ServiceCard from "./ServiceCard";
 
 const ServicesGrid = () => {
-  const handleCPFL = () => {
-    window.open(
-      "https://wa.me/551932010200?text=Olá, gostaria de reportar falta de energia.",
-      "_blank"
-    );
-  };
-
-  const handleSAAE = () => {
-    window.open(
-      "https://wa.me/551933111234?text=Olá, gostaria de reportar falta de água.",
-      "_blank"
-    );
-  };
-
-  const handlePolice = () => {
-    window.location.href = "tel:190";
-  };
-
-  const handleTransit = () => {
-    window.open("https://www.santos.sp.gov.br/portal/transito", "_blank");
-  };
-
   const services = [
     {
       icon: Zap,
@@ -31,7 +9,8 @@ const ServicesGrid = () => {
       subtitle: "CPFL",
       iconColor: "text-cpfl",
       bgColor: "bg-cpfl-bg",
-      onClick: handleCPFL,
+      href: "https://wa.me/551999908888?text=Olá, gostaria de reportar falta de energia.",
+      isExternal: true,
     },
     {
       icon: Droplet,
@@ -39,7 +18,8 @@ const ServicesGrid = () => {
       subtitle: "SAAE",
       iconColor: "text-saae",
       bgColor: "bg-saae-bg",
-      onClick: handleSAAE,
+      href: "https://wa.me/551933111234?text=Olá, gostaria de reportar falta de água.",
+      isExternal: true,
     },
     {
       icon: ShieldAlert,
@@ -47,7 +27,8 @@ const ServicesGrid = () => {
       subtitle: "Polícia",
       iconColor: "text-police",
       bgColor: "bg-police-bg",
-      onClick: handlePolice,
+      href: "tel:190",
+      isExternal: false,
     },
     {
       icon: Car,
@@ -55,7 +36,8 @@ const ServicesGrid = () => {
       subtitle: "Prefeitura",
       iconColor: "text-transit",
       bgColor: "bg-transit-bg",
-      onClick: handleTransit,
+      href: "https://www.santos.sp.gov.br/portal/transito",
+      isExternal: true,
     },
   ];
 
