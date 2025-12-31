@@ -25,7 +25,7 @@ const ServicesGrid = () => {
     {
       imageSrc: logoPmesp,
       title: "Segurança",
-      subtitle: "Polícia",
+      subtitle: "Polícia Militar",
       bgColor: "bg-police-bg",
       href: "tel:190",
       isExternal: false,
