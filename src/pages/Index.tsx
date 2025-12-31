@@ -4,6 +4,7 @@ import ServicesGrid from "@/components/ServicesGrid";
 import ReportForm from "@/components/ReportForm";
 import AssociationCard from "@/components/AssociationCard";
 import CommunityGroups from "@/components/CommunityGroups";
+import PartnerAction from "@/components/PartnerAction";
 import Footer from "@/components/Footer";
 import InstallGuideModal from "@/components/InstallGuideModal";
 import BackToTop from "@/components/BackToTop";
@@ -30,6 +31,10 @@ const Index = () => {
           </section>
           <section id="grupos">
             <CommunityGroups />
+          </section>
+
+          <section id="parceiros">
+            <PartnerAction />
           </section>
           
           {/* Install Guide Button */}
