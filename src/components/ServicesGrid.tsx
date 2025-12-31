@@ -51,9 +51,12 @@ const ServicesGrid = () => {
 
   return (
     <section id="servicos" className="px-4 py-6">
-      <h3 className="text-lg font-bold text-foreground mb-4 uppercase text-center">
+      <h3 className="text-lg font-bold text-foreground mb-2 uppercase text-center">
         Serviços Essenciais
       </h3>
+      <p className="text-sm text-muted-foreground text-center mb-6">
+        Utilize os canais digitais (Site/WhatsApp) para serviços públicos e discagem direta para emergências (Polícia/GCM).
+      </p>
       <div className="grid grid-cols-2 gap-3">
         {services.map((service, index) => (
           <div
