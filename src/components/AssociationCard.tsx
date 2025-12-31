@@ -378,8 +378,17 @@ const AssociationCard = () => {
       <div className="flex items-start space-x-3">
         <Checkbox id="termoAdesao" checked={formData.termoAdesao} onCheckedChange={(c) => handleCheckboxChange("termoAdesao", !!c)} />
         <div className="grid gap-1.5 leading-none">
-          <Label htmlFor="termoAdesao" className="font-normal text-sm leading-relaxed">
-            <span className="text-destructive">*</span> <strong>Termo de Adesão:</strong> Declaro estar ciente do Estatuto Social e me comprometo com os deveres da associação.
+        <Label htmlFor="termoAdesao" className="font-normal text-sm leading-relaxed">
+            <span className="text-destructive">*</span> <strong>Termo de Adesão:</strong> Declaro estar ciente do Estatuto Social{" "}
+            <a
+              href="https://online.fliphtml5.com/thicazu/pdbe/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline text-xs hover:text-primary/80 transition-colors"
+            >
+              (Ler Estatuto)
+            </a>{" "}
+            e me comprometo com os deveres da associação.
           </Label>
         </div>
       </div>

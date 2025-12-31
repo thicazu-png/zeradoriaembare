@@ -1,4 +1,4 @@
-import { Facebook, Instagram } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import PrivacyPolicyModal from "./PrivacyPolicyModal";
 
 const Footer = () => {
@@ -24,6 +24,13 @@ const Footer = () => {
             aria-label="Instagram"
           >
             <Instagram className="w-5 h-5 text-primary" />
+          </a>
+          <a
+            href="mailto:bairrojardimembaresc@gmail.com"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+            aria-label="E-mail"
+          >
+            <Mail className="w-5 h-5 text-primary" />
           </a>
         </div>
 

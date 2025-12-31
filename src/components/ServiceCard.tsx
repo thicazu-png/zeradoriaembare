@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface ServiceCardProps {
-  imageSrc: string;
+  imageSrc?: string;
+  icon?: LucideIcon;
   title: string;
   subtitle?: string;
   bgColor: string;
@@ -11,6 +13,7 @@ interface ServiceCardProps {
 
 const ServiceCard = ({
   imageSrc,
+  icon: Icon,
   title,
   subtitle,
   bgColor,
@@ -36,11 +39,15 @@ const ServiceCard = ({
           bgColor
         )}
       >
-        <img 
-          src={imageSrc} 
-          alt={title} 
-          className="w-10 h-10 object-contain rounded-md"
-        />
+        {imageSrc ? (
+          <img 
+            src={imageSrc} 
+            alt={title} 
+            className="w-10 h-10 object-contain rounded-md"
+          />
+        ) : Icon ? (
+          <Icon className="w-8 h-8 text-foreground" />
+        ) : null}
       </div>
       <span className="text-sm font-semibold text-foreground text-center leading-tight">
         {title}
