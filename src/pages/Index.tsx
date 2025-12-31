@@ -6,6 +6,7 @@ import AssociationCard from "@/components/AssociationCard";
 import CommunityGroups from "@/components/CommunityGroups";
 import Footer from "@/components/Footer";
 import InstallGuideModal from "@/components/InstallGuideModal";
+import BackToTop from "@/components/BackToTop";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -55,6 +56,7 @@ const Index = () => {
           </section>
         </main>
         <Footer />
+        <BackToTop />
       </div>
     </div>
   );
