@@ -165,11 +165,11 @@ const ReportForm = () => {
   return (
     <section id="chamado" className="px-4 py-6">
       <div className="bg-card rounded-2xl border border-border/50 shadow-card p-5">
-        <div className="flex items-center gap-3 mb-3">
+        <div className="flex flex-col items-center gap-3 mb-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
             <FileText className="w-5 h-5 text-primary" />
           </div>
-          <h3 className="text-lg font-bold text-foreground">
+          <h3 className="text-lg font-bold text-foreground uppercase text-center">
             Reportar Problema
           </h3>
         </div>
