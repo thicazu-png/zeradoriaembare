@@ -1,4 +1,4 @@
-import { Menu, Leaf } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -7,15 +7,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import logoAmbje from "@/assets/logo-ambje.png";
 
 const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
       <div className="container flex items-center justify-between h-16 px-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
-            <Leaf className="w-5 h-5 text-primary" />
-          </div>
+          <img 
+            src={logoAmbje} 
+            alt="AMBJE Logo" 
+            className="w-10 h-10 rounded-xl object-cover"
+          />
           <div>
             <h1 className="text-lg font-bold text-foreground leading-tight">
               Jardim Embaré
@@ -34,7 +37,7 @@ const Header = () => {
           <SheetContent side="right" className="w-[280px]">
             <SheetHeader>
               <SheetTitle className="flex items-center gap-2">
-                <Leaf className="w-5 h-5 text-primary" />
+                <img src={logoAmbje} alt="AMBJE" className="w-5 h-5 rounded" />
                 Menu
               </SheetTitle>
             </SheetHeader>
