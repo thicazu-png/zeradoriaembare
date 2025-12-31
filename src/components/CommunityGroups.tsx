@@ -57,6 +57,12 @@ const CommunityGroups = () => {
       href: "https://chat.whatsapp.com/BvlJ0n4BOpl1aGqqkB5Uiz",
     },
     {
+      icon: Users,
+      title: "Embaré Moradores 02",
+      subtitle: "Assuntos Gerais",
+      href: "https://chat.whatsapp.com/Ch3JTLK6bolAujFlRlXTmp",
+    },
+    {
       icon: HardHat,
       title: "Infraestrutura",
       subtitle: "Manutenção do Bairro",
