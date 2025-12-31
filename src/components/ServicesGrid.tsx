@@ -1,40 +1,39 @@
-import { Zap, Droplet, ShieldAlert, Car } from "lucide-react";
 import ServiceCard from "./ServiceCard";
+import logoCpfl from "@/assets/logo-cpfl.png";
+import logoSaae from "@/assets/logo-saae.png";
+import logoPmesp from "@/assets/logo-pmesp.png";
+import logoGcm from "@/assets/logo-gcm.png";
 
 const ServicesGrid = () => {
   const services = [
     {
-      icon: Zap,
+      imageSrc: logoCpfl,
       title: "Falta de Luz",
       subtitle: "CPFL",
-      iconColor: "text-cpfl",
       bgColor: "bg-cpfl-bg",
       href: "https://wa.me/551999908888?text=Ola,%20gostaria%20de%20reportar%20falta%20de%20energia",
       isExternal: true,
     },
     {
-      icon: Droplet,
+      imageSrc: logoSaae,
       title: "Falta de Água",
       subtitle: "SAAE",
-      iconColor: "text-saae",
       bgColor: "bg-saae-bg",
       href: "https://wa.me/558003001520?text=Ola,%20preciso%20de%20atendimento",
       isExternal: true,
     },
     {
-      icon: ShieldAlert,
+      imageSrc: logoPmesp,
       title: "Segurança",
       subtitle: "Polícia",
-      iconColor: "text-police",
       bgColor: "bg-police-bg",
       href: "tel:190",
       isExternal: false,
     },
     {
-      icon: Car,
+      imageSrc: logoGcm,
       title: "Guarda Municipal",
       subtitle: "Prefeitura",
-      iconColor: "text-transit",
       bgColor: "bg-transit-bg",
       href: "tel:153",
       isExternal: false,
