@@ -8,13 +8,10 @@ import Footer from "@/components/Footer";
 import InstallGuideModal from "@/components/InstallGuideModal";
 import BackToTop from "@/components/BackToTop";
 import { Button } from "@/components/ui/button";
-
 const Index = () => {
-  return (
-    <div 
-      className="min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/images/background.jpg')" }}
-    >
+  return <div style={{
+    backgroundImage: "url('/images/background.jpg')"
+  }} className="min-h-screen bg-cover bg-center bg-fixed opacity-60">
       <div className="min-h-screen bg-background/85 backdrop-blur-sm">
         <Header />
         <main className="max-w-lg mx-auto pb-safe">
@@ -46,20 +43,14 @@ const Index = () => {
           
           {/* Install Guide Button */}
           <section className="px-4 py-6 flex justify-center">
-            <InstallGuideModal
-              trigger={
-                <Button variant="outline" className="gap-2">
+            <InstallGuideModal trigger={<Button variant="outline" className="gap-2">
                   📲 Como instalar este App
-                </Button>
-              }
-            />
+                </Button>} />
           </section>
         </main>
         <Footer />
         <BackToTop />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
