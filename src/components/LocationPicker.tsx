@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 interface LocationPickerProps {
   value: string;
   onChange: (address: string, lat?: number, lng?: number) => void;
+  required?: boolean;
 }
 
-const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
+const LocationPicker = ({ value, onChange, required }: LocationPickerProps) => {
   return (
     <div className="relative">
       <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -15,6 +16,7 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="h-12 pl-10 rounded-xl"
+        required={required}
       />
     </div>
   );

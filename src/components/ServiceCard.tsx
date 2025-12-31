@@ -22,9 +22,9 @@ const ServiceCard = ({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center p-5 rounded-2xl border border-border/50",
+        "flex flex-col items-center justify-center p-4 rounded-2xl border border-border/50",
         "bg-card shadow-card hover:shadow-elevated transition-all duration-200",
-        "hover:-translate-y-0.5 active:scale-[0.98] min-h-[120px]",
+        "hover:-translate-y-0.5 active:scale-[0.98] w-full h-[130px]",
         "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
       )}
     >
