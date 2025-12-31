@@ -180,7 +180,7 @@ const AssociationCard = () => {
 
     try {
       await fetch(
-        "https://script.google.com/macros/s/AKfycbxtmtwogZeYsfluAtBmcUdsG4nJuKrNo13VbXkSBmKR_VcVIoWVQw8zOaaeXAUphs2mPw/exec",
+        "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec",
         {
           method: "POST",
           mode: "no-cors",
