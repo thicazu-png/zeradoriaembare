@@ -7,7 +7,8 @@ interface ServiceCardProps {
   subtitle?: string;
   iconColor: string;
   bgColor: string;
-  onClick: () => void;
+  href: string;
+  isExternal?: boolean;
 }
 
 const ServiceCard = ({
@@ -16,16 +17,20 @@ const ServiceCard = ({
   subtitle,
   iconColor,
   bgColor,
-  onClick,
+  href,
+  isExternal = true,
 }: ServiceCardProps) => {
   return (
-    <button
-      onClick={onClick}
+    <a
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className={cn(
         "flex flex-col items-center justify-center p-4 rounded-2xl border border-border/50",
         "bg-card shadow-card hover:shadow-elevated transition-all duration-200",
         "hover:-translate-y-0.5 active:scale-[0.98] w-full h-[130px]",
-        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
+        "no-underline"
       )}
     >
       <div
@@ -42,7 +47,7 @@ const ServiceCard = ({
       {subtitle && (
         <span className="text-xs text-muted-foreground mt-0.5">{subtitle}</span>
       )}
-    </button>
+    </a>
   );
 };
 
