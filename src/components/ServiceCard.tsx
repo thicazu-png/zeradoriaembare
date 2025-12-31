@@ -1,21 +1,18 @@
-import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ServiceCardProps {
-  icon: LucideIcon;
+  imageSrc: string;
   title: string;
   subtitle?: string;
-  iconColor: string;
   bgColor: string;
   href: string;
   isExternal?: boolean;
 }
 
 const ServiceCard = ({
-  icon: Icon,
+  imageSrc,
   title,
   subtitle,
-  iconColor,
   bgColor,
   href,
   isExternal = true,
@@ -39,7 +36,11 @@ const ServiceCard = ({
           bgColor
         )}
       >
-        <Icon className={cn("w-7 h-7", iconColor)} />
+        <img 
+          src={imageSrc} 
+          alt={title} 
+          className="w-10 h-10 object-contain rounded-md"
+        />
       </div>
       <span className="text-sm font-semibold text-foreground text-center leading-tight">
         {title}
