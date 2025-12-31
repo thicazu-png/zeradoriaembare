@@ -49,6 +49,41 @@ const ReportForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validação dos campos obrigatórios
+    if (!formData.type) {
+      toast({
+        title: "Campo obrigatório",
+        description: "Por favor, selecione o tipo de ocorrência.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!formData.name.trim()) {
+      toast({
+        title: "Campo obrigatório",
+        description: "Por favor, informe seu nome.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!formData.address.trim()) {
+      toast({
+        title: "Campo obrigatório",
+        description: "Por favor, informe o endereço/localização.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!formData.description.trim()) {
+      toast({
+        title: "Campo obrigatório",
+        description: "Por favor, descreva o problema.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -142,13 +177,14 @@ const ReportForm = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="type" className="text-sm font-medium">
-              Tipo de Ocorrência
+              Tipo de Ocorrência <span className="text-destructive">*</span>
             </Label>
             <Select
               value={formData.type}
               onValueChange={(value) =>
                 setFormData({ ...formData, type: value })
               }
+              required
             >
               <SelectTrigger id="type" className="h-12 rounded-xl">
                 <SelectValue placeholder="Selecione o tipo..." />
@@ -165,7 +201,7 @@ const ReportForm = () => {
 
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-medium">
-              Seu Nome
+              Seu Nome <span className="text-destructive">*</span>
             </Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -177,23 +213,25 @@ const ReportForm = () => {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className="h-12 pl-10 rounded-xl"
+                required
               />
             </div>
           </div>
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              Endereço / Localização
+              Endereço / Localização <span className="text-destructive">*</span>
             </Label>
             <LocationPicker
               value={formData.address}
               onChange={handleLocationChange}
+              required
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="description" className="text-sm font-medium">
-              Descrição do problema
+              Descrição do problema <span className="text-destructive">*</span>
             </Label>
             <Textarea
               id="description"
@@ -203,8 +241,13 @@ const ReportForm = () => {
                 setFormData({ ...formData, description: e.target.value })
               }
               className="min-h-[100px] rounded-xl resize-none"
+              required
             />
           </div>
+
+          <p className="text-xs text-muted-foreground">
+            <span className="text-destructive">*</span> Campos obrigatórios
+          </p>
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Foto do local</Label>
