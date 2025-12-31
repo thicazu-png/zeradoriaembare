@@ -19,15 +19,6 @@ const Index = () => {
             <HeroSection />
           </section>
           
-          <section className="px-4 py-4 text-center">
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              <span className="block">App Oficial Jd. Embaré 🏡</span>
-              <span className="block">Reporte problemas, acesse serviços úteis e</span>
-              <span className="block">Associe-se à AMBJE.</span>
-              <span className="block">Praticidade para cuidar do nosso bairro!</span>
-            </p>
-          </section>
-          
           <section id="servicos">
             <ServicesGrid />
           </section>
