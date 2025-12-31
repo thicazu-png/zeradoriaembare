@@ -14,6 +14,15 @@ const Index = () => {
         <Header />
         <main className="max-w-lg mx-auto pb-safe">
           <HeroSection />
+          
+          <section className="px-4 py-4 text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              App Oficial Jd. Embaré 🏡<br />
+              Reporte problemas, acesse serviços úteis e associe-se à AMBJE.<br />
+              Praticidade para cuidar do nosso bairro!
+            </p>
+          </section>
+          
           <ServicesGrid />
           <ReportForm />
           <AssociationCard />
