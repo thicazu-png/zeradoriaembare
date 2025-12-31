@@ -7,7 +7,7 @@ const Footer = () => {
         {/* Social Icons */}
         <div className="flex items-center justify-center gap-4 mb-4">
           <a
-            href="#"
+            href="https://www.facebook.com/groups/BairroJardimEmbare"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
@@ -16,7 +16,7 @@ const Footer = () => {
             <Facebook className="w-5 h-5 text-primary" />
           </a>
           <a
-            href="#"
+            href="https://www.instagram.com/jardimembaresc/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
@@ -36,7 +36,7 @@ const Footer = () => {
         <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/70">
           <span>App criado por Thiago Cazu</span>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/drthiagocazu/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-primary transition-colors"
