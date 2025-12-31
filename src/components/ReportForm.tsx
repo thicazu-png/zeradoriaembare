@@ -165,7 +165,7 @@ const ReportForm = () => {
   return (
     <section id="chamado" className="px-4 py-6">
       <div className="bg-card rounded-2xl border border-border/50 shadow-card p-5">
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center gap-3 mb-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
             <FileText className="w-5 h-5 text-primary" />
           </div>
@@ -173,6 +173,9 @@ const ReportForm = () => {
             Reportar Problema
           </h3>
         </div>
+        <p className="text-sm text-muted-foreground mb-5">
+          Preencha os dados abaixo. Seu relato será encaminhado diretamente à secretaria municipal responsável para agilizar a solução.
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

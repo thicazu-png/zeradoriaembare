@@ -63,12 +63,6 @@ const CommunityGroups = () => {
       href: "https://chat.whatsapp.com/Ch3JTLK6bolAujFlRlXTmp",
     },
     {
-      icon: HardHat,
-      title: "Infraestrutura",
-      subtitle: "Manutenção do Bairro",
-      href: "https://chat.whatsapp.com/CYF5appVCUC6RvACCkoRaa",
-    },
-    {
       icon: PawPrint,
       title: "Pets Embaré",
       subtitle: "Animais Perdidos e Adoção",
@@ -90,9 +84,12 @@ const CommunityGroups = () => {
 
   return (
     <section className="px-4 py-6">
-      <h3 className="text-lg font-bold text-foreground mb-4">
+      <h3 className="text-lg font-bold text-foreground mb-2">
         Outros Grupos do Bairro
       </h3>
+      <p className="text-sm text-muted-foreground mb-4">
+        Participe dos grupos temáticos e fique por dentro de tudo o que acontece na nossa comunidade.
+      </p>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {groups.map((group, index) => (
           <div

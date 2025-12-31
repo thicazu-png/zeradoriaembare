@@ -4,6 +4,7 @@ import ServicesGrid from "@/components/ServicesGrid";
 import ReportForm from "@/components/ReportForm";
 import AssociationCard from "@/components/AssociationCard";
 import CommunityGroups from "@/components/CommunityGroups";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -29,6 +30,7 @@ const Index = () => {
           <AssociationCard />
           <CommunityGroups />
         </main>
+        <Footer />
       </div>
     </div>
   );
