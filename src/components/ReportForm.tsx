@@ -38,12 +38,50 @@ const ReportForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const convertFileToBase64 = (file: File): Promise<string> => {
+  const resizeAndCompressImage = (file: File, maxSize: number = 1024, quality: number = 0.7): Promise<string> => {
     return new Promise((resolve, reject) => {
+      const img = new Image();
       const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = reject;
+      
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        
+        // Resize if larger than maxSize
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = Math.round((height * maxSize) / width);
+            width = maxSize;
+          } else {
+            width = Math.round((width * maxSize) / height);
+            height = maxSize;
+          }
+        }
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to JPEG with compression
+        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedBase64);
+      };
+      
+      img.onerror = reject;
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
     });
   };
 
@@ -89,7 +127,7 @@ const ReportForm = () => {
     try {
       let fotoBase64 = "";
       if (selectedFile) {
-        fotoBase64 = await convertFileToBase64(selectedFile);
+        fotoBase64 = await resizeAndCompressImage(selectedFile, 1024, 0.7);
       }
 
       const payload = {
