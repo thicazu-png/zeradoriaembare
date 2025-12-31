@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Camera, Send, MapPin, User, FileText } from "lucide-react";
+import { Camera, Send, User, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import LocationPicker from "./LocationPicker";
 
 const occurrenceTypes = [
   { value: "mato-alto", label: "Mato Alto" },
@@ -28,6 +29,8 @@ const ReportForm = () => {
     name: "",
     address: "",
     description: "",
+    lat: undefined as number | undefined,
+    lng: undefined as number | undefined,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,8 +52,14 @@ const ReportForm = () => {
       name: "",
       address: "",
       description: "",
+      lat: undefined,
+      lng: undefined,
     });
     setIsSubmitting(false);
+  };
+
+  const handleLocationChange = (address: string, lat?: number, lng?: number) => {
+    setFormData({ ...formData, address, lat, lng });
   };
 
   return (
@@ -108,21 +117,13 @@ const ReportForm = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address" className="text-sm font-medium">
+            <Label className="text-sm font-medium">
               Endereço / Localização
             </Label>
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                id="address"
-                placeholder="Rua, número, referência..."
-                value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                className="h-12 pl-10 rounded-xl"
-              />
-            </div>
+            <LocationPicker
+              value={formData.address}
+              onChange={handleLocationChange}
+            />
           </div>
 
           <div className="space-y-2">

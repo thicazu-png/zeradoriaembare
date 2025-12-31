@@ -1,1 +1,4 @@
 project_id = "ahofdbfhfcafkaknyxel"
+
+[functions.google-maps-key]
+verify_jwt = false
