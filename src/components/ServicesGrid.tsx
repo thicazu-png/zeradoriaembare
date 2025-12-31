@@ -9,7 +9,7 @@ const ServicesGrid = () => {
       subtitle: "CPFL",
       iconColor: "text-cpfl",
       bgColor: "bg-cpfl-bg",
-      href: "https://wa.me/551999908888?text=Olá, gostaria de reportar falta de energia.",
+      href: "https://wa.me/551999908888?text=Ola,gostaria+de+reportar+falta+de+energia",
       isExternal: true,
     },
     {
@@ -18,7 +18,7 @@ const ServicesGrid = () => {
       subtitle: "SAAE",
       iconColor: "text-saae",
       bgColor: "bg-saae-bg",
-      href: "https://wa.me/551933111234?text=Olá, gostaria de reportar falta de água.",
+      href: "https://wa.me/558003001520?text=Ola,preciso+de+atendimento",
       isExternal: true,
     },
     {
@@ -32,12 +32,12 @@ const ServicesGrid = () => {
     },
     {
       icon: Car,
-      title: "Trânsito",
+      title: "Guarda Municipal",
       subtitle: "Prefeitura",
       iconColor: "text-transit",
       bgColor: "bg-transit-bg",
-      href: "https://www.santos.sp.gov.br/portal/transito",
-      isExternal: true,
+      href: "tel:153",
+      isExternal: false,
     },
   ];
 
