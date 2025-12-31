@@ -21,9 +21,10 @@ const Index = () => {
           
           <section className="px-4 py-4 text-center">
             <p className="text-sm text-muted-foreground leading-relaxed">
-              App Oficial Jd. Embaré 🏡<br />
-              Reporte problemas, acesse serviços úteis e associe-se à AMBJE.<br />
-              Praticidade para cuidar do nosso bairro!
+              <span className="block">App Oficial Jd. Embaré 🏡</span>
+              <span className="block">Reporte problemas, acesse serviços úteis e</span>
+              <span className="block">Associe-se à AMBJE.</span>
+              <span className="block">Praticidade para cuidar do nosso bairro!</span>
             </p>
           </section>
           

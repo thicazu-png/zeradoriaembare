@@ -504,7 +504,9 @@ const AssociationCard = () => {
             Associação de Moradores
           </h3>
           <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-            Fortaleça nosso bairro. Sua voz faz a diferença. Associe-se!
+            <span className="block">Fortaleça nosso bairro.</span>
+            <span className="block">Sua voz faz a diferença.</span>
+            <span className="block">Associe-se!</span>
           </p>
           <Button variant="association" onClick={() => setIsDialogOpen(true)} className="group">
             Quero me associar
