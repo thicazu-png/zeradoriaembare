@@ -1,14 +1,15 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { MapPin, Loader2, Navigation } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 
 interface LocationPickerProps {
   value: string;
   onChange: (address: string, lat?: number, lng?: number) => void;
 }
+
+const GOOGLE_MAPS_API_KEY = "AIzaSyB56DasKt3NvpQIhbeF2HsWIiN0Hx64kn0";
 
 const mapContainerStyle = {
   width: "100%",
@@ -22,41 +23,27 @@ const defaultCenter = {
   lng: -46.3322,
 };
 
+// Keep loader options stable across renders to avoid re-initialization errors.
 const libraries: ("places")[] = ["places"];
+const loaderId = "google-maps-script";
 
 const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
-  const [apiKey, setApiKey] = useState<string | null>(null);
-  const [isLoadingKey, setIsLoadingKey] = useState(true);
   const [marker, setMarker] = useState<{ lat: number; lng: number } | null>(null);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [isLocating, setIsLocating] = useState(false);
+
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Fetch API key from edge function
-  useEffect(() => {
-    const fetchApiKey = async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke('google-maps-key');
-        if (error) throw error;
-        setApiKey(data.apiKey);
-      } catch (err) {
-        console.error('Error fetching Google Maps API key:', err);
-      } finally {
-        setIsLoadingKey(false);
-      }
-    };
-    fetchApiKey();
-  }, []);
-
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: apiKey || "",
+    id: loaderId,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries,
   });
 
   // Initialize autocomplete
   useEffect(() => {
-    if (!isLoaded || !inputRef.current || !apiKey) return;
+    if (!isLoaded || !inputRef.current) return;
 
     const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
       componentRestrictions: { country: "br" },
@@ -69,7 +56,7 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         const address = place.formatted_address || "";
-        
+
         setMarker({ lat, lng });
         setMapCenter({ lat, lng });
         onChange(address, lat, lng);
@@ -83,7 +70,7 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
-  }, [isLoaded, apiKey, onChange]);
+  }, [isLoaded, onChange]);
 
   const handleMapClick = useCallback(
     (e: google.maps.MapMouseEvent) => {
@@ -145,7 +132,7 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
     );
   };
 
-  if (isLoadingKey) {
+  if (!isLoaded && !loadError) {
     return (
       <div className="space-y-2">
         <div className="relative">
@@ -163,7 +150,7 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
     );
   }
 
-  if (loadError || !apiKey) {
+  if (loadError) {
     return (
       <div className="space-y-2">
         <div className="relative">
