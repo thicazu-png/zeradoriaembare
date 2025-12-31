@@ -50,9 +50,8 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
   }, []);
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: apiKey || "placeholder",
+    googleMapsApiKey: apiKey || "",
     libraries,
-    id: "google-maps-script",
   });
 
   // Initialize autocomplete
@@ -146,7 +145,7 @@ const LocationPicker = ({ value, onChange }: LocationPickerProps) => {
     );
   };
 
-  if (isLoadingKey || !apiKey) {
+  if (isLoadingKey) {
     return (
       <div className="space-y-2">
         <div className="relative">

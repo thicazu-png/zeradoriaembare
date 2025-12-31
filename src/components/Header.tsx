@@ -7,18 +7,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import portalEmbare from "@/assets/portal_embare.jpg";
 
 const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border/50 shadow-sm">
       <div className="container flex items-center justify-between h-16 px-4">
         <div className="flex items-center gap-3">
-          <img 
-            src={portalEmbare} 
-            alt="Portal Jardim Embaré" 
-            className="w-12 h-12 rounded-xl object-cover shadow-sm"
-          />
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
+            <Leaf className="w-5 h-5 text-primary" />
+          </div>
           <div>
             <h1 className="text-lg font-bold text-foreground leading-tight">
               Jardim Embaré
