@@ -1,4 +1,5 @@
 import { Facebook, Instagram } from "lucide-react";
+import PrivacyPolicyModal from "./PrivacyPolicyModal";
 
 const Footer = () => {
   return (
@@ -27,10 +28,21 @@ const Footer = () => {
         </div>
 
         {/* Legal Info */}
-        <p className="text-xs text-muted-foreground text-center mb-4 leading-relaxed">
+        <p className="text-xs text-muted-foreground text-center mb-2 leading-relaxed">
           Associação de Moradores do Bairro Jardim Embaré<br />
           CNPJ nº 33.764.618/0001-87
         </p>
+
+        {/* Privacy Policy Link */}
+        <div className="flex justify-center mb-4">
+          <PrivacyPolicyModal
+            trigger={
+              <span className="text-xs text-muted-foreground underline hover:text-primary transition-colors">
+                Política de Privacidade
+              </span>
+            }
+          />
+        </div>
 
         {/* Credits */}
         <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/70">

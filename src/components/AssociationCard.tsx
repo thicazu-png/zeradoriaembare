@@ -32,6 +32,7 @@ import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import pixQrCode from "@/assets/pix-qrcode.jpg";
+import PrivacyPolicyModal from "./PrivacyPolicyModal";
 
 const TOTAL_STEPS = 5;
 
@@ -386,7 +387,14 @@ const AssociationCard = () => {
         <Checkbox id="termoLGPD" checked={formData.termoLGPD} onCheckedChange={(c) => handleCheckboxChange("termoLGPD", !!c)} />
         <div className="grid gap-1.5 leading-none">
           <Label htmlFor="termoLGPD" className="font-normal text-sm leading-relaxed">
-            <span className="text-destructive">*</span> <strong>LGPD:</strong> Concordo com o tratamento dos meus dados para fins cadastrais.
+            <span className="text-destructive">*</span> <strong>LGPD:</strong> Concordo com o tratamento dos meus dados para fins cadastrais.{" "}
+            <PrivacyPolicyModal
+              trigger={
+                <span className="text-primary underline text-xs hover:text-primary/80 transition-colors">
+                  (Ler Política)
+                </span>
+              }
+            />
           </Label>
         </div>
       </div>
