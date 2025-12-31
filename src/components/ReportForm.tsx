@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Camera, Send, User, FileText } from "lucide-react";
+import { useState, useRef } from "react";
+import { Camera, Send, User, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,8 +22,11 @@ const occurrenceTypes = [
   { value: "outros", label: "Outros" },
 ];
 
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec";
+
 const ReportForm = () => {
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     type: "",
     name: "",
@@ -32,30 +35,92 @@ const ReportForm = () => {
     lat: undefined as number | undefined,
     lng: undefined as number | undefined,
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      let fotoBase64 = "";
+      if (selectedFile) {
+        fotoBase64 = await convertFileToBase64(selectedFile);
+      }
 
-    toast({
-      title: "Solicitação enviada! ✓",
-      description:
-        "Sua ocorrência foi registrada com sucesso. Acompanhe pelo seu e-mail.",
-    });
+      const payload = {
+        source: "site",
+        nome: formData.name,
+        tipoOcorrencia: formData.type,
+        endereco: formData.address,
+        descricao: formData.description,
+        foto: fotoBase64,
+      };
 
-    setFormData({
-      type: "",
-      name: "",
-      address: "",
-      description: "",
-      lat: undefined,
-      lng: undefined,
-    });
-    setIsSubmitting(false);
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      toast({
+        title: "Solicitação enviada! ✓",
+        description:
+          "Sua ocorrência foi registrada com sucesso. Acompanhe pelo seu e-mail.",
+      });
+
+      setFormData({
+        type: "",
+        name: "",
+        address: "",
+        description: "",
+        lat: undefined,
+        lng: undefined,
+      });
+      setSelectedFile(null);
+    } catch (error) {
+      toast({
+        title: "Erro ao enviar",
+        description: "Ocorreu um erro ao enviar sua solicitação. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "Arquivo muito grande",
+          description: "O arquivo deve ter no máximo 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleLocationChange = (address: string, lat?: number, lng?: number) => {
@@ -143,15 +208,43 @@ const ReportForm = () => {
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Foto do local</Label>
-            <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30">
-              <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">
-                Toque para adicionar foto
-              </p>
-              <p className="text-xs text-muted-foreground/70 mt-1">
-                JPG, PNG até 5MB
-              </p>
-            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/jpeg,image/png"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {selectedFile ? (
+              <div className="border border-border rounded-xl p-3 bg-muted/30 flex items-center justify-between">
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <Camera className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-sm text-foreground truncate">{selectedFile.name}</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 flex-shrink-0"
+                  onClick={handleRemoveFile}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <div 
+                className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  Toque para adicionar foto
+                </p>
+                <p className="text-xs text-muted-foreground/70 mt-1">
+                  JPG, PNG até 5MB
+                </p>
+              </div>
+            )}
           </div>
 
           <Button
