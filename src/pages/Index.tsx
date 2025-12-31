@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 const Index = () => {
   return <div style={{
     backgroundImage: "url('/images/background.jpg')"
-  }} className="min-h-screen bg-cover bg-center bg-fixed opacity-60">
+  }} className="min-h-screen bg-cover bg-center bg-fixed opacity-100">
       <div className="min-h-screen bg-background/85 backdrop-blur-sm">
         <Header />
         <main className="max-w-lg mx-auto pb-safe">
