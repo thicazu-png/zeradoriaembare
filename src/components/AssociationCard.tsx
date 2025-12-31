@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { Users, ArrowRight, ArrowLeft, Check, Copy, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -392,6 +392,67 @@ const AssociationCard = () => {
     </div>
   );
 
+  const handleCopyPix = () => {
+    navigator.clipboard.writeText("12.345.678/0001-90");
+    toast({
+      title: "Chave PIX copiada!",
+      description: "Cole no seu aplicativo de pagamento.",
+    });
+  };
+
+  const renderPaymentDetails = () => {
+    if (formData.formaPagamento === "pix" || formData.formaPagamento === "transferencia") {
+      return (
+        <div className="rounded-lg border bg-muted/50 p-4 space-y-4">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Banknote className="w-4 h-4" />
+            Dados para Pagamento
+          </div>
+          
+          {/* QR Code Placeholder */}
+          <div className="flex justify-center">
+            <div className="w-32 h-32 bg-muted border-2 border-dashed border-muted-foreground/30 rounded-lg flex items-center justify-center">
+              <span className="text-xs text-muted-foreground text-center px-2">QR Code PIX</span>
+            </div>
+          </div>
+          
+          {/* PIX Key */}
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">Chave PIX (CNPJ):</p>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 bg-background px-3 py-2 rounded text-sm font-mono border">
+                12.345.678/0001-90
+              </code>
+              <Button type="button" variant="outline" size="icon" onClick={handleCopyPix} className="shrink-0">
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+          
+          {/* Bank Details */}
+          <div className="text-sm space-y-1 text-muted-foreground">
+            <p><strong className="text-foreground">Banco:</strong> Banco do Brasil</p>
+            <p><strong className="text-foreground">Agência:</strong> 1234-5</p>
+            <p><strong className="text-foreground">Conta:</strong> 12345-6</p>
+            <p><strong className="text-foreground">Titular:</strong> Associação de Moradores</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (formData.formaPagamento === "dinheiro") {
+      return (
+        <div className="rounded-lg border bg-muted/50 p-4">
+          <p className="text-sm text-muted-foreground text-center">
+            💵 Entregar para a tesouraria na próxima reunião.
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const renderStep5 = () => (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground text-center">
@@ -404,10 +465,13 @@ const AssociationCard = () => {
           <SelectContent>
             <SelectItem value="boleto">Boleto</SelectItem>
             <SelectItem value="pix">PIX</SelectItem>
+            <SelectItem value="transferencia">Transferência</SelectItem>
             <SelectItem value="dinheiro">Dinheiro</SelectItem>
           </SelectContent>
         </Select>
       </div>
+      
+      {renderPaymentDetails()}
     </div>
   );
 
