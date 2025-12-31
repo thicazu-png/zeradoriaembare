@@ -31,6 +31,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
+import pixQrCode from "@/assets/pix-qrcode.jpg";
 
 const TOTAL_STEPS = 5;
 
@@ -393,7 +394,7 @@ const AssociationCard = () => {
   );
 
   const handleCopyPix = () => {
-    navigator.clipboard.writeText("12.345.678/0001-90");
+    navigator.clipboard.writeText("bairrojardimembaresc@gmail.com");
     toast({
       title: "Chave PIX copiada!",
       description: "Cole no seu aplicativo de pagamento.",
@@ -409,19 +410,21 @@ const AssociationCard = () => {
             Dados para Pagamento
           </div>
           
-          {/* QR Code Placeholder */}
+          {/* QR Code */}
           <div className="flex justify-center">
-            <div className="w-32 h-32 bg-muted border-2 border-dashed border-muted-foreground/30 rounded-lg flex items-center justify-center">
-              <span className="text-xs text-muted-foreground text-center px-2">QR Code PIX</span>
-            </div>
+            <img 
+              src={pixQrCode} 
+              alt="QR Code PIX - Associação de Moradores" 
+              className="w-full max-w-[280px] rounded-lg border"
+            />
           </div>
           
           {/* PIX Key */}
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Chave PIX (CNPJ):</p>
+            <p className="text-xs text-muted-foreground">Chave PIX (E-mail):</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 bg-background px-3 py-2 rounded text-sm font-mono border">
-                12.345.678/0001-90
+              <code className="flex-1 bg-background px-2 py-2 rounded text-xs font-mono border break-all">
+                bairrojardimembaresc@gmail.com
               </code>
               <Button type="button" variant="outline" size="icon" onClick={handleCopyPix} className="shrink-0">
                 <Copy className="w-4 h-4" />
@@ -431,11 +434,15 @@ const AssociationCard = () => {
           
           {/* Bank Details */}
           <div className="text-sm space-y-1 text-muted-foreground">
-            <p><strong className="text-foreground">Banco:</strong> Banco do Brasil</p>
-            <p><strong className="text-foreground">Agência:</strong> 1234-5</p>
-            <p><strong className="text-foreground">Conta:</strong> 12345-6</p>
-            <p><strong className="text-foreground">Titular:</strong> Associação de Moradores</p>
+            <p><strong className="text-foreground">Banco:</strong> Sicoob Crediguaçu (756)</p>
+            <p><strong className="text-foreground">Agência:</strong> 3194</p>
+            <p><strong className="text-foreground">Conta:</strong> 9.739.521-8</p>
+            <p><strong className="text-foreground">CNPJ:</strong> 33.764.618/0001-87</p>
           </div>
+          
+          <p className="text-xs text-primary text-center font-medium">
+            📧 Lembre-se de enviar o comprovante para o e-mail da AMBJE
+          </p>
         </div>
       );
     }
