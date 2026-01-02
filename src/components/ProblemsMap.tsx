@@ -16,9 +16,15 @@ interface Problem {
 
 const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec";
 
-// Center of Jardim Embaré
-const MAP_CENTER: [number, number] = [-21.987, -47.887];
+// Center of Jardim Embaré - São Carlos, SP
+const MAP_CENTER: [number, number] = [-21.9853, -47.9260];
 const DEFAULT_ZOOM = 15;
+
+// Bounding box to limit map navigation (approximate area around Jardim Embaré)
+const MAP_BOUNDS = {
+  ne: [-21.975, -47.915] as [number, number], // Northeast corner
+  sw: [-21.995, -47.937] as [number, number], // Southwest corner
+};
 
 // Category colors for markers
 const getCategoryColor = (categoria: string): string => {
@@ -151,6 +157,8 @@ const ProblemsMap = () => {
               height={300}
               defaultCenter={MAP_CENTER}
               defaultZoom={DEFAULT_ZOOM}
+              minZoom={13}
+              maxZoom={18}
               onClick={() => setSelectedProblem(null)}
             >
               {problems.map((problem, index) => (
