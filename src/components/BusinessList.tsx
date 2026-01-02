@@ -48,8 +48,9 @@ const BusinessList = () => {
     fetchBusinesses();
   }, []);
 
-  const extractWhatsAppNumber = (contatos: string): string | null => {
-    const numbers = contatos.replace(/\D/g, "");
+  const extractWhatsAppNumber = (contatos: string | number | null | undefined): string | null => {
+    const phoneStr = contatos ? String(contatos) : '';
+    const numbers = phoneStr.replace(/\D/g, "");
     if (numbers.length >= 10) {
       return numbers.startsWith("55") ? numbers : `55${numbers}`;
     }
