@@ -52,7 +52,7 @@ const Footer = () => {
         </div>
 
         {/* Credits */}
-        <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/70">
+        <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/70 mb-3">
           <span>App desenvolvido por Thiago Cazu</span>
           <a
             href="https://www.instagram.com/drthiagocazu/"
@@ -63,6 +63,13 @@ const Footer = () => {
           >
             <Instagram className="w-3.5 h-3.5" />
           </a>
+        </div>
+
+        {/* Version Badge */}
+        <div className="flex justify-center">
+          <span className="bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs text-slate-500 border border-white/20">
+            v2026.01.01
+          </span>
         </div>
       </div>
     </footer>
