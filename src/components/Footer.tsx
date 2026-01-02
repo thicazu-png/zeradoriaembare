@@ -1,6 +1,5 @@
 import { Facebook, Instagram, Mail } from "lucide-react";
 import PrivacyPolicyModal from "./PrivacyPolicyModal";
-
 const Footer = () => {
   return (
     <footer className="bg-muted/50 border-t border-border mt-8">
@@ -51,24 +50,13 @@ const Footer = () => {
           />
         </div>
 
-        {/* Credits */}
-        <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground/70 mb-3">
-          <span>App desenvolvido por Thiago Cazu</span>
-          <a
-            href="https://www.instagram.com/drthiagocazu/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors"
-            aria-label="Instagram do criador"
-          >
-            <Instagram className="w-3.5 h-3.5" />
-          </a>
-        </div>
-
-        {/* Version Badge */}
-        <div className="flex justify-center">
-          <span className="bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs text-slate-500 border border-white/20">
-            v2026.01.01
+        {/* Credits & Version Badges */}
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <span className="bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
+            App por Thiago Cazu
+          </span>
+          <span className="bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
+            v2026.01.02
           </span>
         </div>
       </div>
