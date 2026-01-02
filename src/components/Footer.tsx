@@ -53,6 +53,11 @@ const Footer = () => {
 
         {/* Developer Credit & Version */}
         <div className="relative flex items-center justify-center py-2">
+          {/* Version Badge - Left */}
+          <span className="absolute left-0 bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
+            v2026.01.07
+          </span>
+
           {/* Developer Credit - Centered */}
           <a
             href="https://instagram.com/drthiagocazu"
@@ -63,11 +68,6 @@ const Footer = () => {
             <Instagram className="w-4 h-4" />
             App desenvolvido por Thiago Cazu
           </a>
-
-          {/* Version Badge - Right */}
-          <span className="absolute right-0 bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
-            v2026.01.07
-          </span>
         </div>
       </div>
     </footer>
