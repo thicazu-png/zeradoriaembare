@@ -26,9 +26,10 @@ const ServiceCard = ({
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
       className={cn(
-        "flex flex-col items-center justify-center p-4 rounded-2xl border border-border/50",
-        "bg-card shadow-card hover:shadow-elevated transition-all duration-200",
-        "hover:-translate-y-0.5 active:scale-[0.98] w-full h-[130px]",
+        "flex flex-col items-center justify-center p-4 rounded-2xl",
+        "bg-white/40 backdrop-blur-md border border-white/50 shadow-glass",
+        "hover:bg-white/60 hover:scale-105 transition-all duration-200",
+        "active:scale-[0.98] w-full h-[130px]",
         "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
         "no-underline"
       )}
@@ -46,14 +47,14 @@ const ServiceCard = ({
             className="w-10 h-10 object-contain rounded-md"
           />
         ) : Icon ? (
-          <Icon className="w-8 h-8 text-foreground" />
+          <Icon className="w-8 h-8 text-slate-700" />
         ) : null}
       </div>
-      <span className="text-sm font-semibold text-foreground text-center leading-tight">
+      <span className="text-sm font-semibold text-slate-800 text-center leading-tight">
         {title}
       </span>
       {subtitle && (
-        <span className="text-xs text-muted-foreground mt-0.5">{subtitle}</span>
+        <span className="text-xs text-slate-500 mt-0.5">{subtitle}</span>
       )}
     </a>
   );
