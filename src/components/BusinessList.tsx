@@ -7,11 +7,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, MessageCircle, Store } from "lucide-react";
 
 interface Business {
-  categoria: string;
-  nome: string;
-  endereco: string;
-  contatos: string;
-  logo: string;
+  categoria: string | null | undefined;
+  nome: string | null | undefined;
+  endereco: string | null | undefined;
+  contatos: string | number | null | undefined;
+  logo: string | null | undefined;
 }
 
 const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec";
@@ -57,8 +57,33 @@ const BusinessList = () => {
     return null;
   };
 
-  const getCategoryGroup = (categoria: string): string => {
-    const cat = categoria.toUpperCase();
+  const getImageUrl = (logo: string | null | undefined): string | null => {
+    if (!logo) return null;
+    const logoStr = String(logo);
+    
+    // Handle Google Drive URLs
+    if (logoStr.includes('drive.google.com')) {
+      // Extract file ID from various Google Drive URL formats
+      const patterns = [
+        /\/file\/d\/([a-zA-Z0-9_-]+)/,
+        /id=([a-zA-Z0-9_-]+)/,
+        /\/d\/([a-zA-Z0-9_-]+)/
+      ];
+      
+      for (const pattern of patterns) {
+        const match = logoStr.match(pattern);
+        if (match && match[1]) {
+          return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w200`;
+        }
+      }
+      return null; // Invalid Google Drive URL
+    }
+    
+    return logoStr;
+  };
+
+  const getCategoryGroup = (categoria: string | null | undefined): string => {
+    const cat = String(categoria || '').toUpperCase();
     if (["RESTAURANTE", "LANCHONETE", "PADARIA", "MERCADO"].some(c => cat.includes(c))) {
       return "ALIMENTAÇÃO";
     }
@@ -143,15 +168,19 @@ const BusinessList = () => {
           {filteredBusinesses.map((business, index) => {
             const whatsappNumber = extractWhatsAppNumber(business.contatos);
             const categoryGroup = getCategoryGroup(business.categoria);
+            const imageUrl = getImageUrl(business.logo);
+            const nomeStr = String(business.nome || 'Sem nome');
+            const categoriaStr = String(business.categoria || 'Outros');
+            const enderecoStr = business.endereco ? String(business.endereco) : null;
 
             return (
               <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex flex-col items-center text-center">
-                    {business.logo ? (
+                    {imageUrl ? (
                       <img
-                        src={business.logo}
-                        alt={business.nome}
+                        src={imageUrl}
+                        alt={nomeStr}
                         className="h-16 w-16 rounded-full object-cover mb-3 border-2 border-muted"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = 'none';
@@ -159,25 +188,25 @@ const BusinessList = () => {
                         }}
                       />
                     ) : null}
-                    <div className={`h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-3 ${business.logo ? 'hidden' : ''}`}>
+                    <div className={`h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-3 ${imageUrl ? 'hidden' : ''}`}>
                       <Store className="h-8 w-8 text-muted-foreground" />
                     </div>
 
                     <h3 className="font-semibold text-foreground mb-1 line-clamp-1">
-                      {business.nome}
+                      {nomeStr}
                     </h3>
 
                     <Badge 
                       variant="secondary" 
                       className={`mb-2 text-xs ${categoryColors[categoryGroup] || categoryColors["OUTROS"]}`}
                     >
-                      {business.categoria}
+                      {categoriaStr}
                     </Badge>
 
-                    {business.endereco && (
+                    {enderecoStr && (
                       <p className="text-xs text-muted-foreground flex items-center gap-1 mb-3">
                         <MapPin className="h-3 w-3 flex-shrink-0" />
-                        <span className="line-clamp-2">{business.endereco}</span>
+                        <span className="line-clamp-2">{enderecoStr}</span>
                       </p>
                     )}
 
