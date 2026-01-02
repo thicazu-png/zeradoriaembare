@@ -39,7 +39,7 @@ const BusinessList = () => {
   useEffect(() => {
     const fetchBusinesses = async () => {
       try {
-        const response = await fetch(WEBHOOK_URL);
+        const response = await fetch(`${WEBHOOK_URL}?type=comercio`);
         if (!response.ok) throw new Error("Erro ao carregar dados");
         const data = await response.json();
         setBusinesses(Array.isArray(data) ? data : []);
