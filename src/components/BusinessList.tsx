@@ -91,16 +91,40 @@ const BusinessList = () => {
   };
 
   const getCategoryGroup = (categoria: string | null | undefined): string => {
-    const cat = String(categoria || '').toUpperCase();
-    if (["RESTAURANTE", "LANCHONETE", "PADARIA", "MERCADO"].some(c => cat.includes(c))) {
+    const cat = String(categoria || '').toLowerCase();
+    
+    // Grupo ALIMENTAÇÃO
+    const alimentacaoKeywords = [
+      "restaurante", "lanchonete", "pizzaria", "padaria", "confeitaria",
+      "mercado", "hortifruti", "alimentação", "alimentacao", "açaí", "acai",
+      "sorveteria", "café", "cafe", "bar", "hamburgueria", "pastelaria"
+    ];
+    if (alimentacaoKeywords.some(keyword => cat.includes(keyword))) {
       return "ALIMENTAÇÃO";
     }
-    if (["MECÂNICO", "ELETRICISTA", "PEDREIRO", "MARIDO DE ALUGUEL"].some(c => cat.includes(c))) {
+    
+    // Grupo SERVIÇOS
+    const servicosKeywords = [
+      "mecânico", "mecanico", "automotivo", "eletricista", "encanador",
+      "pedreiro", "reformas", "reforma", "climatização", "climatizacao",
+      "marido de aluguel", "serviços", "servicos", "pintor", "serralheiro",
+      "vidraceiro", "marceneiro", "gesseiro", "instalador"
+    ];
+    if (servicosKeywords.some(keyword => cat.includes(keyword))) {
       return "SERVIÇOS";
     }
-    if (["SALÃO", "MANICURE", "BARBEARIA"].some(c => cat.includes(c))) {
+    
+    // Grupo BELEZA
+    const belezaKeywords = [
+      "salão", "salao", "barbearia", "manicure", "pedicure", "estética",
+      "estetica", "massagem", "farmácia", "farmacia", "beleza", "cabelo",
+      "depilação", "depilacao", "sobrancelha", "makeup", "maquiagem"
+    ];
+    if (belezaKeywords.some(keyword => cat.includes(keyword))) {
       return "BELEZA";
     }
+    
+    // OUTROS: Pet Shop, Veterinário, Loja, Vestuário, Aulas e demais
     return "OUTROS";
   };
 
