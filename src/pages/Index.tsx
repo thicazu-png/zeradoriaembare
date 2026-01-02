@@ -34,12 +34,12 @@ const Index = () => {
             <CommunityGroups />
           </section>
 
-          <section id="parceiros">
-            <PartnerAction />
-          </section>
-
           <section id="comercios">
             <BusinessList />
+          </section>
+
+          <section id="parceiros">
+            <PartnerAction />
           </section>
           
           {/* Install Guide Button */}

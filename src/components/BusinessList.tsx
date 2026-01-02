@@ -48,11 +48,19 @@ const BusinessList = () => {
     fetchBusinesses();
   }, []);
 
-  const extractWhatsAppNumber = (contatos: string | number | null | undefined): string | null => {
+  const extractContactNumber = (contatos: string | number | null | undefined): { number: string; hasWhatsApp: boolean } | null => {
     const phoneStr = contatos ? String(contatos) : '';
     const numbers = phoneStr.replace(/\D/g, "");
-    if (numbers.length >= 10) {
-      return numbers.startsWith("55") ? numbers : `55${numbers}`;
+    
+    // Se tiver qualquer número, retorna
+    if (numbers.length > 0) {
+      // Se tiver 10+ dígitos, provavelmente tem DDD e pode usar WhatsApp
+      if (numbers.length >= 10) {
+        const formattedNumber = numbers.startsWith("55") ? numbers : `55${numbers}`;
+        return { number: formattedNumber, hasWhatsApp: true };
+      }
+      // Números curtos (sem DDD) - usa discagem direta
+      return { number: numbers, hasWhatsApp: false };
     }
     return null;
   };
@@ -103,20 +111,27 @@ const BusinessList = () => {
   if (loading) {
     return (
       <div className="px-4 py-6">
-        <h2 className="text-xl font-bold text-foreground mb-4">Comércios do Bairro</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="overflow-hidden">
-              <CardContent className="p-4">
-                <Skeleton className="h-16 w-16 rounded-full mx-auto mb-3" />
-                <Skeleton className="h-5 w-3/4 mx-auto mb-2" />
-                <Skeleton className="h-4 w-1/2 mx-auto mb-2" />
-                <Skeleton className="h-4 w-full mb-3" />
-                <Skeleton className="h-9 w-full" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5 shadow-lg">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold text-center uppercase text-foreground mb-4 flex items-center justify-center gap-2">
+              <Store className="h-5 w-5 text-primary" />
+              Guia Comercial
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <Skeleton className="h-16 w-16 rounded-full mx-auto mb-3" />
+                    <Skeleton className="h-5 w-3/4 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-1/2 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-full mb-3" />
+                    <Skeleton className="h-9 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -135,25 +150,27 @@ const BusinessList = () => {
 
   return (
     <div className="px-4 py-6">
-      <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-        <Store className="h-5 w-5 text-primary" />
-        Comércios do Bairro
-      </h2>
+      <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5 shadow-lg">
+        <CardContent className="p-6">
+          <h2 className="text-xl font-bold text-center uppercase text-foreground mb-4 flex items-center justify-center gap-2">
+            <Store className="h-5 w-5 text-primary" />
+            Guia Comercial
+          </h2>
 
-      <Tabs defaultValue="TODOS" className="mb-4">
-        <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50">
-          {categories.map((cat) => (
-            <TabsTrigger
-              key={cat}
-              value={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className="text-xs px-2 py-1.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              {cat}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+          <Tabs defaultValue="TODOS" className="mb-4">
+            <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50">
+              {categories.map((cat) => (
+                <TabsTrigger
+                  key={cat}
+                  value={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className="text-xs px-2 py-1.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  {cat}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
 
       {filteredBusinesses.length === 0 ? (
         <Card className="border-dashed">
@@ -166,7 +183,7 @@ const BusinessList = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredBusinesses.map((business, index) => {
-            const whatsappNumber = extractWhatsAppNumber(business.contatos);
+            const contactInfo = extractContactNumber(business.contatos);
             const categoryGroup = getCategoryGroup(business.categoria);
             const imageUrl = getImageUrl(business.logo);
             const nomeStr = String(business.nome || 'Sem nome');
@@ -210,11 +227,17 @@ const BusinessList = () => {
                       </p>
                     )}
 
-                    {whatsappNumber ? (
+                    {contactInfo ? (
                       <Button
                         size="sm"
                         className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
-                        onClick={() => window.open(`https://wa.me/${whatsappNumber}`, "_blank")}
+                        onClick={() => {
+                          if (contactInfo.hasWhatsApp) {
+                            window.open(`https://wa.me/${contactInfo.number}`, "_blank");
+                          } else {
+                            window.open(`tel:${contactInfo.number}`, "_self");
+                          }
+                        }}
                       >
                         <MessageCircle className="h-4 w-4" />
                         Entrar em Contato
@@ -228,7 +251,9 @@ const BusinessList = () => {
             );
           })}
         </div>
-      )}
+        )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
