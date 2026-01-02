@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Store } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -242,22 +241,21 @@ const PartnerAction = () => {
 
   return (
     <section className="px-4 py-6">
-      <Card className="border-amber-300 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-700">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-2 w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
+      <div className="bg-gradient-to-br from-amber-500/15 via-amber-500/10 to-amber-400/5 rounded-2xl p-5 border border-amber-500/20">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/20 mb-3">
             <Store className="w-6 h-6 text-amber-600 dark:text-amber-400" />
           </div>
-          <CardTitle className="text-lg text-amber-900 dark:text-amber-100">
+          <h3 className="text-lg font-bold text-foreground mb-1">
             Tem um negócio no bairro?
-          </CardTitle>
-          <CardDescription className="text-amber-700 dark:text-amber-300">
-            Cadastre seu comércio ou serviço gratuitamente e apareça para todos os vizinhos no App.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
+          </h3>
+          <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+            <span className="block">Cadastre seu comércio ou serviço gratuitamente</span>
+            <span className="block">e apareça para todos os vizinhos no App.</span>
+          </p>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-amber-600 hover:bg-amber-700 text-white">
+              <Button className="bg-amber-600 hover:bg-amber-700 text-white group">
                 Cadastrar meu Negócio
               </Button>
             </DialogTrigger>
@@ -370,8 +368,8 @@ const PartnerAction = () => {
               </form>
             </DialogContent>
           </Dialog>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </section>
   );
 };
