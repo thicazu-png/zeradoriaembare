@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import LocationPicker from "./LocationPicker";
 
 const occurrenceTypes = [
@@ -35,6 +36,7 @@ const ReportForm = () => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDifferentLocation, setIsDifferentLocation] = useState(false);
   const [formData, setFormData] = useState({
     type: "",
     name: "",
@@ -105,6 +107,7 @@ const ReportForm = () => {
       lng: undefined,
     });
     setSelectedFile(null);
+    setIsDifferentLocation(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -135,10 +138,10 @@ const ReportForm = () => {
       });
       return;
     }
-    if (!formData.problemLocation.trim()) {
+    if (isDifferentLocation && !formData.problemLocation.trim()) {
       toast({
         title: "Campo obrigatório",
-        description: "Por favor, informe o local do problema.",
+        description: "Por favor, informe o endereço da ocorrência.",
         variant: "destructive",
       });
       return;
@@ -164,8 +167,9 @@ const ReportForm = () => {
         source: "site",
         nome: formData.name,
         categoria: formData.type,
-        endereco: formData.problemLocation,
-        descricao: `Reportado por morador em: ${formData.userAddress}.\n\n${formData.description}`,
+        endereco: formData.userAddress,
+        local_problema: isDifferentLocation ? formData.problemLocation : "-",
+        descricao: formData.description,
         foto: fotoBase64,
         lat: formData.lat,
         lng: formData.lng,
@@ -299,29 +303,57 @@ const ReportForm = () => {
                 <Label htmlFor="userAddress" className="text-sm font-medium">
                   Seu Endereço <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="userAddress"
-                  placeholder="Rua e número onde você mora"
+                <LocationPicker
                   value={formData.userAddress}
-                  onChange={(e) =>
-                    setFormData({ ...formData, userAddress: e.target.value })
-                  }
-                  className="h-12 rounded-xl"
+                  onChange={(location, lat, lng) => {
+                    setFormData({ 
+                      ...formData, 
+                      userAddress: location,
+                      lat: isDifferentLocation ? formData.lat : lat,
+                      lng: isDifferentLocation ? formData.lng : lng,
+                    });
+                  }}
                   required
+                  placeholder="Rua e número onde você mora"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">
-                  Local do Problema / Ocorrência <span className="text-destructive">*</span>
-                </Label>
-                <LocationPicker
-                  value={formData.problemLocation}
-                  onChange={handleLocationChange}
-                  required
-                  placeholder="Ex: Em frente ao número 500; Na praça; Vizinho do 710..."
+              <div className="flex items-center space-x-2 py-2">
+                <Checkbox
+                  id="differentLocation"
+                  checked={isDifferentLocation}
+                  onCheckedChange={(checked) => {
+                    setIsDifferentLocation(checked === true);
+                    if (!checked) {
+                      setFormData({ ...formData, problemLocation: "" });
+                    }
+                  }}
                 />
+                <Label 
+                  htmlFor="differentLocation" 
+                  className="text-sm font-medium cursor-pointer"
+                >
+                  O problema é em outro local?
+                </Label>
               </div>
+
+              {isDifferentLocation && (
+                <div className="space-y-2">
+                  <Label htmlFor="problemLocation" className="text-sm font-medium">
+                    Endereço da Ocorrência <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="problemLocation"
+                    placeholder="Ex: Rua X, em frente ao número 123..."
+                    value={formData.problemLocation}
+                    onChange={(e) =>
+                      setFormData({ ...formData, problemLocation: e.target.value })
+                    }
+                    className="h-12 rounded-xl"
+                    required={isDifferentLocation}
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="description" className="text-sm font-medium">
