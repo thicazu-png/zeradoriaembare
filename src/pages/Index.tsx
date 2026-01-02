@@ -27,15 +27,14 @@ const Index = () => {
           <section id="reportar">
             <ReportForm />
           </section>
+          <section id="guia-comercial">
+            <BusinessList />
+          </section>
           <section id="associacao">
             <AssociationCard />
           </section>
           <section id="grupos">
             <CommunityGroups />
-          </section>
-
-          <section id="comercios">
-            <BusinessList />
           </section>
 
           <section id="parceiros">
