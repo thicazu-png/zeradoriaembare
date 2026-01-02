@@ -289,7 +289,7 @@ const BusinessList = () => {
                       return `https://www.google.com/maps/dir/?api=1&destination=${business.lat},${business.lng}`;
                     }
                     if (enderecoStr) {
-                      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(enderecoStr + " Jardim Embaré São Carlos")}`;
+                      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(enderecoStr + ", Jardim Embaré, São Carlos")}`;
                     }
                     return null;
                   };
