@@ -38,7 +38,8 @@ const ReportForm = () => {
   const [formData, setFormData] = useState({
     type: "",
     name: "",
-    address: "",
+    userAddress: "",
+    problemLocation: "",
     description: "",
     lat: undefined as number | undefined,
     lng: undefined as number | undefined,
@@ -97,7 +98,8 @@ const ReportForm = () => {
     setFormData({
       type: "",
       name: "",
-      address: "",
+      userAddress: "",
+      problemLocation: "",
       description: "",
       lat: undefined,
       lng: undefined,
@@ -125,10 +127,18 @@ const ReportForm = () => {
       });
       return;
     }
-    if (!formData.address.trim()) {
+    if (!formData.userAddress.trim()) {
       toast({
         title: "Campo obrigatório",
-        description: "Por favor, informe o endereço/localização.",
+        description: "Por favor, informe seu endereço.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!formData.problemLocation.trim()) {
+      toast({
+        title: "Campo obrigatório",
+        description: "Por favor, informe o local do problema.",
         variant: "destructive",
       });
       return;
@@ -154,8 +164,8 @@ const ReportForm = () => {
         source: "site",
         nome: formData.name,
         categoria: formData.type,
-        endereco: formData.address,
-        descricao: formData.description,
+        endereco: formData.problemLocation,
+        descricao: `Reportado por morador em: ${formData.userAddress}.\n\n${formData.description}`,
         foto: fotoBase64,
         lat: formData.lat,
         lng: formData.lng,
@@ -211,8 +221,8 @@ const ReportForm = () => {
     }
   };
 
-  const handleLocationChange = (address: string, lat?: number, lng?: number) => {
-    setFormData({ ...formData, address, lat, lng });
+  const handleLocationChange = (location: string, lat?: number, lng?: number) => {
+    setFormData({ ...formData, problemLocation: location, lat, lng });
   };
 
   return (
@@ -286,13 +296,30 @@ const ReportForm = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="userAddress" className="text-sm font-medium">
+                  Seu Endereço <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="userAddress"
+                  placeholder="Rua e número onde você mora"
+                  value={formData.userAddress}
+                  onChange={(e) =>
+                    setFormData({ ...formData, userAddress: e.target.value })
+                  }
+                  className="h-12 rounded-xl"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label className="text-sm font-medium">
-                  Endereço / Localização <span className="text-destructive">*</span>
+                  Local do Problema / Ocorrência <span className="text-destructive">*</span>
                 </Label>
                 <LocationPicker
-                  value={formData.address}
+                  value={formData.problemLocation}
                   onChange={handleLocationChange}
                   required
+                  placeholder="Ex: Em frente ao número 500; Na praça; Vizinho do 710..."
                 />
               </div>
 
