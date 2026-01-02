@@ -8,9 +8,10 @@ interface LocationPickerProps {
   value: string;
   onChange: (address: string, lat?: number, lng?: number) => void;
   required?: boolean;
+  placeholder?: string;
 }
 
-const LocationPicker = ({ value, onChange, required }: LocationPickerProps) => {
+const LocationPicker = ({ value, onChange, required, placeholder = "Rua, número, bairro..." }: LocationPickerProps) => {
   const { toast } = useToast();
   const [isLocating, setIsLocating] = useState(false);
 
@@ -65,7 +66,7 @@ const LocationPicker = ({ value, onChange, required }: LocationPickerProps) => {
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          placeholder="Rua, número, bairro..."
+          placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           className="h-12 pl-10 pr-4 rounded-xl"
