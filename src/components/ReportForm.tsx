@@ -157,6 +157,8 @@ const ReportForm = () => {
         endereco: formData.address,
         descricao: formData.description,
         foto: fotoBase64,
+        lat: formData.lat,
+        lng: formData.lng,
       };
 
       await fetch(WEBHOOK_URL, {
