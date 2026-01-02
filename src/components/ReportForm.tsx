@@ -23,10 +23,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import LocationPicker from "./LocationPicker";
 
 const occurrenceTypes = [
-  { value: "mato-alto", label: "Mato Alto" },
-  { value: "buraco", label: "Buraco na Rua" },
-  { value: "lixo", label: "Lixo / Entulho" },
-  { value: "iluminacao", label: "Iluminação Pública" },
+  { value: "buraco", label: "Buraco" },
+  { value: "iluminacao", label: "Iluminação" },
+  { value: "lixo-limpeza", label: "Lixo/Limpeza" },
+  { value: "perturbacao-sossego", label: "Perturbação do sossego" },
   { value: "outros", label: "Outros" },
 ];
 

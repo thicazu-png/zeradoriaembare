@@ -56,7 +56,7 @@ const Footer = () => {
             App por Thiago Cazu
           </span>
           <span className="bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
-            v2026.01.03
+            v2026.01.04
           </span>
         </div>
       </div>

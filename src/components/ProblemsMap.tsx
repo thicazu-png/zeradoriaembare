@@ -30,32 +30,28 @@ const MAP_BOUNDS = {
 const getCategoryColor = (categoria: string): string => {
   const cat = categoria?.toLowerCase() || "";
   
-  if (cat.includes("iluminação") || cat.includes("iluminacao") || cat.includes("lâmpada") || cat.includes("lampada")) {
-    return "#f1c40f"; // Yellow
+  if (cat.includes("buraco")) {
+    return "#ef4444"; // Red
   }
-  if (cat.includes("buraco") || cat.includes("asfalto")) {
-    return "#34495e"; // Dark gray
+  if (cat.includes("iluminação") || cat.includes("iluminacao")) {
+    return "#eab308"; // Yellow
   }
-  if (cat.includes("mato") || cat.includes("limpeza") || cat.includes("capina")) {
-    return "#27ae60"; // Green
+  if (cat.includes("lixo") || cat.includes("limpeza")) {
+    return "#22c55e"; // Green
   }
-  if (cat.includes("vazamento") || cat.includes("água") || cat.includes("agua") || cat.includes("esgoto")) {
-    return "#3498db"; // Blue
+  if (cat.includes("perturbação") || cat.includes("perturbacao") || cat.includes("sossego")) {
+    return "#a855f7"; // Purple
   }
-  if (cat.includes("lixo") || cat.includes("entulho")) {
-    return "#e74c3c"; // Red
-  }
-  return "#9b59b6"; // Purple for others
+  return "#64748b"; // Slate for others
 };
 
 const getCategoryEmoji = (categoria: string): string => {
   const cat = categoria?.toLowerCase() || "";
   
-  if (cat.includes("iluminação") || cat.includes("iluminacao") || cat.includes("lâmpada")) return "💡";
-  if (cat.includes("buraco") || cat.includes("asfalto")) return "🕳️";
-  if (cat.includes("mato") || cat.includes("limpeza")) return "🌿";
-  if (cat.includes("vazamento") || cat.includes("água") || cat.includes("esgoto")) return "💧";
-  if (cat.includes("lixo") || cat.includes("entulho")) return "🗑️";
+  if (cat.includes("buraco")) return "🕳️";
+  if (cat.includes("iluminação") || cat.includes("iluminacao")) return "💡";
+  if (cat.includes("lixo") || cat.includes("limpeza")) return "🗑️";
+  if (cat.includes("perturbação") || cat.includes("perturbacao") || cat.includes("sossego")) return "🔊";
   return "📍";
 };
 
@@ -131,24 +127,24 @@ const ProblemsMap = () => {
           {/* Legend */}
           <div className="flex flex-wrap justify-center gap-2 mb-4 text-xs">
             <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#f1c40f" }}></span>
-              💡 Iluminação
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#34495e" }}></span>
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#ef4444" }}></span>
               🕳️ Buraco
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#27ae60" }}></span>
-              🌿 Mato
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#eab308" }}></span>
+              💡 Iluminação
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#3498db" }}></span>
-              💧 Água
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#22c55e" }}></span>
+              🗑️ Lixo/Limpeza
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#e74c3c" }}></span>
-              🗑️ Lixo
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#a855f7" }}></span>
+              🔊 Perturbação
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-3 h-3 rounded-full" style={{ backgroundColor: "#64748b" }}></span>
+              📍 Outros
             </span>
           </div>
 
