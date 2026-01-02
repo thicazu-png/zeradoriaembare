@@ -17,8 +17,8 @@ interface Problem {
 const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec";
 
 // Center of Jardim Embaré - São Carlos, SP
-const MAP_CENTER: [number, number] = [-21.9853, -47.9260];
-const DEFAULT_ZOOM = 15;
+const MAP_CENTER: [number, number] = [-21.966260500240534, -47.93432760869767];
+const DEFAULT_ZOOM = 16;
 
 // Bounding box to limit map navigation (approximate area around Jardim Embaré)
 const MAP_BOUNDS = {
