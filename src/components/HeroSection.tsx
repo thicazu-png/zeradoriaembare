@@ -19,9 +19,7 @@ const HeroSection = () => {
               Olá, vizinho!
             </h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Este é o App Oficial Jd. Embaré 🏡<br />
-              Reporte problemas, acesse serviços úteis e Associe-se à AMBJE.<br />
-              Praticidade para cuidar do nosso bairro!
+              O que precisamos resolver hoje?
             </p>
           </div>
         </div>

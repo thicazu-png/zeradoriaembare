@@ -231,36 +231,33 @@ const ReportForm = () => {
 
   return (
     <section id="chamado" className="px-4 py-6">
-      <div className="glass-card p-5">
+      <div className="bg-card rounded-2xl border border-border/50 shadow-card p-5">
         <div className="flex flex-col items-center gap-3 mb-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/20 backdrop-blur-sm">
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
             <FileText className="w-5 h-5 text-primary" />
           </div>
-          <h3 className="text-lg font-bold text-slate-800 uppercase text-center">
+          <h3 className="text-lg font-bold text-foreground uppercase text-center">
             Reportar Problema
           </h3>
         </div>
-        <p className="text-sm text-slate-600 mb-5 text-center">
+        <p className="text-sm text-muted-foreground mb-5 text-center">
           Preencha os dados abaixo. Seu relato será encaminhado diretamente à secretaria municipal responsável para agilizar a solução.
         </p>
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button 
-              size="full" 
-              className="gap-2 bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
-            >
+            <Button size="full" className="gap-2">
               📝 Abrir Formulário de Ocorrência
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-white/90 backdrop-blur-xl border border-white/50">
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-center text-slate-800">Relatar Problema</DialogTitle>
+              <DialogTitle className="text-center">Relatar Problema</DialogTitle>
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="type" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="type" className="text-sm font-medium">
                   Tipo de Ocorrência <span className="text-destructive">*</span>
                 </Label>
                 <Select
@@ -270,10 +267,10 @@ const ReportForm = () => {
                   }
                   required
                 >
-                  <SelectTrigger id="type" className="h-12 rounded-xl glass-input">
+                  <SelectTrigger id="type" className="h-12 rounded-xl">
                     <SelectValue placeholder="Selecione o tipo..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-lg">
+                  <SelectContent>
                     {occurrenceTypes.map((type) => (
                       <SelectItem key={type.value} value={type.value}>
                         {type.label}
@@ -284,11 +281,11 @@ const ReportForm = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="name" className="text-sm font-medium">
                   Seu Nome <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
                     id="name"
                     placeholder="Digite seu nome"
@@ -296,14 +293,14 @@ const ReportForm = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="h-12 pl-10 rounded-xl glass-input"
+                    className="h-12 pl-10 rounded-xl"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="userAddress" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="userAddress" className="text-sm font-medium">
                   Seu Endereço <span className="text-destructive">*</span>
                 </Label>
                 <LocationPicker
@@ -331,11 +328,10 @@ const ReportForm = () => {
                       setFormData({ ...formData, problemLocation: "" });
                     }
                   }}
-                  className="border-slate-300"
                 />
                 <Label 
                   htmlFor="differentLocation" 
-                  className="text-sm font-medium cursor-pointer text-slate-700"
+                  className="text-sm font-medium cursor-pointer"
                 >
                   O problema é em outro local?
                 </Label>
@@ -343,7 +339,7 @@ const ReportForm = () => {
 
               {isDifferentLocation && (
                 <div className="space-y-2">
-                  <Label htmlFor="problemLocation" className="text-sm font-medium text-slate-700">
+                  <Label htmlFor="problemLocation" className="text-sm font-medium">
                     Endereço da Ocorrência <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -353,14 +349,14 @@ const ReportForm = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, problemLocation: e.target.value })
                     }
-                    className="h-12 rounded-xl glass-input"
+                    className="h-12 rounded-xl"
                     required={isDifferentLocation}
                   />
                 </div>
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="description" className="text-sm font-medium">
                   Descrição do problema <span className="text-destructive">*</span>
                 </Label>
                 <Textarea
@@ -370,17 +366,17 @@ const ReportForm = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  className="min-h-[100px] rounded-xl resize-none glass-input"
+                  className="min-h-[100px] rounded-xl resize-none"
                   required
                 />
               </div>
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 <span className="text-destructive">*</span> Campos obrigatórios
               </p>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-700">Foto do local</Label>
+                <Label className="text-sm font-medium">Foto do local</Label>
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -389,10 +385,10 @@ const ReportForm = () => {
                   className="hidden"
                 />
                 {selectedFile ? (
-                  <div className="rounded-xl p-3 bg-white/50 backdrop-blur-sm border border-white/50 flex items-center justify-between">
+                  <div className="border border-border rounded-xl p-3 bg-muted/30 flex items-center justify-between">
                     <div className="flex items-center gap-2 overflow-hidden">
                       <Camera className="w-5 h-5 text-primary flex-shrink-0" />
-                      <span className="text-sm text-slate-700 truncate">{selectedFile.name}</span>
+                      <span className="text-sm text-foreground truncate">{selectedFile.name}</span>
                     </div>
                     <Button
                       type="button"
@@ -406,14 +402,14 @@ const ReportForm = () => {
                   </div>
                 ) : (
                   <div 
-                    className="border-2 border-dashed border-white/50 rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer bg-white/30 backdrop-blur-sm"
+                    className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors cursor-pointer bg-muted/30"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <Camera className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                    <p className="text-sm text-slate-600">
+                    <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">
                       Toque para adicionar foto
                     </p>
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-muted-foreground/70 mt-1">
                       JPG, PNG até 5MB
                     </p>
                   </div>
@@ -423,11 +419,11 @@ const ReportForm = () => {
               <Button
                 type="submit"
                 size="full"
-                className="mt-2 bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:shadow-xl transition-all"
+                className="mt-2"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <span className="animate-pulse">Enviando...</span>
+                  <span className="animate-pulse-soft">Enviando...</span>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
