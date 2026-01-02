@@ -14,13 +14,16 @@ import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
-    <div
-      style={{
-        backgroundImage: "url('/images/background.jpg')",
-      }}
-      className="min-h-screen bg-cover bg-center bg-fixed opacity-100"
-    >
-      <div className="min-h-screen bg-background/85 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* Decorative Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-purple-200/40 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/4 -right-20 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 left-1/4 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 right-1/3 w-80 h-80 bg-indigo-200/25 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-10">
         <Header />
         <main className="max-w-lg mx-auto pb-safe">
           <section id="inicio">
@@ -35,7 +38,7 @@ const Index = () => {
             <ProblemsMap />
           </section>
 
-          <p className="text-center text-sm text-muted-foreground px-4 py-2">
+          <p className="text-center text-sm text-slate-600 px-4 py-2 font-medium">
             Não encontrou o problema no mapa? 👇 Reporte abaixo
           </p>
 
@@ -63,12 +66,19 @@ const Index = () => {
           <section className="px-4 py-6 flex justify-center">
             <InstallGuideModal
               trigger={
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 glass-card px-6 py-3 hover:bg-white/50 transition-all">
                   📲 Como instalar este App
                 </Button>
               }
             />
           </section>
+
+          {/* Version Badge */}
+          <div className="flex justify-end px-4 pb-4">
+            <span className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-[10px] text-slate-500 border border-white/30">
+              v2026.01.01
+            </span>
+          </div>
         </main>
         <Footer />
         <BackToTop />
