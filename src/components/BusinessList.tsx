@@ -221,10 +221,15 @@ const BusinessList = () => {
                     </Badge>
 
                     {enderecoStr && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mb-3">
+                      <a 
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoStr + ", Jardim Embaré, São Carlos")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary flex items-center gap-1 mb-3 hover:underline cursor-pointer transition-colors"
+                      >
                         <MapPin className="h-3 w-3 flex-shrink-0" />
                         <span className="line-clamp-2">{enderecoStr}</span>
-                      </p>
+                      </a>
                     )}
 
                     {contactInfo ? (
