@@ -17,7 +17,7 @@ const ServicesGrid = () => {
       title: "Falta de Luz",
       subtitle: "CPFL",
       bgColor: "bg-cpfl-bg",
-      href: "https://wa.me/551999908888?text=Ola,%20gostaria%20de%20reportar%20falta%20de%20energia",
+      href: "https://wa.me/5519999088888?text=Ola,%20gostaria%20de%20reportar%20falta%20de%20energia",
       isExternal: true,
     },
     {
