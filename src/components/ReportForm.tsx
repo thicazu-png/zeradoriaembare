@@ -231,23 +231,23 @@ const ReportForm = () => {
 
   return (
     <section id="chamado" className="px-4 py-6">
-      <div className="bg-white/40 backdrop-blur-md border border-white/50 rounded-2xl shadow-sm p-6">
-        <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium mb-3">
-          <FileText className="w-3.5 h-3.5" />
-          Reportar Problema
+      <div className="bg-white/30 backdrop-blur-lg border border-white/50 rounded-2xl shadow-sm p-5">
+        <div className="flex flex-col items-center gap-3 mb-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
+            <FileText className="w-5 h-5 text-primary" />
+          </div>
+          <h3 className="text-lg font-bold text-foreground uppercase text-center">
+            Reportar Problema
+          </h3>
         </div>
-        <h3 className="text-lg font-bold text-foreground mb-2">
-          Reporte um problema no bairro
-        </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-          Seu relato será encaminhado à secretaria municipal responsável para agilizar a solução.
+        <p className="text-sm text-muted-foreground mb-5 text-center">
+          Preencha os dados abaixo. Seu relato será encaminhado diretamente à secretaria municipal responsável para agilizar a solução.
         </p>
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
-              📝 Abrir Formulário
-              <Send className="w-4 h-4" />
+            <Button size="full" className="gap-2">
+              📝 Abrir Formulário de Ocorrência
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
