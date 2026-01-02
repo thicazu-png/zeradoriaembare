@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, MessageCircle, Store, Navigation } from "lucide-react";
+import { MapPin, MessageCircle, Store, Navigation, Instagram, Globe, Phone } from "lucide-react";
 
 interface Business {
   categoria: string | null | undefined;
@@ -53,18 +53,70 @@ const BusinessList = () => {
     fetchBusinesses();
   }, []);
 
-  const extractContactNumber = (contatos: string | number | null | undefined): { number: string; hasWhatsApp: boolean } | null => {
-    const phoneStr = contatos ? String(contatos) : '';
-    const numbers = phoneStr.replace(/\D/g, "");
-    
-    if (numbers.length > 0) {
-      if (numbers.length >= 10) {
-        const formattedNumber = numbers.startsWith("55") ? numbers : `55${numbers}`;
-        return { number: formattedNumber, hasWhatsApp: true };
+  // Parse multiple contacts separated by ";"
+  interface ContactItem {
+    type: 'whatsapp' | 'phone' | 'instagram' | 'website';
+    value: string;
+    display: string;
+  }
+
+  const parseContacts = (contatos: string | number | null | undefined): ContactItem[] => {
+    const contatosStr = contatos ? String(contatos) : '';
+    if (!contatosStr.trim()) return [];
+
+    const items = contatosStr.split(';').map(item => item.trim()).filter(Boolean);
+    const parsed: ContactItem[] = [];
+
+    for (const item of items) {
+      // Check if it's an Instagram handle
+      if (item.startsWith('@') || item.toLowerCase().includes('instagram')) {
+        const handle = item.replace(/.*@/, '@').replace(/\s/g, '');
+        const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
+        if (cleanHandle) {
+          parsed.push({
+            type: 'instagram',
+            value: `https://instagram.com/${cleanHandle}`,
+            display: `@${cleanHandle}`
+          });
+        }
+        continue;
       }
-      return { number: numbers, hasWhatsApp: false };
+
+      // Check if it's a website
+      if (item.toLowerCase().includes('http') || item.toLowerCase().includes('www.') || item.includes('.com')) {
+        let url = item.trim();
+        if (!url.startsWith('http')) {
+          url = 'https://' + url.replace(/^www\./, '');
+        }
+        parsed.push({
+          type: 'website',
+          value: url,
+          display: item.replace(/https?:\/\//, '').replace(/^www\./, '').slice(0, 25)
+        });
+        continue;
+      }
+
+      // Check if it's a phone number
+      const numbers = item.replace(/\D/g, '');
+      if (numbers.length >= 8) {
+        if (numbers.length >= 10) {
+          const formattedNumber = numbers.startsWith('55') ? numbers : `55${numbers}`;
+          parsed.push({
+            type: 'whatsapp',
+            value: formattedNumber,
+            display: item.trim()
+          });
+        } else {
+          parsed.push({
+            type: 'phone',
+            value: numbers,
+            display: item.trim()
+          });
+        }
+      }
     }
-    return null;
+
+    return parsed;
   };
 
   const getImageUrl = (logo: string | null | undefined): string | null => {
@@ -95,36 +147,42 @@ const BusinessList = () => {
     
     // Grupo ALIMENTAÇÃO
     const alimentacaoKeywords = [
-      "restaurante", "lanchonete", "pizzaria", "padaria", "confeitaria",
-      "mercado", "hortifruti", "alimentação", "alimentacao", "açaí", "acai",
-      "sorveteria", "café", "cafe", "bar", "hamburgueria", "pastelaria"
+      "restaurante", "marmitaria", "lanchonete", "hamburgueria", "pizzaria",
+      "padaria", "confeitaria", "mercado", "mercearia", "hortifruti", "açougue",
+      "acougue", "açaí", "acai", "sorveteria", "adega", "bebidas", "doces",
+      "bolos", "buffet", "festas", "café", "cafe", "bar", "pastelaria"
     ];
     if (alimentacaoKeywords.some(keyword => cat.includes(keyword))) {
       return "ALIMENTAÇÃO";
     }
     
-    // Grupo SERVIÇOS
+    // Grupo SERVIÇOS (Casa, Automotivo, Técnicos)
     const servicosKeywords = [
-      "mecânico", "mecanico", "automotivo", "eletricista", "encanador",
-      "pedreiro", "reformas", "reforma", "climatização", "climatizacao",
-      "marido de aluguel", "serviços", "servicos", "pintor", "serralheiro",
-      "vidraceiro", "marceneiro", "gesseiro", "instalador"
+      "eletricista", "encanador", "caça vazamento", "pedreiro", "reformas",
+      "pintor", "marido de aluguel", "chaveiro", "jardinagem", "paisagismo",
+      "refrigeração", "ar condicionado", "fretes", "mudanças", "mudanca",
+      "dedetizadora", "limpeza", "mecânica", "mecanica", "mecânico", "mecanico",
+      "auto elétrica", "auto eletrica", "funilaria", "lava rápido", "lava rapido",
+      "borracharia", "auto peças", "auto pecas", "acessórios", "costura",
+      "gás", "gas", "água", "agua", "serviços", "servicos"
     ];
     if (servicosKeywords.some(keyword => cat.includes(keyword))) {
       return "SERVIÇOS";
     }
     
-    // Grupo BELEZA
+    // Grupo BELEZA E SAÚDE
     const belezaKeywords = [
-      "salão", "salao", "barbearia", "manicure", "pedicure", "estética",
-      "estetica", "massagem", "farmácia", "farmacia", "beleza", "cabelo",
-      "depilação", "depilacao", "sobrancelha", "makeup", "maquiagem"
+      "salão", "salao", "beleza", "barbearia", "manicure", "pedicure",
+      "estética", "estetica", "depilação", "depilacao", "maquiagem", "makeup",
+      "sobrancelha", "farmácia", "farmacia", "dentista", "consultório",
+      "consultorio", "psicologia", "terapias", "terapia", "pilates", "yoga",
+      "personal", "massagem", "cabelo"
     ];
     if (belezaKeywords.some(keyword => cat.includes(keyword))) {
       return "BELEZA";
     }
     
-    // OUTROS: Pet Shop, Veterinário, Loja, Vestuário, Aulas e demais
+    // OUTROS: Pets, Lojas, Educação e demais
     return "OUTROS";
   };
 
@@ -218,7 +276,7 @@ const BusinessList = () => {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {displayedBusinesses.map((business, index) => {
-                  const contactInfo = extractContactNumber(business.contatos);
+                  const contacts = parseContacts(business.contatos);
                   const categoryGroup = getCategoryGroup(business.categoria);
                   const imageUrl = getImageUrl(business.logo);
                   const nomeStr = String(business.nome || 'Sem nome');
@@ -281,22 +339,60 @@ const BusinessList = () => {
                           )}
 
                           <div className="w-full flex flex-col gap-2">
-                            {contactInfo && (
+                            {/* WhatsApp buttons */}
+                            {contacts.filter(c => c.type === 'whatsapp').map((contact, i) => (
                               <Button
+                                key={`whatsapp-${i}`}
                                 size="sm"
                                 className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
-                                onClick={() => {
-                                  if (contactInfo.hasWhatsApp) {
-                                    window.open(`https://wa.me/${contactInfo.number}`, "_blank");
-                                  } else {
-                                    window.open(`tel:${contactInfo.number}`, "_self");
-                                  }
-                                }}
+                                onClick={() => window.open(`https://wa.me/${contact.value}`, "_blank")}
                               >
                                 <MessageCircle className="h-4 w-4" />
-                                Entrar em Contato
+                                WhatsApp
                               </Button>
-                            )}
+                            ))}
+
+                            {/* Phone buttons */}
+                            {contacts.filter(c => c.type === 'phone').map((contact, i) => (
+                              <Button
+                                key={`phone-${i}`}
+                                size="sm"
+                                variant="outline"
+                                className="w-full gap-2"
+                                onClick={() => window.open(`tel:${contact.value}`, "_self")}
+                              >
+                                <Phone className="h-4 w-4" />
+                                Ligar
+                              </Button>
+                            ))}
+
+                            {/* Instagram buttons */}
+                            {contacts.filter(c => c.type === 'instagram').map((contact, i) => (
+                              <Button
+                                key={`instagram-${i}`}
+                                size="sm"
+                                variant="outline"
+                                className="w-full gap-2 border-pink-300 text-pink-600 hover:bg-pink-50 dark:border-pink-700 dark:text-pink-400 dark:hover:bg-pink-950"
+                                onClick={() => window.open(contact.value, "_blank")}
+                              >
+                                <Instagram className="h-4 w-4" />
+                                {contact.display}
+                              </Button>
+                            ))}
+
+                            {/* Website buttons */}
+                            {contacts.filter(c => c.type === 'website').map((contact, i) => (
+                              <Button
+                                key={`website-${i}`}
+                                size="sm"
+                                variant="outline"
+                                className="w-full gap-2"
+                                onClick={() => window.open(contact.value, "_blank")}
+                              >
+                                <Globe className="h-4 w-4" />
+                                Site
+                              </Button>
+                            ))}
                             
                             {directionsUrl && (
                               <Button
@@ -310,7 +406,7 @@ const BusinessList = () => {
                               </Button>
                             )}
                             
-                            {!contactInfo && !directionsUrl && (
+                            {contacts.length === 0 && !directionsUrl && (
                               <p className="text-xs text-muted-foreground">Informações não disponíveis</p>
                             )}
                           </div>

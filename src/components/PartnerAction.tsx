@@ -12,20 +12,91 @@ const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2Lki
 
 const categoryGroups = [
   {
-    label: "ALIMENTAÇÃO",
-    options: ["Restaurante", "Lanchonete", "Padaria", "Mercado"]
+    label: "🍔 ALIMENTAÇÃO",
+    options: [
+      "Restaurante / Marmitaria",
+      "Lanchonete / Hamburgueria",
+      "Pizzaria",
+      "Padaria / Confeitaria",
+      "Mercado / Mercearia",
+      "Hortifruti / Açougue",
+      "Açaí / Sorveteria",
+      "Adega / Bebidas",
+      "Doces / Bolos para Festas"
+    ]
   },
   {
-    label: "SERVIÇOS",
-    options: ["Mecânico", "Eletricista", "Pedreiro", "Marido de Aluguel"]
+    label: "🔧 SERVIÇOS TÉCNICOS & CASA",
+    options: [
+      "Eletricista",
+      "Encanador / Caça Vazamento",
+      "Pedreiro / Reformas",
+      "Pintor",
+      "Marido de Aluguel",
+      "Chaveiro",
+      "Jardinagem / Paisagismo",
+      "Refrigeração / Ar Condicionado",
+      "Fretes / Mudanças",
+      "Dedetizadora / Limpeza"
+    ]
   },
   {
-    label: "BELEZA",
-    options: ["Salão", "Manicure", "Barbearia"]
+    label: "💅 BELEZA & SAÚDE",
+    options: [
+      "Salão de Beleza",
+      "Barbearia",
+      "Manicure / Pedicure",
+      "Estética / Depilação",
+      "Maquiagem / Sobrancelha",
+      "Farmácia",
+      "Dentista / Consultório",
+      "Psicologia / Terapias",
+      "Pilates / Yoga / Personal"
+    ]
   },
   {
-    label: "OUTROS",
-    options: ["Pet Shop", "Loja de Roupas", "Aulas"]
+    label: "🚗 AUTOMOTIVO",
+    options: [
+      "Mecânica Geral",
+      "Auto Elétrica",
+      "Funilaria e Pintura",
+      "Lava Rápido / Estética Automotiva",
+      "Borracharia",
+      "Auto Peças / Acessórios"
+    ]
+  },
+  {
+    label: "🛒 COMPRAS & VARIEDADES",
+    options: [
+      "Roupas / Calçados",
+      "Papelaria / Bazar",
+      "Artesanato / Costura",
+      "Gás e Água",
+      "Floricultura",
+      "Material de Construção"
+    ]
+  },
+  {
+    label: "🐾 PETS",
+    options: [
+      "Pet Shop / Ração",
+      "Veterinário",
+      "Banho e Tosa",
+      "Cuidador / Passeador"
+    ]
+  },
+  {
+    label: "🎓 EDUCAÇÃO & LAZER",
+    options: [
+      "Aulas Particulares / Reforço",
+      "Escola de Idiomas",
+      "Escola de Música / Dança",
+      "Buffet / Festas"
+    ]
+  },
+  {
+    label: "📦 OUTROS",
+    options: ["Outros"]
   }
 ];
 
@@ -262,9 +333,12 @@ const PartnerAction = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Contatos</label>
+                  <label className="text-sm font-medium">Canais de Contato</label>
+                  <p className="text-xs text-muted-foreground">
+                    ⚠️ Importante: Informe o DDD no telefone. Se houver mais de um contato (ex: WhatsApp e Instagram), separe-os por ponto e vírgula (;).
+                  </p>
                   <Textarea
-                    placeholder="WhatsApp, Instagram, telefone..."
+                    placeholder="Ex: (16) 99999-8888; @loja_do_bairro; www.meusite.com"
                     value={formData.contatos}
                     onChange={(e) => setFormData({ ...formData, contatos: e.target.value })}
                     rows={3}
