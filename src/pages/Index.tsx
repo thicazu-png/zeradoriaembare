@@ -31,12 +31,16 @@ const Index = () => {
             <ServicesGrid />
           </section>
 
-          <section id="reportar">
-            <ReportForm />
-          </section>
-
           <section id="mapa-ocorrencias">
             <ProblemsMap />
+          </section>
+
+          <p className="text-center text-sm text-muted-foreground px-4 py-2">
+            Não encontrou o problema no mapa? 👇 Reporte abaixo
+          </p>
+
+          <section id="reportar">
+            <ReportForm />
           </section>
 
           <section id="guia-comercial">
