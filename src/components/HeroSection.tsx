@@ -13,8 +13,9 @@ const HeroSection = () => {
             <h2 className="text-xl font-bold text-foreground mb-2">
               Olá, vizinho!
             </h2>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Este é o App Oficial Jd. Embaré 🏡. Reporte problemas, acesse serviços úteis. Praticidade para cuidar do nosso bairro!
+            <p className="text-foreground text-sm leading-relaxed font-semibold">
+              App Oficial do Jardim Embaré 🏡<br />
+              Informe problemas, acesse serviços úteis e cuide do nosso bairro de forma simples e colaborativa.
             </p>
           </div>
         </div>
