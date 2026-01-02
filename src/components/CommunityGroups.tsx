@@ -16,9 +16,10 @@ const CommunityGroupCard = ({ icon: Icon, title, subtitle, href }: CommunityGrou
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-[#25D366]/30",
-        "bg-card shadow-card hover:shadow-elevated transition-all duration-200",
-        "hover:-translate-y-0.5 hover:border-[#25D366] active:scale-[0.98]",
+        "flex flex-col items-center justify-center p-4 rounded-2xl",
+        "bg-white/40 backdrop-blur-md border border-white/50 shadow-sm",
+        "hover:shadow-elevated hover:bg-white/50 hover:border-[#25D366]/50 transition-all duration-200",
+        "hover:-translate-y-0.5 active:scale-[0.98]",
         "focus:outline-none focus:ring-2 focus:ring-[#25D366]/50 focus:ring-offset-2",
         "no-underline h-[155px]"
       )}

@@ -241,10 +241,10 @@ const PartnerAction = () => {
 
   return (
     <section className="px-4 py-6">
-      <div className="bg-gradient-to-br from-amber-500/15 via-amber-500/10 to-amber-400/5 rounded-2xl p-5 border border-amber-500/20">
+      <div className="bg-gradient-to-br from-primary/15 via-primary/10 to-accent/5 rounded-2xl p-5 border border-primary/20">
         <div className="flex flex-col items-center text-center">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/20 mb-3">
-            <Store className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/20 mb-3">
+            <Store className="w-6 h-6 text-primary" />
           </div>
           <h3 className="text-lg font-bold text-foreground mb-1">
             Tem um negócio no bairro?
@@ -255,7 +255,7 @@ const PartnerAction = () => {
           </p>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-amber-600 hover:bg-amber-700 text-white group">
+              <Button className="group">
                 Cadastrar meu Negócio
               </Button>
             </DialogTrigger>
@@ -360,7 +360,7 @@ const PartnerAction = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                  className="w-full"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Enviando..." : "Enviar Cadastro"}
