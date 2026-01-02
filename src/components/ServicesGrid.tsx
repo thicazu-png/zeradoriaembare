@@ -79,7 +79,7 @@ const ServicesGrid = () => {
         >
           <button
             onClick={() => setBusModalOpen(true)}
-            className="flex flex-col items-center justify-center p-4 rounded-2xl border border-border/50 bg-card shadow-card hover:shadow-elevated transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] w-full h-[130px] focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
+            className="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/40 backdrop-blur-md border border-white/50 shadow-sm hover:shadow-elevated hover:bg-white/50 transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] w-full h-[130px] focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
           >
             <div className="flex items-center justify-center w-14 h-14 rounded-xl mb-3 bg-amber-50">
               <img

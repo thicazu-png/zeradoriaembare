@@ -26,8 +26,9 @@ const ServiceCard = ({
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
       className={cn(
-        "flex flex-col items-center justify-center p-4 rounded-2xl border border-border/50",
-        "bg-card shadow-card hover:shadow-elevated transition-all duration-200",
+        "flex flex-col items-center justify-center p-4 rounded-2xl",
+        "bg-white/40 backdrop-blur-md border border-white/50 shadow-sm",
+        "hover:shadow-elevated hover:bg-white/50 transition-all duration-200",
         "hover:-translate-y-0.5 active:scale-[0.98] w-full h-[130px]",
         "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
         "no-underline"

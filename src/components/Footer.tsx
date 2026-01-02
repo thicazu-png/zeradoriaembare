@@ -51,12 +51,12 @@ const Footer = () => {
         </div>
 
         {/* Credits & Version Badges */}
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <span className="bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
             App por Thiago Cazu
           </span>
           <span className="bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
-            v2026.01.02
+            v2026.01.03
           </span>
         </div>
       </div>

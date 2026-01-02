@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -53,7 +52,6 @@ const BusinessList = () => {
     fetchBusinesses();
   }, []);
 
-  // Parse multiple contacts separated by ";"
   interface ContactItem {
     type: 'whatsapp' | 'phone' | 'instagram' | 'website';
     value: string;
@@ -68,7 +66,6 @@ const BusinessList = () => {
     const parsed: ContactItem[] = [];
 
     for (const item of items) {
-      // Check if it's an Instagram handle
       if (item.startsWith('@') || item.toLowerCase().includes('instagram')) {
         const handle = item.replace(/.*@/, '@').replace(/\s/g, '');
         const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
@@ -82,7 +79,6 @@ const BusinessList = () => {
         continue;
       }
 
-      // Check if it's a website
       if (item.toLowerCase().includes('http') || item.toLowerCase().includes('www.') || item.includes('.com')) {
         let url = item.trim();
         if (!url.startsWith('http')) {
@@ -96,7 +92,6 @@ const BusinessList = () => {
         continue;
       }
 
-      // Check if it's a phone number
       const numbers = item.replace(/\D/g, '');
       if (numbers.length >= 8) {
         if (numbers.length >= 10) {
@@ -145,7 +140,6 @@ const BusinessList = () => {
   const getCategoryGroup = (categoria: string | null | undefined): string => {
     const cat = String(categoria || '').toLowerCase();
     
-    // Grupo ALIMENTAÇÃO
     const alimentacaoKeywords = [
       "restaurante", "marmitaria", "lanchonete", "hamburgueria", "pizzaria",
       "padaria", "confeitaria", "mercado", "mercearia", "hortifruti", "açougue",
@@ -156,7 +150,6 @@ const BusinessList = () => {
       return "ALIMENTAÇÃO";
     }
     
-    // Grupo SERVIÇOS (Casa, Automotivo, Técnicos)
     const servicosKeywords = [
       "eletricista", "encanador", "caça vazamento", "pedreiro", "reformas",
       "pintor", "marido de aluguel", "chaveiro", "jardinagem", "paisagismo",
@@ -170,7 +163,6 @@ const BusinessList = () => {
       return "SERVIÇOS";
     }
     
-    // Grupo BELEZA E SAÚDE
     const belezaKeywords = [
       "salão", "salao", "beleza", "barbearia", "manicure", "pedicure",
       "estética", "estetica", "depilação", "depilacao", "maquiagem", "makeup",
@@ -182,7 +174,6 @@ const BusinessList = () => {
       return "BELEZA";
     }
     
-    // OUTROS: Pets, Lojas, Educação e demais
     return "OUTROS";
   };
 
@@ -202,27 +193,23 @@ const BusinessList = () => {
   if (loading) {
     return (
       <div className="px-4 py-6">
-        <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5 shadow-lg">
-          <CardContent className="p-6">
-            <h2 className="text-xl font-bold text-center uppercase text-foreground mb-4 flex items-center justify-center gap-2">
-              <Store className="h-5 w-5 text-primary" />
-              Guia Comercial
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1, 2, 3].map((i) => (
-                <Card key={i} className="overflow-hidden">
-                  <CardContent className="p-4">
-                    <Skeleton className="h-16 w-16 rounded-full mx-auto mb-3" />
-                    <Skeleton className="h-5 w-3/4 mx-auto mb-2" />
-                    <Skeleton className="h-4 w-1/2 mx-auto mb-2" />
-                    <Skeleton className="h-4 w-full mb-3" />
-                    <Skeleton className="h-9 w-full" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="bg-white/40 backdrop-blur-md border border-white/50 shadow-sm rounded-2xl p-6">
+          <h2 className="text-xl font-bold text-center uppercase text-foreground mb-4 flex items-center justify-center gap-2">
+            <Store className="h-5 w-5 text-primary" />
+            Guia Comercial
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="overflow-hidden bg-white/60 backdrop-blur-sm border border-white/50 rounded-2xl p-4">
+                <Skeleton className="h-16 w-16 rounded-full mx-auto mb-3" />
+                <Skeleton className="h-5 w-3/4 mx-auto mb-2" />
+                <Skeleton className="h-4 w-1/2 mx-auto mb-2" />
+                <Skeleton className="h-4 w-full mb-3" />
+                <Skeleton className="h-9 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -230,219 +217,206 @@ const BusinessList = () => {
   if (error) {
     return (
       <div className="px-4 py-6">
-        <Card className="border-destructive/50 bg-destructive/10">
-          <CardContent className="p-4 text-center text-destructive">
-            <p>{error}</p>
-          </CardContent>
-        </Card>
+        <div className="bg-destructive/10 border border-destructive/50 rounded-2xl p-4 text-center text-destructive">
+          <p>{error}</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="px-4 py-6">
-      <Card className="border-primary/20 bg-gradient-to-br from-background to-primary/5 shadow-lg">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-bold text-center uppercase text-foreground mb-4 flex items-center justify-center gap-2">
-            <Store className="h-5 w-5 text-primary" />
-            Guia Comercial
-          </h2>
+      <div className="bg-white/40 backdrop-blur-md border border-white/50 shadow-sm rounded-2xl p-6">
+        <h2 className="text-xl font-bold text-center uppercase text-foreground mb-4 flex items-center justify-center gap-2">
+          <Store className="h-5 w-5 text-primary" />
+          Guia Comercial
+        </h2>
 
-          {/* Category Filters */}
-          <Tabs defaultValue="TODOS" className="mb-4">
-            <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50">
-              {categories.map((cat) => (
-                <TabsTrigger
-                  key={cat}
-                  value={cat}
-                  onClick={() => handleCategoryChange(cat)}
-                  className="text-xs px-2 py-1.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                >
-                  {cat}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+        <Tabs defaultValue="TODOS" className="mb-4">
+          <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50">
+            {categories.map((cat) => (
+              <TabsTrigger
+                key={cat}
+                value={cat}
+                onClick={() => handleCategoryChange(cat)}
+                className="text-xs px-2 py-1.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                {cat}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
-          {filteredBusinesses.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent className="p-8 text-center text-muted-foreground">
-                <Store className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Nenhum comércio nesta categoria ainda.</p>
-                <p className="text-sm mt-1">Seja o primeiro a cadastrar!</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {displayedBusinesses.map((business, index) => {
-                  const contacts = parseContacts(business.contatos);
-                  const categoryGroup = getCategoryGroup(business.categoria);
-                  const imageUrl = getImageUrl(business.logo);
-                  const nomeStr = String(business.nome || 'Sem nome');
-                  const categoriaStr = String(business.categoria || 'Outros');
-                  const enderecoStr = business.endereco ? String(business.endereco) : null;
-                  
-                  // Generate directions URL
-                  const getDirectionsUrl = () => {
-                    if (business.lat && business.lng && !isNaN(Number(business.lat)) && !isNaN(Number(business.lng))) {
-                      return `https://www.google.com/maps/dir/?api=1&destination=${business.lat},${business.lng}`;
-                    }
-                    if (enderecoStr) {
-                      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(enderecoStr + ", Jardim Embaré, São Carlos")}`;
-                    }
-                    return null;
-                  };
-                  
-                  const directionsUrl = getDirectionsUrl();
+        {filteredBusinesses.length === 0 ? (
+          <div className="border border-dashed border-border rounded-2xl p-8 text-center text-muted-foreground">
+            <Store className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <p>Nenhum comércio nesta categoria ainda.</p>
+            <p className="text-sm mt-1">Seja o primeiro a cadastrar!</p>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {displayedBusinesses.map((business, index) => {
+                const contacts = parseContacts(business.contatos);
+                const categoryGroup = getCategoryGroup(business.categoria);
+                const imageUrl = getImageUrl(business.logo);
+                const nomeStr = String(business.nome || 'Sem nome');
+                const categoriaStr = String(business.categoria || 'Outros');
+                const enderecoStr = business.endereco ? String(business.endereco) : null;
+                
+                const getDirectionsUrl = () => {
+                  if (business.lat && business.lng && !isNaN(Number(business.lat)) && !isNaN(Number(business.lng))) {
+                    return `https://www.google.com/maps/dir/?api=1&destination=${business.lat},${business.lng}`;
+                  }
+                  if (enderecoStr) {
+                    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(enderecoStr + ", Jardim Embaré, São Carlos")}`;
+                  }
+                  return null;
+                };
+                
+                const directionsUrl = getDirectionsUrl();
 
-                  return (
-                    <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col items-center text-center">
-                          {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={nomeStr}
-                              className="h-16 w-16 rounded-full object-cover mb-3 border-2 border-muted"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
-                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                              }}
-                            />
-                          ) : null}
-                          <div className={`h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-3 ${imageUrl ? 'hidden' : ''}`}>
-                            <Store className="h-8 w-8 text-muted-foreground" />
-                          </div>
-
-                          <h3 className="font-semibold text-foreground mb-1 line-clamp-1">
-                            {nomeStr}
-                          </h3>
-
-                          <Badge 
-                            variant="secondary" 
-                            className={`mb-2 text-xs ${categoryColors[categoryGroup] || categoryColors["OUTROS"]}`}
-                          >
-                            {categoriaStr}
-                          </Badge>
-
-                          {enderecoStr && (
-                            <a 
-                              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoStr + ", Jardim Embaré, São Carlos")}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-primary flex items-center gap-1 mb-3 hover:underline cursor-pointer transition-colors"
-                            >
-                              <MapPin className="h-3 w-3 flex-shrink-0" />
-                              <span className="line-clamp-2">{enderecoStr}</span>
-                            </a>
-                          )}
-
-                          <div className="w-full flex flex-col gap-2">
-                            {/* WhatsApp buttons */}
-                            {contacts.filter(c => c.type === 'whatsapp').map((contact, i) => (
-                              <Button
-                                key={`whatsapp-${i}`}
-                                size="sm"
-                                className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
-                                onClick={() => window.open(`https://wa.me/${contact.value}`, "_blank")}
-                              >
-                                <MessageCircle className="h-4 w-4" />
-                                WhatsApp
-                              </Button>
-                            ))}
-
-                            {/* Phone buttons */}
-                            {contacts.filter(c => c.type === 'phone').map((contact, i) => (
-                              <Button
-                                key={`phone-${i}`}
-                                size="sm"
-                                variant="outline"
-                                className="w-full gap-2"
-                                onClick={() => window.open(`tel:${contact.value}`, "_self")}
-                              >
-                                <Phone className="h-4 w-4" />
-                                Ligar
-                              </Button>
-                            ))}
-
-                            {/* Instagram buttons */}
-                            {contacts.filter(c => c.type === 'instagram').map((contact, i) => (
-                              <Button
-                                key={`instagram-${i}`}
-                                size="sm"
-                                variant="outline"
-                                className="w-full gap-2 border-pink-300 text-pink-600 hover:bg-pink-50 dark:border-pink-700 dark:text-pink-400 dark:hover:bg-pink-950"
-                                onClick={() => window.open(contact.value, "_blank")}
-                              >
-                                <Instagram className="h-4 w-4" />
-                                {contact.display}
-                              </Button>
-                            ))}
-
-                            {/* Website buttons */}
-                            {contacts.filter(c => c.type === 'website').map((contact, i) => (
-                              <Button
-                                key={`website-${i}`}
-                                size="sm"
-                                variant="outline"
-                                className="w-full gap-2"
-                                onClick={() => window.open(contact.value, "_blank")}
-                              >
-                                <Globe className="h-4 w-4" />
-                                Site
-                              </Button>
-                            ))}
-                            
-                            {directionsUrl && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="w-full gap-2"
-                                onClick={() => window.open(directionsUrl, "_blank")}
-                              >
-                                <Navigation className="h-4 w-4" />
-                                Como Chegar
-                              </Button>
-                            )}
-                            
-                            {contacts.length === 0 && !directionsUrl && (
-                              <p className="text-xs text-muted-foreground">Informações não disponíveis</p>
-                            )}
-                          </div>
+                return (
+                  <div key={index} className="overflow-hidden hover:shadow-md transition-shadow bg-white/60 backdrop-blur-sm border border-white/50 rounded-2xl">
+                    <div className="p-4">
+                      <div className="flex flex-col items-center text-center">
+                        {imageUrl ? (
+                          <img
+                            src={imageUrl}
+                            alt={nomeStr}
+                            className="h-16 w-16 rounded-full object-cover mb-3 border-2 border-muted"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <div className={`h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-3 ${imageUrl ? 'hidden' : ''}`}>
+                          <Store className="h-8 w-8 text-muted-foreground" />
                         </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
 
-              {/* Ver Mais / Ver Menos Button */}
-              {filteredBusinesses.length > INITIAL_VISIBLE_COUNT && (
-                <div className="mt-4 flex justify-center">
-                  {isExpanded ? (
-                    <Button
-                      variant="ghost"
-                      onClick={() => setVisibleCount(INITIAL_VISIBLE_COUNT)}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      Recolher lista
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      onClick={() => setVisibleCount(filteredBusinesses.length)}
-                      className="gap-1"
-                    >
-                      Ver todos os comércios (+{remainingCount})
-                    </Button>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+                        <h3 className="font-semibold text-foreground mb-1 line-clamp-1">
+                          {nomeStr}
+                        </h3>
+
+                        <Badge 
+                          variant="secondary" 
+                          className={`mb-2 text-xs ${categoryColors[categoryGroup] || categoryColors["OUTROS"]}`}
+                        >
+                          {categoriaStr}
+                        </Badge>
+
+                        {enderecoStr && (
+                          <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoStr + ", Jardim Embaré, São Carlos")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-primary flex items-center gap-1 mb-3 hover:underline cursor-pointer transition-colors"
+                          >
+                            <MapPin className="h-3 w-3 flex-shrink-0" />
+                            <span className="line-clamp-2">{enderecoStr}</span>
+                          </a>
+                        )}
+
+                        <div className="w-full flex flex-col gap-2">
+                          {contacts.filter(c => c.type === 'whatsapp').map((contact, i) => (
+                            <Button
+                              key={`whatsapp-${i}`}
+                              size="sm"
+                              className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
+                              onClick={() => window.open(`https://wa.me/${contact.value}`, "_blank")}
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                              WhatsApp
+                            </Button>
+                          ))}
+
+                          {contacts.filter(c => c.type === 'phone').map((contact, i) => (
+                            <Button
+                              key={`phone-${i}`}
+                              size="sm"
+                              variant="outline"
+                              className="w-full gap-2"
+                              onClick={() => window.open(`tel:${contact.value}`, "_self")}
+                            >
+                              <Phone className="h-4 w-4" />
+                              Ligar
+                            </Button>
+                          ))}
+
+                          {contacts.filter(c => c.type === 'instagram').map((contact, i) => (
+                            <Button
+                              key={`instagram-${i}`}
+                              size="sm"
+                              variant="outline"
+                              className="w-full gap-2 border-pink-300 text-pink-600 hover:bg-pink-50 dark:border-pink-700 dark:text-pink-400 dark:hover:bg-pink-950"
+                              onClick={() => window.open(contact.value, "_blank")}
+                            >
+                              <Instagram className="h-4 w-4" />
+                              {contact.display}
+                            </Button>
+                          ))}
+
+                          {contacts.filter(c => c.type === 'website').map((contact, i) => (
+                            <Button
+                              key={`website-${i}`}
+                              size="sm"
+                              variant="outline"
+                              className="w-full gap-2"
+                              onClick={() => window.open(contact.value, "_blank")}
+                            >
+                              <Globe className="h-4 w-4" />
+                              Site
+                            </Button>
+                          ))}
+                          
+                          {directionsUrl && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="w-full gap-2"
+                              onClick={() => window.open(directionsUrl, "_blank")}
+                            >
+                              <Navigation className="h-4 w-4" />
+                              Como Chegar
+                            </Button>
+                          )}
+                          
+                          {contacts.length === 0 && !directionsUrl && (
+                            <p className="text-xs text-muted-foreground">Informações não disponíveis</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {filteredBusinesses.length > INITIAL_VISIBLE_COUNT && (
+              <div className="mt-4 flex justify-center">
+                {isExpanded ? (
+                  <Button
+                    variant="ghost"
+                    onClick={() => setVisibleCount(INITIAL_VISIBLE_COUNT)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Recolher lista
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => setVisibleCount(filteredBusinesses.length)}
+                    className="gap-1"
+                  >
+                    Ver todos os comércios (+{remainingCount})
+                  </Button>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

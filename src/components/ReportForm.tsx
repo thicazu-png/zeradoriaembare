@@ -231,7 +231,7 @@ const ReportForm = () => {
 
   return (
     <section id="chamado" className="px-4 py-6">
-      <div className="bg-card rounded-2xl border border-border/50 shadow-card p-5">
+      <div className="bg-white/30 backdrop-blur-lg border border-white/50 rounded-2xl shadow-sm p-5">
         <div className="flex flex-col items-center gap-3 mb-3">
           <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
             <FileText className="w-5 h-5 text-primary" />
@@ -419,7 +419,7 @@ const ReportForm = () => {
               <Button
                 type="submit"
                 size="full"
-                className="mt-2"
+                className="mt-2 bg-white/60 backdrop-blur-sm border border-white/50 text-foreground hover:bg-white/80"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
