@@ -35,8 +35,9 @@ const Index = () => {
             <ProblemsMap />
           </section>
 
-          <p className="text-center text-sm text-muted-foreground px-4 py-2">
-            Não encontrou o problema no mapa? 👇 Reporte abaixo
+          <p className="text-center text-sm text-muted-foreground font-bold px-4 py-2">
+            Não encontrou o problema no mapa?<br />
+            👇 Reporte abaixo
           </p>
 
           <section id="reportar">
