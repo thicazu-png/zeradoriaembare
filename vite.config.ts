@@ -16,11 +16,42 @@ export default defineConfig(({ mode }) => ({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "images/background.jpg"],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,svg,woff,woff2}'],
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/docs\.google\.com\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'google-sheets-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 5, // 5 minutes
+              },
+              networkTimeoutSeconds: 10,
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+            },
+          },
+        ],
+      },
       manifest: {
-        name: "Zeladoria Jd. Embaré",
-        short_name: "Zeladoria JE",
+        name: "Zeladoria Embaré",
+        short_name: "Jd. Embaré",
         description: "App Oficial Jd. Embaré 🏡 Reporte problemas, acesse serviços úteis e associe-se à AMBJE.",
-        theme_color: "#22874a",
+        theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait",
