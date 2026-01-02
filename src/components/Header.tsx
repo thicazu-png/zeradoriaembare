@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, Home, Zap, Megaphone, UserPlus, Users, Facebook, Instagram, Mail } from "lucide-react";
+import { Menu, Home, Zap, Megaphone, Store, UserPlus, Users, Facebook, Instagram, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -15,6 +15,7 @@ const menuItems = [
   { label: "Início", target: "#inicio", icon: Home },
   { label: "Serviços Essenciais", target: "#servicos", icon: Zap },
   { label: "Reportar Problema", target: "#reportar", icon: Megaphone },
+  { label: "Guia Comercial", target: "#guia-comercial", icon: Store },
   { label: "Seja Sócio", target: "#associacao", icon: UserPlus },
   { label: "Grupos do Bairro", target: "#grupos", icon: Users },
 ];
