@@ -18,7 +18,7 @@ const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2Lki
 
 // Center of Jardim Embaré - São Carlos, SP
 const MAP_CENTER: [number, number] = [-21.966260500240534, -47.93432760869767];
-const DEFAULT_ZOOM = 13;
+const DEFAULT_ZOOM = 14;
 
 // Bounding box to limit map navigation (approximate area around Jardim Embaré)
 const MAP_BOUNDS = {
