@@ -350,7 +350,7 @@ const PartnerAction = ({ showAsButton = false }: PartnerActionProps) => {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="w-full gap-2">
+          <Button className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white">
             <Plus className="h-4 w-4" />
             Cadastrar meu Negócio
           </Button>
