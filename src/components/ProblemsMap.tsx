@@ -86,7 +86,7 @@ const ProblemsMap = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await fetch(`${WEBHOOK_URL}?type=denuncias`);
+        const response = await fetch(`${WEBHOOK_URL}?type=denuncias&t=${new Date().getTime()}`);
         if (!response.ok) throw new Error("Erro ao carregar dados");
         const data = await response.json();
         

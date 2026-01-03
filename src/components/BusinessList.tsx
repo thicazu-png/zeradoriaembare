@@ -39,7 +39,7 @@ const BusinessList = () => {
   useEffect(() => {
     const fetchBusinesses = async () => {
       try {
-        const response = await fetch(`${WEBHOOK_URL}?type=comercio`);
+        const response = await fetch(`${WEBHOOK_URL}?type=comercio&t=${new Date().getTime()}`);
         if (!response.ok) throw new Error("Erro ao carregar dados");
         const data = await response.json();
         setBusinesses(Array.isArray(data) ? data : []);
@@ -119,6 +119,12 @@ const BusinessList = () => {
     if (!logo) return null;
     const logoStr = String(logo);
     
+    // Se já está no formato correto (googleusercontent ou thumbnail), não manipula
+    if (logoStr.includes('googleusercontent') || logoStr.includes('thumbnail?id=')) {
+      return logoStr;
+    }
+    
+    // Converte links do Drive no formato /file/d/ID/view
     if (logoStr.includes('drive.google.com')) {
       const patterns = [
         /\/file\/d\/([a-zA-Z0-9_-]+)/,
@@ -288,6 +294,7 @@ const BusinessList = () => {
                               alt={nomeStr}
                               className="h-full w-full object-cover object-center"
                               referrerPolicy="no-referrer"
+                              crossOrigin="anonymous"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
                                 target.style.display = 'none';
