@@ -129,7 +129,7 @@ const BusinessList = () => {
       for (const pattern of patterns) {
         const match = logoStr.match(pattern);
         if (match && match[1]) {
-          return `https://lh3.googleusercontent.com/u/0/d/${match[1]}`;
+          return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w200`;
         }
       }
       return null;
@@ -281,12 +281,12 @@ const BusinessList = () => {
                   <div key={index} className="overflow-hidden hover:shadow-md transition-shadow bg-white/60 backdrop-blur-sm border border-white/50 rounded-2xl">
                     <div className="p-4">
                       <div className="flex flex-col items-center text-center">
-                        <div className="relative h-16 w-16 mb-3">
-                          {imageUrl && (
+                        <div className="h-16 w-16 aspect-square rounded-full overflow-hidden bg-slate-100 border-2 border-white/50 shadow-sm mb-3">
+                          {imageUrl ? (
                             <img
                               src={imageUrl}
                               alt={nomeStr}
-                              className="h-16 w-16 rounded-full object-cover border-2 border-muted"
+                              className="h-full w-full object-cover object-center"
                               referrerPolicy="no-referrer"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -295,9 +295,9 @@ const BusinessList = () => {
                                 if (fallback) fallback.style.display = 'flex';
                               }}
                             />
-                          )}
+                          ) : null}
                           <div 
-                            className="h-16 w-16 rounded-full bg-muted items-center justify-center border-2 border-muted"
+                            className="h-full w-full flex items-center justify-center"
                             style={{ display: imageUrl ? 'none' : 'flex' }}
                           >
                             <Store className="h-8 w-8 text-muted-foreground" />
