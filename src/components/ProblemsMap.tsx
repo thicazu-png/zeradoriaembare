@@ -3,6 +3,7 @@ import { Map, Marker, Overlay } from "pigeon-maps";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, AlertTriangle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Problem {
   categoria: string;
@@ -26,6 +27,16 @@ const MAP_BOUNDS = {
   sw: [-21.995, -47.937] as [number, number], // Southwest corner
 };
 
+// Category filters for the map
+const CATEGORY_FILTERS = [
+  { value: "todos", label: "Todas as Categorias", color: "#000" },
+  { value: "buraco", label: "🕳️ Buraco", color: "#ef4444" },
+  { value: "iluminacao", label: "💡 Iluminação", color: "#eab308" },
+  { value: "lixo", label: "🗑️ Lixo/Limpeza", color: "#22c55e" },
+  { value: "perturbacao", label: "🔊 Perturbação", color: "#a855f7" },
+  { value: "outros", label: "📍 Outros", color: "#64748b" },
+];
+
 // Category colors for markers
 const getCategoryColor = (categoria: string): string => {
   const cat = categoria?.toLowerCase() || "";
@@ -45,6 +56,16 @@ const getCategoryColor = (categoria: string): string => {
   return "#64748b"; // Slate for others
 };
 
+const getCategoryKey = (categoria: string): string => {
+  const cat = categoria?.toLowerCase() || "";
+  
+  if (cat.includes("buraco")) return "buraco";
+  if (cat.includes("iluminação") || cat.includes("iluminacao")) return "iluminacao";
+  if (cat.includes("lixo") || cat.includes("limpeza")) return "lixo";
+  if (cat.includes("perturbação") || cat.includes("perturbacao") || cat.includes("sossego")) return "perturbacao";
+  return "outros";
+};
+
 const getCategoryEmoji = (categoria: string): string => {
   const cat = categoria?.toLowerCase() || "";
   
@@ -60,6 +81,7 @@ const ProblemsMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState("todos");
 
   useEffect(() => {
     const fetchProblems = async () => {
@@ -124,6 +146,30 @@ const ProblemsMap = () => {
             Ocorrências reportadas no bairro
           </p>
 
+          {/* Category Filter */}
+          <div className="mb-4">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filtrar por categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORY_FILTERS.map((filter) => (
+                  <SelectItem key={filter.value} value={filter.value}>
+                    <span className="flex items-center gap-2">
+                      {filter.value !== "todos" && (
+                        <span 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: filter.color }}
+                        ></span>
+                      )}
+                      {filter.label}
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Legend */}
           <div className="flex flex-wrap justify-center gap-2 mb-4 text-xs">
             <span className="flex items-center gap-1">
@@ -157,15 +203,19 @@ const ProblemsMap = () => {
               maxZoom={18}
               onClick={() => setSelectedProblem(null)}
             >
-              {problems.map((problem, index) => (
-                <Marker
-                  key={index}
-                  width={40}
-                  anchor={[Number(problem.lat), Number(problem.lng)]}
-                  color={getCategoryColor(problem.categoria)}
-                  onClick={() => setSelectedProblem(problem)}
-                />
-              ))}
+              {problems
+                .filter((problem) => 
+                  selectedCategory === "todos" || getCategoryKey(problem.categoria) === selectedCategory
+                )
+                .map((problem, index) => (
+                  <Marker
+                    key={index}
+                    width={40}
+                    anchor={[Number(problem.lat), Number(problem.lng)]}
+                    color={getCategoryColor(problem.categoria)}
+                    onClick={() => setSelectedProblem(problem)}
+                  />
+                ))}
 
               {selectedProblem && selectedProblem.lat && selectedProblem.lng && (
                 <Overlay
