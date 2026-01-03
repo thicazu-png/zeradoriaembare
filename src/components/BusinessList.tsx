@@ -129,7 +129,7 @@ const BusinessList = () => {
       for (const pattern of patterns) {
         const match = logoStr.match(pattern);
         if (match && match[1]) {
-          return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w200`;
+          return `https://lh3.googleusercontent.com/u/0/d/${match[1]}`;
         }
       }
       return null;
@@ -281,19 +281,27 @@ const BusinessList = () => {
                   <div key={index} className="overflow-hidden hover:shadow-md transition-shadow bg-white/60 backdrop-blur-sm border border-white/50 rounded-2xl">
                     <div className="p-4">
                       <div className="flex flex-col items-center text-center">
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt={nomeStr}
-                            className="h-16 w-16 rounded-full object-cover mb-3 border-2 border-muted"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <div className={`h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-3 ${imageUrl ? 'hidden' : ''}`}>
-                          <Store className="h-8 w-8 text-muted-foreground" />
+                        <div className="relative h-16 w-16 mb-3">
+                          {imageUrl && (
+                            <img
+                              src={imageUrl}
+                              alt={nomeStr}
+                              className="h-16 w-16 rounded-full object-cover border-2 border-muted"
+                              referrerPolicy="no-referrer"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const fallback = target.nextElementSibling as HTMLElement;
+                                if (fallback) fallback.style.display = 'flex';
+                              }}
+                            />
+                          )}
+                          <div 
+                            className="h-16 w-16 rounded-full bg-muted items-center justify-center border-2 border-muted"
+                            style={{ display: imageUrl ? 'none' : 'flex' }}
+                          >
+                            <Store className="h-8 w-8 text-muted-foreground" />
+                          </div>
                         </div>
 
                         <h3 className="font-semibold text-foreground mb-1 line-clamp-1">
