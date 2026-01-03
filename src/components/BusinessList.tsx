@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, MessageCircle, Store, Navigation, Instagram, Globe, Phone } from "lucide-react";
+import { MapPin, MessageCircle, Store, Navigation, Instagram, Globe, Phone, Plus } from "lucide-react";
+import PartnerAction from "@/components/PartnerAction";
 
 interface Business {
   categoria: string | null | undefined;
@@ -416,6 +417,11 @@ const BusinessList = () => {
             )}
           </>
         )}
+
+        {/* Register Business Button */}
+        <div className="mt-6 pt-4 border-t border-white/30">
+          <PartnerAction showAsButton />
+        </div>
       </div>
     </div>
   );
