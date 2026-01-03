@@ -342,15 +342,18 @@ const ReportForm = () => {
                   <Label htmlFor="problemLocation" className="text-sm font-medium">
                     Endereço da Ocorrência <span className="text-destructive">*</span>
                   </Label>
-                  <Input
-                    id="problemLocation"
-                    placeholder="Ex: Rua X, em frente ao número 123..."
+                  <LocationPicker
                     value={formData.problemLocation}
-                    onChange={(e) =>
-                      setFormData({ ...formData, problemLocation: e.target.value })
-                    }
-                    className="h-12 rounded-xl"
-                    required={isDifferentLocation}
+                    onChange={(location, lat, lng) => {
+                      setFormData({ 
+                        ...formData, 
+                        problemLocation: location,
+                        lat,
+                        lng,
+                      });
+                    }}
+                    required
+                    placeholder="Ex: Rua X, em frente ao número 123..."
                   />
                 </div>
               )}
