@@ -119,12 +119,12 @@ const BusinessList = () => {
     if (!logo) return null;
     const logoStr = String(logo);
     
-    // Se já está no formato correto (googleusercontent ou thumbnail), não manipula
-    if (logoStr.includes('googleusercontent') || logoStr.includes('thumbnail?id=')) {
+    // Se já está no formato correto (googleusercontent), não manipula
+    if (logoStr.includes('googleusercontent')) {
       return logoStr;
     }
     
-    // Converte links do Drive no formato /file/d/ID/view
+    // Converte links do Drive no formato /file/d/ID/view para lh3.googleusercontent.com
     if (logoStr.includes('drive.google.com')) {
       const patterns = [
         /\/file\/d\/([a-zA-Z0-9_-]+)/,
@@ -135,7 +135,7 @@ const BusinessList = () => {
       for (const pattern of patterns) {
         const match = logoStr.match(pattern);
         if (match && match[1]) {
-          return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w200`;
+          return `https://lh3.googleusercontent.com/u/0/d/${match[1]}=w400`;
         }
       }
       return null;
