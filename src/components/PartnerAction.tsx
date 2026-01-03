@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Store } from "lucide-react";
+import { Store, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -108,7 +108,11 @@ interface FormData {
   contatos: string;
 }
 
-const PartnerAction = () => {
+interface PartnerActionProps {
+  showAsButton?: boolean;
+}
+
+const PartnerAction = ({ showAsButton = false }: PartnerActionProps) => {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -239,6 +243,134 @@ const PartnerAction = () => {
     }
   };
 
+  const renderFormFields = () => (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Categoria *</label>
+        <Select
+          value={formData.categoria}
+          onValueChange={(value) => setFormData({ ...formData, categoria: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione uma categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            {categoryGroups.map((group) => (
+              <SelectGroup key={group.label}>
+                <SelectLabel className="font-bold text-amber-700 dark:text-amber-400">
+                  {group.label}
+                </SelectLabel>
+                {group.options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Nome Fantasia *</label>
+        <Input
+          placeholder="Nome do seu negócio"
+          value={formData.nomeFantasia}
+          onChange={(e) => setFormData({ ...formData, nomeFantasia: e.target.value })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">CPF ou CNPJ</label>
+        <Input
+          placeholder="000.000.000-00 ou 00.000.000/0000-00"
+          value={formData.documento}
+          onChange={(e) => setFormData({ ...formData, documento: e.target.value })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Nome do Responsável *</label>
+        <Input
+          placeholder="Seu nome completo"
+          value={formData.nomeProprietario}
+          onChange={(e) => setFormData({ ...formData, nomeProprietario: e.target.value })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Endereço</label>
+        <Input
+          placeholder="Rua, número, bairro"
+          value={formData.endereco}
+          onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Canais de Contato</label>
+        <p className="text-xs text-muted-foreground">
+          ⚠️ Importante: Informe o DDD no telefone. Se houver mais de um contato (ex: WhatsApp e Instagram), separe-os por ponto e vírgula (;).
+        </p>
+        <Textarea
+          placeholder="Ex: (16) 99999-8888; @loja_do_bairro; www.meusite.com"
+          value={formData.contatos}
+          onChange={(e) => setFormData({ ...formData, contatos: e.target.value })}
+          rows={3}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Logo/Foto</label>
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="cursor-pointer"
+        />
+        {selectedFile && (
+          <p className="text-xs text-muted-foreground">
+            Arquivo selecionado: {selectedFile.name}
+          </p>
+        )}
+      </div>
+
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Enviando..." : "Enviar Cadastro"}
+      </Button>
+    </>
+  );
+
+  // Render as simple button for embedding in other sections
+  if (showAsButton) {
+    return (
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="w-full gap-2">
+            <Plus className="h-4 w-4" />
+            Cadastrar meu Negócio
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Cadastro de Parceiro</DialogTitle>
+            <DialogDescription>
+              Preencha os dados do seu negócio para aparecer no App.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+            {renderFormFields()}
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   return (
     <section className="px-4 py-6">
       <div className="bg-gradient-to-br from-primary/15 via-primary/10 to-accent/5 rounded-2xl p-5 border border-primary/20">
@@ -268,103 +400,7 @@ const PartnerAction = () => {
               </DialogHeader>
 
               <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Categoria *</label>
-                  <Select
-                    value={formData.categoria}
-                    onValueChange={(value) => setFormData({ ...formData, categoria: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categoryGroups.map((group) => (
-                        <SelectGroup key={group.label}>
-                          <SelectLabel className="font-bold text-amber-700 dark:text-amber-400">
-                            {group.label}
-                          </SelectLabel>
-                          {group.options.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Nome Fantasia *</label>
-                  <Input
-                    placeholder="Nome do seu negócio"
-                    value={formData.nomeFantasia}
-                    onChange={(e) => setFormData({ ...formData, nomeFantasia: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">CPF ou CNPJ</label>
-                  <Input
-                    placeholder="000.000.000-00 ou 00.000.000/0000-00"
-                    value={formData.documento}
-                    onChange={(e) => setFormData({ ...formData, documento: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Nome do Responsável *</label>
-                  <Input
-                    placeholder="Seu nome completo"
-                    value={formData.nomeProprietario}
-                    onChange={(e) => setFormData({ ...formData, nomeProprietario: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Endereço</label>
-                  <Input
-                    placeholder="Rua, número, bairro"
-                    value={formData.endereco}
-                    onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Canais de Contato</label>
-                  <p className="text-xs text-muted-foreground">
-                    ⚠️ Importante: Informe o DDD no telefone. Se houver mais de um contato (ex: WhatsApp e Instagram), separe-os por ponto e vírgula (;).
-                  </p>
-                  <Textarea
-                    placeholder="Ex: (16) 99999-8888; @loja_do_bairro; www.meusite.com"
-                    value={formData.contatos}
-                    onChange={(e) => setFormData({ ...formData, contatos: e.target.value })}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Logo/Foto</label>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="cursor-pointer"
-                  />
-                  {selectedFile && (
-                    <p className="text-xs text-muted-foreground">
-                      Arquivo selecionado: {selectedFile.name}
-                    </p>
-                  )}
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Enviando..." : "Enviar Cadastro"}
-                </Button>
+                {renderFormFields()}
               </form>
             </DialogContent>
           </Dialog>
