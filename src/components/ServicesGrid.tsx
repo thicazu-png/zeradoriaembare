@@ -7,6 +7,7 @@ import logoPmesp from "@/assets/logo-pmesp.png";
 import logoGcm from "@/assets/logo-gcm.png";
 import logoOuvidoria from "@/assets/logo-ouvidoria.png";
 import logoSouTransportes from "@/assets/logo-sou-transportes.png";
+import logoSaoCarlosAmbiental from "@/assets/logo-sao-carlos-ambiental.png";
 
 const ServicesGrid = () => {
   const [busModalOpen, setBusModalOpen] = useState(false);
@@ -50,6 +51,14 @@ const ServicesGrid = () => {
       subtitle: "Prefeitura",
       bgColor: "bg-background",
       href: "https://servico.saocarlos.sp.gov.br/ouvidoria/",
+      isExternal: true,
+    },
+    {
+      imageSrc: logoSaoCarlosAmbiental,
+      title: "Coleta de Lixo",
+      subtitle: "São Carlos Ambiental",
+      bgColor: "bg-green-50",
+      href: "https://wa.link/2qz3q8",
       isExternal: true,
     },
   ];
