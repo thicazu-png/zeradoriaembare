@@ -76,10 +76,10 @@ const PopularParticipation = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > 20 * 1024 * 1024) {
         toast({
           title: "Arquivo muito grande",
-          description: "A imagem deve ter no máximo 5MB.",
+          description: "A imagem deve ter no máximo 20MB.",
           variant: "destructive",
         });
         return;
@@ -348,7 +348,7 @@ const PopularParticipation = () => {
             >
               <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">Clique para enviar a foto</p>
-              <p className="text-xs text-muted-foreground mt-1">Máximo 5MB</p>
+              <p className="text-xs text-muted-foreground mt-1">Máximo 20MB</p>
             </div>
           )}
           <input
