@@ -7,6 +7,7 @@ import AssociationCard from "@/components/AssociationCard";
 import CommunityGroups from "@/components/CommunityGroups";
 import PartnerAction from "@/components/PartnerAction";
 import BusinessList from "@/components/BusinessList";
+import PopularParticipation from "@/components/PopularParticipation";
 import Footer from "@/components/Footer";
 import InstallGuideModal from "@/components/InstallGuideModal";
 import BackToTop from "@/components/BackToTop";
@@ -50,6 +51,10 @@ const Index = () => {
 
           <section id="associacao">
             <AssociationCard />
+          </section>
+
+          <section id="participacao">
+            <PopularParticipation />
           </section>
 
           <section id="grupos">
