@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Users, ArrowRight, ArrowLeft, Check, Copy, Banknote } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, Copy, Banknote } from "lucide-react";
+import logoAmbje from "@/assets/logo-ambje-new.png";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -514,9 +515,11 @@ const AssociationCard = () => {
     <section id="associacao" className="px-4 py-6 pb-8">
       <div className="bg-gradient-to-br from-primary/15 via-primary/10 to-accent/5 rounded-2xl p-5 border border-primary/20">
         <div className="flex flex-col items-center text-center">
-          <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/20 mb-3">
-            <Users className="w-6 h-6 text-primary" />
-          </div>
+          <img 
+            src={logoAmbje} 
+            alt="AMBJE - Associação de Moradores" 
+            className="h-14 w-auto object-contain mb-3"
+          />
           <h3 className="text-lg font-bold text-foreground mb-1">
             Associação de Moradores
           </h3>
