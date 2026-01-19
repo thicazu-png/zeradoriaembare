@@ -1,6 +1,6 @@
-import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import logoAbaixoAssinado from "@/assets/logo-abaixo-assinado.png";
 
 const PopularParticipation = () => {
   return (
@@ -11,8 +11,16 @@ const PopularParticipation = () => {
       
       <Card className="bg-white/40 backdrop-blur-md border-white/50 shadow-lg">
         <CardContent className="p-6 flex flex-col items-center gap-4">
-          <p className="text-center text-sm text-slate-600">
-            Sua assinatura fortalece nossa cobrança por melhorias no Embaré.
+          <img 
+            src={logoAbaixoAssinado} 
+            alt="Abaixo-Assinado" 
+            className="h-14 w-auto object-contain"
+          />
+          
+          <p className="text-center text-sm text-slate-600 font-medium">
+            Abaixo-Assinado Contra Abuso SAAE
+            <br />
+            <span className="font-normal">Sua assinatura fortalece nossa cobrança por melhorias no Embaré.</span>
           </p>
           
           <Button
@@ -25,8 +33,7 @@ const PopularParticipation = () => {
               )
             }
           >
-            <FileText className="h-5 w-5" />
-            Assinar Abaixo-Assinado
+            ✍️ Assinar Abaixo-Assinado
           </Button>
         </CardContent>
       </Card>

@@ -28,6 +28,14 @@ const Index = () => {
             <HeroSection />
           </section>
 
+          <section id="participacao">
+            <PopularParticipation />
+          </section>
+
+          <section id="associacao">
+            <AssociationCard />
+          </section>
+
           <section id="servicos">
             <ServicesGrid />
           </section>
@@ -47,14 +55,6 @@ const Index = () => {
 
           <section id="guia-comercial">
             <BusinessList />
-          </section>
-
-          <section id="associacao">
-            <AssociationCard />
-          </section>
-
-          <section id="participacao">
-            <PopularParticipation />
           </section>
 
           <section id="grupos">
