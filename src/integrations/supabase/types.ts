@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      petition_signatures: {
+        Row: {
+          cdc_matricula: string
+          consumo_valor_atual: string
+          created_at: string
+          documento: string
+          email: string
+          foto_conta_url: string | null
+          id: string
+          media_consumo: string
+          nome: string
+        }
+        Insert: {
+          cdc_matricula: string
+          consumo_valor_atual: string
+          created_at?: string
+          documento: string
+          email: string
+          foto_conta_url?: string | null
+          id?: string
+          media_consumo: string
+          nome: string
+        }
+        Update: {
+          cdc_matricula?: string
+          consumo_valor_atual?: string
+          created_at?: string
+          documento?: string
+          email?: string
+          foto_conta_url?: string | null
+          id?: string
+          media_consumo?: string
+          nome?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
