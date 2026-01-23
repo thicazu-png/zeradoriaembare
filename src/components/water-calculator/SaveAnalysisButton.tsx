@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { Save, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -8,6 +19,8 @@ import {
   calculateCycleData,
   calculateHistoricalAverage,
   generateDiagnosis,
+  formatCurrency,
+  formatNumber,
   type ResidenceData,
   type HistoricalEntry,
 } from "@/lib/waterTariff";
@@ -20,6 +33,7 @@ interface SaveAnalysisButtonProps {
 const SaveAnalysisButton = ({ data, historicalEntries }: SaveAnalysisButtonProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const { toast } = useToast();
 
   const hasValidData =
@@ -27,34 +41,37 @@ const SaveAnalysisButton = ({ data, historicalEntries }: SaveAnalysisButtonProps
     data.currentReadingDate &&
     data.currentReading > data.previousReading &&
     data.userName.trim() !== "" &&
-    data.cdcDv.trim() !== "";
+    data.cdcDv.trim() !== "" &&
+    data.chargedValue > 0 &&
+    data.fixedFee > 0;
+
+  const cycleData = hasValidData && data.previousReadingDate && data.currentReadingDate
+    ? calculateCycleData(
+        data.previousReadingDate,
+        data.currentReadingDate,
+        data.previousReading,
+        data.currentReading
+      )
+    : null;
+
+  const billData = cycleData
+    ? calculateWaterBill(cycleData.normalizedConsumption, data.includeSewer, data.fixedFee)
+    : null;
 
   const handleSave = async () => {
-    if (!hasValidData || !data.previousReadingDate || !data.currentReadingDate) {
+    if (!hasValidData || !data.previousReadingDate || !data.currentReadingDate || !cycleData || !billData) {
       toast({
         title: "Dados incompletos",
-        description: "Preencha nome, CDC e dados de leitura antes de salvar.",
+        description: "Preencha todos os campos obrigatórios antes de salvar.",
         variant: "destructive",
       });
       return;
     }
 
     setIsSaving(true);
+    setShowConfirmation(false);
 
     try {
-      const cycleData = calculateCycleData(
-        data.previousReadingDate,
-        data.currentReadingDate,
-        data.previousReading,
-        data.currentReading
-      );
-
-      const billData = calculateWaterBill(
-        cycleData.normalizedConsumption,
-        data.includeSewer,
-        data.fixedFee
-      );
-
       const historicalAverage = calculateHistoricalAverage(historicalEntries, true);
       
       const volumeAnomaly = historicalAverage.monthlyAverage > 0
@@ -102,8 +119,8 @@ const SaveAnalysisButton = ({ data, historicalEntries }: SaveAnalysisButtonProps
 
       setSaved(true);
       toast({
-        title: "Análise salva!",
-        description: "Sua análise foi salva com sucesso no banco de dados.",
+        title: "Análise salva com sucesso!",
+        description: `Relatório do CDC ${data.cdcDv} foi salvo no banco de dados.`,
       });
 
       // Reset saved state after 3 seconds
@@ -121,29 +138,61 @@ const SaveAnalysisButton = ({ data, historicalEntries }: SaveAnalysisButtonProps
   };
 
   return (
-    <Button
-      onClick={handleSave}
-      disabled={!hasValidData || isSaving}
-      variant={saved ? "default" : "outline"}
-      className="gap-2"
-    >
-      {isSaving ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Salvando...
-        </>
-      ) : saved ? (
-        <>
-          <Check className="h-4 w-4" />
-          Salvo!
-        </>
-      ) : (
-        <>
-          <Save className="h-4 w-4" />
-          Salvar Análise
-        </>
-      )}
-    </Button>
+    <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+      <AlertDialogTrigger asChild>
+        <Button
+          disabled={!hasValidData || isSaving}
+          variant={saved ? "default" : "outline"}
+          className="gap-2"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Salvando...
+            </>
+          ) : saved ? (
+            <>
+              <Check className="h-4 w-4" />
+              Salvo!
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4" />
+              Salvar Análise
+            </>
+          )}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Confirmar Salvamento</AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3">
+              <p>Deseja salvar esta análise no banco de dados?</p>
+              
+              {cycleData && billData && (
+                <div className="bg-muted rounded-lg p-3 text-sm space-y-1">
+                  <p><strong>Nome:</strong> {data.userName}</p>
+                  <p><strong>CDC:</strong> {data.cdcDv}</p>
+                  <p><strong>Consumo Normalizado:</strong> {formatNumber(cycleData.normalizedConsumption, 1)} m³</p>
+                  <p><strong>Valor Cobrado:</strong> {formatCurrency(data.chargedValue)}</p>
+                  <p><strong>Valor Técnico Justo:</strong> {formatCurrency(billData.total)}</p>
+                  <p className={billData.total < data.chargedValue ? "text-destructive" : "text-green-600"}>
+                    <strong>Diferença:</strong> {formatCurrency(data.chargedValue - billData.total)}
+                  </p>
+                </div>
+              )}
+            </div>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={handleSave}>
+            Confirmar e Salvar
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

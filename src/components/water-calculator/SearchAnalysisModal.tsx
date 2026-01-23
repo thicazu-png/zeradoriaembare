@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, FileSearch, Calendar, TrendingUp, TrendingDown, Minus, Loader2 } from "lucide-react";
+import { Search, FileSearch, Calendar, TrendingUp, TrendingDown, Minus, Loader2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,8 +18,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { formatCurrency, formatNumber } from "@/lib/waterTariff";
+import { formatCurrency, formatNumber, type TariffBreakdown } from "@/lib/waterTariff";
 
 interface AnalysisResult {
   id: string;
@@ -31,6 +32,8 @@ interface AnalysisResult {
   previous_reading: number;
   current_reading: number;
   charged_value: number;
+  fixed_fee: number;
+  include_sewer: boolean;
   cycle_days: number;
   consumption: number;
   normalized_consumption: number;
@@ -42,15 +45,18 @@ interface AnalysisResult {
   historical_average: number | null;
   volume_anomaly: number | null;
   diagnosis_items: string[];
+  tariff_breakdown: TariffBreakdown[];
 }
 
 const SearchAnalysisModal = () => {
   const [open, setOpen] = useState(false);
   const [searchCdc, setSearchCdc] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [results, setResults] = useState<AnalysisResult[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisResult | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const { toast } = useToast();
 
   const handleSearch = async () => {
     if (!searchCdc.trim()) return;
@@ -68,7 +74,7 @@ const SearchAnalysisModal = () => {
 
       if (error) throw error;
 
-      setResults((data as AnalysisResult[]) || []);
+      setResults((data as unknown as AnalysisResult[]) || []);
       setSelectedAnalysis(null);
     } catch (error) {
       console.error("Error searching analyses:", error);
@@ -80,6 +86,120 @@ const SearchAnalysisModal = () => {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("pt-BR");
+  };
+
+  const generatePDF = async (analysis: AnalysisResult) => {
+    setIsGeneratingPdf(true);
+
+    try {
+      const { default: jsPDF } = await import("jspdf");
+      await import("jspdf-autotable");
+      
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+
+      // Header
+      doc.setFontSize(18);
+      doc.setTextColor(33, 37, 41);
+      doc.text("Relatório Técnico de Análise de Conta de Água", pageWidth / 2, 20, { align: "center" });
+
+      doc.setFontSize(10);
+      doc.setTextColor(108, 117, 125);
+      doc.text(`Relatório recuperado em: ${new Date().toLocaleDateString("pt-BR")}`, pageWidth / 2, 28, { align: "center" });
+      doc.text(`Análise original: ${formatDate(analysis.created_at)}`, pageWidth / 2, 34, { align: "center" });
+
+      // User info
+      doc.setFontSize(12);
+      doc.setTextColor(33, 37, 41);
+      doc.text("Dados do Usuário", 14, 48);
+      
+      doc.setFontSize(10);
+      doc.text(`Nome: ${analysis.user_name}`, 14, 56);
+      doc.text(`CDC-DV: ${analysis.cdc_dv}`, 14, 62);
+
+      // Cycle data
+      doc.setFontSize(12);
+      doc.text("Dados do Ciclo", 14, 76);
+      
+      doc.setFontSize(10);
+      doc.text(`Período: ${formatDate(analysis.previous_reading_date)} a ${formatDate(analysis.current_reading_date)}`, 14, 84);
+      doc.text(`Dias do Ciclo: ${analysis.cycle_days}`, 14, 90);
+      doc.text(`Consumo Real: ${formatNumber(analysis.consumption, 1)} m³`, 14, 96);
+      doc.text(`Consumo Normalizado (30 dias): ${formatNumber(analysis.normalized_consumption, 1)} m³`, 14, 102);
+      if (analysis.historical_average) {
+        doc.text(`Média Histórica: ${formatNumber(analysis.historical_average, 1)} m³`, 14, 108);
+      }
+
+      // Tariff breakdown
+      doc.setFontSize(12);
+      doc.text("Detalhamento Tarifário", 14, 122);
+
+      const tableData = analysis.tariff_breakdown.map((item) => [
+        item.range,
+        formatNumber(item.volume, 1),
+        formatCurrency(item.price),
+        formatCurrency(item.subtotal),
+      ]);
+
+      (doc as any).autoTable({
+        startY: 128,
+        head: [["Faixa", "Volume (m³)", "Preço/m³", "Subtotal"]],
+        body: tableData,
+        theme: "striped",
+        headStyles: { fillColor: [59, 130, 246] },
+      });
+
+      const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+      // Summary
+      doc.setFontSize(12);
+      doc.text("Resumo Financeiro", 14, finalY);
+      
+      doc.setFontSize(10);
+      doc.text(`Valor da Água: ${formatCurrency(analysis.water_value)}`, 14, finalY + 8);
+      doc.text(`Valor do Esgoto: ${formatCurrency(analysis.sewer_value)}`, 14, finalY + 14);
+      doc.text(`Taxa Fixa: ${formatCurrency(analysis.fixed_fee)}`, 14, finalY + 20);
+      doc.text(`Total Técnico Justo: ${formatCurrency(analysis.total_technical_value)}`, 14, finalY + 26);
+      doc.text(`Valor Cobrado: ${formatCurrency(analysis.charged_value)}`, 14, finalY + 32);
+      
+      const diff = analysis.difference_absolute;
+      doc.setTextColor(diff > 0 ? 220 : 40, diff > 0 ? 53 : 167, diff > 0 ? 69 : 69);
+      doc.text(`Diferença: ${formatCurrency(diff)} (${formatNumber(analysis.difference_percent, 1)}%)`, 14, finalY + 38);
+
+      // Diagnosis
+      doc.setTextColor(33, 37, 41);
+      doc.setFontSize(12);
+      doc.text("Diagnóstico Técnico", 14, finalY + 52);
+
+      doc.setFontSize(9);
+      let diagY = finalY + 60;
+      analysis.diagnosis_items.forEach((item) => {
+        const lines = doc.splitTextToSize(item, pageWidth - 28);
+        doc.text(lines, 14, diagY);
+        diagY += lines.length * 5 + 3;
+      });
+
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(108, 117, 125);
+      doc.text("Relatório gerado pelo Sistema de Análise de Contas de Água - AMBJE", pageWidth / 2, 285, { align: "center" });
+
+      doc.save(`relatorio-conta-agua-${analysis.cdc_dv}-${formatDate(analysis.created_at).replace(/\//g, "-")}.pdf`);
+
+      toast({
+        title: "PDF gerado!",
+        description: "O relatório foi baixado com sucesso.",
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast({
+        title: "Erro ao gerar PDF",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   return (
@@ -171,13 +291,27 @@ const SearchAnalysisModal = () => {
 
           {selectedAnalysis && (
             <div className="space-y-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedAnalysis(null)}
-              >
-                ← Voltar para lista
-              </Button>
+              <div className="flex items-center justify-between">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedAnalysis(null)}
+                >
+                  ← Voltar para lista
+                </Button>
+                <Button
+                  onClick={() => generatePDF(selectedAnalysis)}
+                  disabled={isGeneratingPdf}
+                  className="gap-2"
+                >
+                  {isGeneratingPdf ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <FileText className="h-4 w-4" />
+                  )}
+                  Exportar PDF
+                </Button>
+              </div>
 
               <div className="bg-card rounded-lg p-4 border border-border">
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
