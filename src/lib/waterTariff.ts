@@ -166,14 +166,21 @@ export const classifyConsumption = (
   return { classification, deviation, deviationPercent };
 };
 
+export type DiagnosisType = "warning" | "info" | "success" | "danger" | "money";
+
+export interface DiagnosisItem {
+  type: DiagnosisType;
+  message: string;
+}
+
 export const generateDiagnosis = (
   cycleDays: number,
   normalizedConsumption: number,
   historicalAverage: number,
   chargedValue: number,
   calculatedTotal: number
-): string[] => {
-  const diagnosis: string[] = [];
+): DiagnosisItem[] => {
+  const diagnosis: DiagnosisItem[] = [];
   const { classification, deviationPercent } = classifyConsumption(
     normalizedConsumption,
     historicalAverage
@@ -181,50 +188,56 @@ export const generateDiagnosis = (
 
   // Reading delay distortion
   if (cycleDays > 30) {
-    diagnosis.push(
-      `⚠️ Distorção por atraso de leitura: O ciclo teve ${cycleDays} dias (${cycleDays - 30} dias a mais que o padrão de 30 dias), o que pode ter inflacionado o consumo aparente.`
-    );
+    diagnosis.push({
+      type: "warning",
+      message: `Distorção por atraso de leitura: O ciclo teve ${cycleDays} dias (${cycleDays - 30} dias a mais que o padrão de 30 dias), o que pode ter inflacionado o consumo aparente.`
+    });
   } else if (cycleDays < 28) {
-    diagnosis.push(
-      `📌 Ciclo reduzido: O período teve apenas ${cycleDays} dias, o que pode subestimar o consumo mensal real.`
-    );
+    diagnosis.push({
+      type: "info",
+      message: `Ciclo reduzido: O período teve apenas ${cycleDays} dias, o que pode subestimar o consumo mensal real.`
+    });
   }
 
   // Progressive tariff impact
   if (normalizedConsumption > 30) {
-    diagnosis.push(
-      `💰 Impacto da tarifa progressiva: Consumo de ${normalizedConsumption.toFixed(1)} m³ atinge faixas superiores com valores mais altos por m³.`
-    );
+    diagnosis.push({
+      type: "money",
+      message: `Impacto da tarifa progressiva: Consumo de ${normalizedConsumption.toFixed(1)} m³ atinge faixas superiores com valores mais altos por m³.`
+    });
   }
 
   // Statistical deviation
   if (historicalAverage > 0) {
     if (Math.abs(deviationPercent) > 10) {
-      diagnosis.push(
-        `📊 Desvio estatístico: Consumo ${deviationPercent > 0 ? "acima" : "abaixo"} da média histórica em ${Math.abs(deviationPercent).toFixed(1)}%.`
-      );
+      diagnosis.push({
+        type: deviationPercent > 0 ? "warning" : "success",
+        message: `Desvio estatístico: Consumo ${deviationPercent > 0 ? "acima" : "abaixo"} da média histórica em ${Math.abs(deviationPercent).toFixed(1)}%.`
+      });
     }
   }
 
   // Consumption classification
-  const classificationLabels = {
-    normal: "✅ Classificação: Consumo NORMAL dentro do padrão histórico.",
-    elevated: "⚡ Classificação: Consumo ELEVADO POR PERÍODO - pode indicar uso sazonal ou ciclo estendido.",
-    anomalous: "🚨 Classificação: Consumo ANÔMALO - desvio significativo que requer investigação.",
+  const classificationItems: Record<string, DiagnosisItem> = {
+    normal: { type: "success", message: "Classificação: Consumo NORMAL dentro do padrão histórico." },
+    elevated: { type: "warning", message: "Classificação: Consumo ELEVADO POR PERÍODO - pode indicar uso sazonal ou ciclo estendido." },
+    anomalous: { type: "danger", message: "Classificação: Consumo ANÔMALO - desvio significativo que requer investigação." },
   };
-  diagnosis.push(classificationLabels[classification]);
+  diagnosis.push(classificationItems[classification]);
 
   // Billing comparison
   const difference = chargedValue - calculatedTotal;
   if (Math.abs(difference) > 1) {
     if (difference > 0) {
-      diagnosis.push(
-        `💸 Cobrança superior: Valor cobrado R$ ${chargedValue.toFixed(2)} excede o valor técnico R$ ${calculatedTotal.toFixed(2)} em R$ ${difference.toFixed(2)}.`
-      );
+      diagnosis.push({
+        type: "danger",
+        message: `Cobrança superior: Valor cobrado R$ ${chargedValue.toFixed(2)} excede o valor técnico R$ ${calculatedTotal.toFixed(2)} em R$ ${difference.toFixed(2)}.`
+      });
     } else {
-      diagnosis.push(
-        `✔️ Cobrança compatível: Valor cobrado está R$ ${Math.abs(difference).toFixed(2)} abaixo do cálculo técnico.`
-      );
+      diagnosis.push({
+        type: "success",
+        message: `Cobrança compatível: Valor cobrado está R$ ${Math.abs(difference).toFixed(2)} abaixo do cálculo técnico.`
+      });
     }
   }
 
