@@ -185,8 +185,10 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
     setIsGenerating(true);
 
     try {
-      const { default: jsPDF } = await import("jspdf");
-      await import("jspdf-autotable");
+      const jsPDFModule = await import("jspdf");
+      const jsPDF = jsPDFModule.default;
+      const autoTableModule = await import("jspdf-autotable");
+      const autoTable = autoTableModule.default;
       
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -244,7 +246,7 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         }
       }
 
-      (doc as any).autoTable({
+      autoTable(doc, {
         startY: currentY,
         body: indicatorsData,
         theme: "plain",
@@ -270,7 +272,7 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         formatCurrency(item.subtotal),
       ]);
 
-      (doc as any).autoTable({
+      autoTable(doc, {
         startY: currentY,
         head: [["Faixa de Consumo", "Volume", "Preço Unitário", "Subtotal"]],
         body: tableData,
