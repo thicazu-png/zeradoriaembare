@@ -1,3 +1,4 @@
+import { HelpCircle } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -7,6 +8,11 @@ import {
   TableRow,
   TableFooter,
 } from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   WATER_TARIFF_TABLE,
   calculateWaterBill,
@@ -124,7 +130,25 @@ const SimulationTab = ({ data }: SimulationTabProps) => {
           </div>
 
           <div className="bg-primary/10 rounded-lg p-4 border border-primary/20">
-            <h3 className="font-semibold text-foreground mb-4">📝 Resumo do Valor Técnico Justo</h3>
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="font-semibold text-foreground">📝 Resumo do Valor Técnico Justo</h3>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="text-muted-foreground hover:text-foreground transition-colors">
+                    <HelpCircle className="h-4 w-4" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 text-sm">
+                  <h4 className="font-semibold mb-2">O que é o Valor Técnico Justo?</h4>
+                  <p className="text-muted-foreground">
+                    É o valor calculado aplicando-se a tabela tarifária oficial do SAAE sobre o 
+                    <strong> consumo normalizado para 30 dias</strong>. Isso corrige distorções 
+                    causadas por ciclos de leitura irregulares (maiores ou menores que 30 dias), 
+                    permitindo uma comparação justa com o valor efetivamente cobrado na conta.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Valor da Água:</span>
