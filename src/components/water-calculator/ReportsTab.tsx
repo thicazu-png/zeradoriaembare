@@ -424,6 +424,69 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         currentY += chartHeight + 15;
       }
 
+      // ============ METHODOLOGY SECTION ============
+      // Check if there's space for methodology on page 1, otherwise add new page
+      if (currentY + 80 > 275) {
+        doc.addPage();
+        currentY = 20;
+      }
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(59, 130, 246);
+      doc.text("METODOLOGIA DO CÁLCULO DO VALOR JUSTO", 14, currentY);
+      currentY += 7;
+
+      // Methodology explanation
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(33, 37, 41);
+
+      const methodologySteps = [
+        {
+          title: "1ª Etapa: Identificação do Período Real de Leitura",
+          text: `O ciclo de faturamento analisado teve ${cycleData.cycleDays} dias, diferente do mês padrão de 30 dias. Isso significa que o consumo medido não corresponde a um "mês normal", mas a ${cycleData.cycleDays > 30 ? "mais" : "menos"} dias acumulados no mesmo faturamento.`
+        },
+        {
+          title: "2ª Etapa: Cálculo Proporcional (Pró-rata)",
+          text: `O consumo total de ${formatNumber(cycleData.consumption, 1)} m³ foi dividido pelos ${cycleData.cycleDays} dias do período, obtendo-se o consumo diário médio de ${formatNumber(cycleData.dailyConsumption, 3)} m³/dia. Multiplicando por 30 dias, obtém-se a metragem cúbica equivalente mensal de ${formatNumber(cycleData.normalizedConsumption, 1)} m³.`
+        },
+        {
+          title: "3ª Etapa: Aplicação da Tabela Tarifária Progressiva",
+          text: `A metragem normalizada de ${formatNumber(cycleData.normalizedConsumption, 1)} m³ foi aplicada às faixas tarifárias progressivas do SAAE${data.includeSewer ? ", incluindo esgoto (100% da água)" : ""}. Somando-se a taxa fixa de ${formatCurrency(data.fixedFee)}, obtém-se o Valor Técnico Justo de ${formatCurrency(billData.total)}.`
+        },
+        {
+          title: "Comparação com Histórico",
+          text: historicalAverage.monthlyAverage > 0 
+            ? `Comparando o consumo normalizado de ${formatNumber(cycleData.normalizedConsumption, 1)} m³ com a média histórica de ${formatNumber(historicalAverage.monthlyAverage, 1)} m³, constata-se desvio de ${classification ? (classification.deviationPercent > 0 ? "+" : "") + formatNumber(classification.deviationPercent, 1) : "0"}%. Esta análise demonstra que, mesmo após o ajuste proporcional, o consumo pode apresentar discrepâncias indicando outras distorções no processo de medição ou faturamento.`
+            : `Sem dados históricos suficientes para comparação. A inclusão do histórico de consumo permite identificar discrepâncias além das causadas pelo período irregular de leitura.`
+        }
+      ];
+
+      methodologySteps.forEach((step) => {
+        // Check for page break
+        if (currentY + 20 > 275) {
+          doc.addPage();
+          currentY = 20;
+        }
+
+        // Step title in bold
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.setTextColor(33, 37, 41);
+        doc.text(step.title, 14, currentY);
+        currentY += 4;
+
+        // Step text
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7);
+        const wrappedText = doc.splitTextToSize(step.text, pageWidth - 28);
+        doc.text(wrappedText, 14, currentY);
+        currentY += wrappedText.length * 3.5 + 3;
+      });
+
+      currentY += 5;
+
       // ============ PAGE 2: DETAILED TABLES ============
       doc.addPage();
       currentY = 20;
