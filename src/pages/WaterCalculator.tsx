@@ -1,0 +1,128 @@
+import { useState } from "react";
+import { ArrowLeft, Calculator, FileSpreadsheet, BarChart3, GitCompare, Search, FileText, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import logoSaae from "@/assets/logo-saae.png";
+import DataEntryTab from "@/components/water-calculator/DataEntryTab";
+import HistoryTab from "@/components/water-calculator/HistoryTab";
+import SimulationTab from "@/components/water-calculator/SimulationTab";
+import ComparisonTab from "@/components/water-calculator/ComparisonTab";
+import AnalysisTab from "@/components/water-calculator/AnalysisTab";
+import ReportsTab from "@/components/water-calculator/ReportsTab";
+import CommunityTab from "@/components/water-calculator/CommunityTab";
+import type { ResidenceData, HistoricalEntry } from "@/lib/waterTariff";
+
+const initialResidenceData: ResidenceData = {
+  userName: "",
+  cdcDv: "",
+  previousReadingDate: null,
+  currentReadingDate: null,
+  previousReading: 0,
+  currentReading: 0,
+  chargedValue: 0,
+  fixedFee: 25.0,
+  includeSewer: true,
+};
+
+const WaterCalculator = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("entrada");
+  const [residenceData, setResidenceData] = useState<ResidenceData>(initialResidenceData);
+  const [historicalEntries, setHistoricalEntries] = useState<HistoricalEntry[]>([]);
+
+  const handleResidenceDataChange = (data: Partial<ResidenceData>) => {
+    setResidenceData((prev) => ({ ...prev, ...data }));
+  };
+
+  const tabs = [
+    { id: "entrada", label: "Entrada", icon: FileSpreadsheet },
+    { id: "historico", label: "Histórico", icon: BarChart3 },
+    { id: "simulacao", label: "Simulação", icon: Calculator },
+    { id: "comparacao", label: "Comparação", icon: GitCompare },
+    { id: "analise", label: "Análise", icon: Search },
+    { id: "relatorios", label: "Relatórios", icon: FileText },
+    { id: "comunidade", label: "Comunidade", icon: Users },
+  ];
+
+  return (
+    <div
+      style={{
+        backgroundImage: "url('/images/background.jpg')",
+      }}
+      className="min-h-screen bg-cover bg-center bg-fixed"
+    >
+      <div className="min-h-screen bg-background/90 backdrop-blur-sm">
+        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+          <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <img src={logoSaae} alt="SAAE" className="h-8 w-auto" />
+            <div className="flex-1">
+              <h1 className="text-sm font-bold text-foreground">Análise de Conta de Água</h1>
+              <p className="text-xs text-muted-foreground">Calculadora Técnica</p>
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-lg mx-auto px-4 py-4 pb-safe">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="w-full h-auto flex-wrap gap-1 bg-muted/50 p-1.5 rounded-lg">
+              {tabs.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="flex-1 min-w-[80px] text-xs py-2 px-2 data-[state=active]:bg-background"
+                >
+                  <tab.icon className="h-3.5 w-3.5 mr-1" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            <div className="mt-4">
+              <TabsContent value="entrada" className="mt-0">
+                <DataEntryTab data={residenceData} onChange={handleResidenceDataChange} />
+              </TabsContent>
+
+              <TabsContent value="historico" className="mt-0">
+                <HistoryTab entries={historicalEntries} onChange={setHistoricalEntries} />
+              </TabsContent>
+
+              <TabsContent value="simulacao" className="mt-0">
+                <SimulationTab data={residenceData} />
+              </TabsContent>
+
+              <TabsContent value="comparacao" className="mt-0">
+                <ComparisonTab data={residenceData} historicalEntries={historicalEntries} />
+              </TabsContent>
+
+              <TabsContent value="analise" className="mt-0">
+                <AnalysisTab data={residenceData} historicalEntries={historicalEntries} />
+              </TabsContent>
+
+              <TabsContent value="relatorios" className="mt-0">
+                <ReportsTab data={residenceData} historicalEntries={historicalEntries} />
+              </TabsContent>
+
+              <TabsContent value="comunidade" className="mt-0">
+                <CommunityTab />
+              </TabsContent>
+            </div>
+          </Tabs>
+
+          <div className="mt-6 p-4 bg-muted/50 rounded-lg text-center">
+            <p className="text-xs text-muted-foreground">
+              Ferramenta técnica para cidadãos, comunidades, associações de bairro, 
+              auditoria de faturamento, controle social do serviço público, 
+              demandas administrativas, ações coletivas, análise jurídica e defesa do consumidor.
+            </p>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default WaterCalculator;
