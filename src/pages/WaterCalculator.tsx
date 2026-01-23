@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Calculator, FileSpreadsheet, BarChart3, GitCompare, Search, FileText, Users } from "lucide-react";
+import { ArrowLeft, Calculator, FileSpreadsheet, BarChart3, GitCompare, Search, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,7 +10,7 @@ import SimulationTab from "@/components/water-calculator/SimulationTab";
 import ComparisonTab from "@/components/water-calculator/ComparisonTab";
 import AnalysisTab from "@/components/water-calculator/AnalysisTab";
 import ReportsTab from "@/components/water-calculator/ReportsTab";
-import CommunityTab from "@/components/water-calculator/CommunityTab";
+
 import type { ResidenceData, HistoricalEntry } from "@/lib/waterTariff";
 
 const initialResidenceData: ResidenceData = {
@@ -42,7 +42,6 @@ const WaterCalculator = () => {
     { id: "comparacao", label: "Comparação", icon: GitCompare },
     { id: "analise", label: "Análise", icon: Search },
     { id: "relatorios", label: "Relatórios", icon: FileText },
-    { id: "comunidade", label: "Comunidade", icon: Users },
   ];
 
   return (
@@ -106,9 +105,6 @@ const WaterCalculator = () => {
                 <ReportsTab data={residenceData} historicalEntries={historicalEntries} />
               </TabsContent>
 
-              <TabsContent value="comunidade" className="mt-0">
-                <CommunityTab />
-              </TabsContent>
             </div>
           </Tabs>
 
