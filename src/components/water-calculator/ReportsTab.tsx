@@ -301,51 +301,96 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
 
       currentY += 44;
 
-      // Evolution chart (if historical data exists)
-      if (historicalChartData.length > 0) {
+      // Evolution chart (if historical data exists or we have current cycle data)
+      if (historicalChartData.length > 0 || cycleData) {
         doc.setFontSize(11);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(59, 130, 246);
         doc.text("EVOLUÇÃO DO CONSUMO", 14, currentY);
         currentY += 6;
 
+        // Prepare chart data including current month (January 2026) for visual comparison
+        type ChartEntry = { month: string; consumo: number; normalizado: number; isCurrentMonth?: boolean };
+        const chartDataWithCurrent: ChartEntry[] = historicalChartData.map(e => ({ ...e, isCurrentMonth: false }));
+        
+        // Add current month (mês reclamado) for visual comparison - marked as January
+        if (cycleData) {
+          chartDataWithCurrent.push({
+            month: "01/2026",
+            consumo: cycleData.consumption,
+            normalizado: cycleData.normalizedConsumption,
+            isCurrentMonth: true
+          });
+        }
+
         // Draw chart axes
         const chartX = 20;
         const chartY = currentY + 5;
         const chartWidth = pageWidth - 40;
-        const chartHeight = 45;
+        const chartHeight = 55;
 
         // Background
         doc.setFillColor(250, 250, 250);
         doc.rect(chartX, chartY, chartWidth, chartHeight, "F");
 
-        // Find max value for scaling
-        const maxConsumo = Math.max(...historicalChartData.map(d => Math.max(d.consumo, d.normalizado)), 1);
-        const barWidth = (chartWidth - 10) / (historicalChartData.length * 2 + 1);
+        // Find max value for scaling (including current month)
+        const maxConsumo = Math.max(...chartDataWithCurrent.map(d => Math.max(d.consumo, d.normalizado)), 1);
+        const barWidth = (chartWidth - 10) / (chartDataWithCurrent.length * 2 + 1);
 
         // Draw bars
-        historicalChartData.forEach((entry, i) => {
+        chartDataWithCurrent.forEach((entry, i) => {
           const x = chartX + 5 + i * barWidth * 2;
+          const isCurrentMonth = entry.isCurrentMonth || false;
           
-          // Consumo bar (primary color)
-          const consumoHeight = (entry.consumo / maxConsumo) * (chartHeight - 15);
-          doc.setFillColor(59, 130, 246);
-          doc.rect(x, chartY + chartHeight - 10 - consumoHeight, barWidth * 0.8, consumoHeight, "F");
+          // Consumo bar (primary color, or orange for current month)
+          const consumoHeight = (entry.consumo / maxConsumo) * (chartHeight - 25);
+          if (isCurrentMonth) {
+            doc.setFillColor(249, 115, 22); // Orange for current/claimed month
+          } else {
+            doc.setFillColor(59, 130, 246);
+          }
+          doc.rect(x, chartY + chartHeight - 15 - consumoHeight, barWidth * 0.8, consumoHeight, "F");
 
-          // Normalizado bar (lighter)
-          const normHeight = (entry.normalizado / maxConsumo) * (chartHeight - 15);
-          doc.setFillColor(147, 197, 253);
-          doc.rect(x + barWidth * 0.9, chartY + chartHeight - 10 - normHeight, barWidth * 0.8, normHeight, "F");
+          // Value label on top of consumo bar
+          doc.setFontSize(5);
+          doc.setTextColor(33, 37, 41);
+          doc.text(formatNumber(entry.consumo, 0), x + barWidth * 0.4, chartY + chartHeight - 17 - consumoHeight, { align: "center" });
+
+          // Normalizado bar (lighter, or light orange for current month)
+          const normHeight = (entry.normalizado / maxConsumo) * (chartHeight - 25);
+          if (isCurrentMonth) {
+            doc.setFillColor(253, 186, 116); // Light orange for current month
+          } else {
+            doc.setFillColor(147, 197, 253);
+          }
+          doc.rect(x + barWidth * 0.9, chartY + chartHeight - 15 - normHeight, barWidth * 0.8, normHeight, "F");
+
+          // Value label on top of normalizado bar
+          doc.setFontSize(5);
+          doc.setTextColor(33, 37, 41);
+          doc.text(formatNumber(entry.normalizado, 0), x + barWidth * 0.9 + barWidth * 0.4, chartY + chartHeight - 17 - normHeight, { align: "center" });
 
           // Month label
           doc.setFontSize(6);
-          doc.setTextColor(108, 117, 125);
-          doc.text(entry.month, x + barWidth * 0.5, chartY + chartHeight - 3, { align: "center" });
+          if (isCurrentMonth) {
+            doc.setTextColor(249, 115, 22);
+            doc.setFont("helvetica", "bold");
+          } else {
+            doc.setTextColor(108, 117, 125);
+            doc.setFont("helvetica", "normal");
+          }
+          doc.text(entry.month, x + barWidth * 0.9, chartY + chartHeight - 5, { align: "center" });
+          
+          // Add "(reclamado)" label for current month
+          if (isCurrentMonth) {
+            doc.setFontSize(4);
+            doc.text("(reclamado)", x + barWidth * 0.9, chartY + chartHeight - 1, { align: "center" });
+          }
         });
 
         // Average line
         if (historicalAverage.monthlyAverage > 0) {
-          const avgY = chartY + chartHeight - 10 - (historicalAverage.monthlyAverage / maxConsumo) * (chartHeight - 15);
+          const avgY = chartY + chartHeight - 15 - (historicalAverage.monthlyAverage / maxConsumo) * (chartHeight - 25);
           doc.setDrawColor(220, 53, 69);
           doc.setLineWidth(0.3);
           doc.setLineDashPattern([2, 2], 0);
@@ -353,19 +398,28 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
           doc.setLineDashPattern([], 0);
           doc.setFontSize(6);
           doc.setTextColor(220, 53, 69);
-          doc.text(`Média: ${formatNumber(historicalAverage.monthlyAverage, 1)}`, chartX + chartWidth - 2, avgY - 2, { align: "right" });
+          doc.text(`Média: ${formatNumber(historicalAverage.monthlyAverage, 1)} m³`, chartX + chartWidth - 2, avgY - 2, { align: "right" });
         }
 
         // Legend
-        doc.setFontSize(7);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(6);
         doc.setFillColor(59, 130, 246);
-        doc.rect(chartX, chartY + chartHeight + 2, 8, 3, "F");
+        doc.rect(chartX, chartY + chartHeight + 3, 6, 2.5, "F");
         doc.setTextColor(33, 37, 41);
-        doc.text("Consumo Real", chartX + 10, chartY + chartHeight + 5);
+        doc.text("Real (m³)", chartX + 8, chartY + chartHeight + 5);
         
         doc.setFillColor(147, 197, 253);
-        doc.rect(chartX + 50, chartY + chartHeight + 2, 8, 3, "F");
-        doc.text("Normalizado 30d", chartX + 60, chartY + chartHeight + 5);
+        doc.rect(chartX + 35, chartY + chartHeight + 3, 6, 2.5, "F");
+        doc.text("Norm. 30d (m³)", chartX + 43, chartY + chartHeight + 5);
+
+        doc.setFillColor(249, 115, 22);
+        doc.rect(chartX + 80, chartY + chartHeight + 3, 6, 2.5, "F");
+        doc.text("Mês Reclamado", chartX + 88, chartY + chartHeight + 5);
+        
+        doc.setFillColor(253, 186, 116);
+        doc.rect(chartX + 125, chartY + chartHeight + 3, 6, 2.5, "F");
+        doc.text("Recl. Norm.", chartX + 133, chartY + chartHeight + 5);
 
         currentY += chartHeight + 15;
       }
