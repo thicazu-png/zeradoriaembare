@@ -138,30 +138,33 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
     synthesis += `- Taxa fixa de resíduos: ${formatCurrency(data.fixedFee)}\n`;
     synthesis += `- VALOR TÉCNICO JUSTO TOTAL: ${formatCurrency(billData.total)}\n\n`;
     
-    // Billing comparison - HIGHLIGHT (same format as COMPARAÇÃO COM HISTÓRICO)
+    // Billing comparison - same format as COMPARAÇÃO COM HISTÓRICO
     synthesis += `RESULTADO DA ANÁLISE - DESTAQUES\n`;
     synthesis += `Consumo Normalizado (30 dias): ${formatNumber(cycleData.normalizedConsumption, 1)} m³. `;
     synthesis += `Valor Técnico Justo a ser Cobrado: ${formatCurrency(billData.total)}. `;
     synthesis += `Valor Efetivamente Cobrado na Conta: ${formatCurrency(data.chargedValue)}. `;
     synthesis += `Diferença: ${formatCurrency(diff)} (${formatNumber(diffPercent, 1)}%).\n\n`;
     
+    // CONCLUSÃO section - will be rendered as highlighted box
+    synthesis += `CONCLUSÃO_BOX_START\n`;
     if (Math.abs(diff) > 1) {
       if (diff > 0) {
-        synthesis += `CONCLUSÃO: O valor cobrado na conta está ${formatCurrency(diff)} ACIMA do valor técnico justo. `;
+        synthesis += `O valor cobrado na conta está ${formatCurrency(diff)} ACIMA do valor técnico justo. `;
         synthesis += `Esta diferença de ${formatNumber(diffPercent, 1)}% pode decorrer de: `;
         synthesis += `(1) Ciclo de faturamento superior a 30 dias (${cycleData.cycleDays} dias neste caso); `;
         synthesis += `(2) Inclusão de taxas ou multas não informadas; `;
         synthesis += `(3) Erro de cálculo na aplicação da tarifa progressiva. `;
         synthesis += `Recomenda-se verificar a composição detalhada da fatura junto ao SAAE e, `;
-        synthesis += `se confirmada a cobrança indevida, solicitar revisão formal.\n`;
+        synthesis += `se confirmada a cobrança indevida, solicitar revisão formal.`;
       } else {
-        synthesis += `CONCLUSÃO: O valor cobrado está ${formatCurrency(Math.abs(diff))} ABAIXO do valor técnico calculado, `;
-        synthesis += `indicando possível desconto, isenção ou benefício tarifário aplicado.\n`;
+        synthesis += `O valor cobrado está ${formatCurrency(Math.abs(diff))} ABAIXO do valor técnico calculado, `;
+        synthesis += `indicando possível desconto, isenção ou benefício tarifário aplicado.`;
       }
     } else {
-      synthesis += `CONCLUSÃO: O valor cobrado está compatível com o cálculo técnico, `;
-      synthesis += `com diferença desprezível de ${formatCurrency(Math.abs(diff))}.\n`;
+      synthesis += `O valor cobrado está compatível com o cálculo técnico, `;
+      synthesis += `com diferença desprezível de ${formatCurrency(Math.abs(diff))}.`;
     }
+    synthesis += `\nCONCLUSÃO_BOX_END`;
     
     return synthesis;
   };
@@ -312,18 +315,15 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
 
       currentY += 56;
 
-      // Check if we need a new page for diagnosis
-      if (currentY > 220) {
-        doc.addPage();
-        currentY = 20;
-      }
-
-      // Diagnosis section
-      doc.setFontSize(11);
+      // Diagnosis section - same formatting as SÍNTESE DISCURSIVA
+      doc.addPage();
+      currentY = 20;
+      
+      doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(33, 37, 41);
-      doc.text("DIAGNÓSTICO TÉCNICO AUTOMÁTICO", 14, currentY);
-      currentY += 6;
+      doc.text("DIAGNÓSTICO TÉCNICO AUTOMÁTICO", pageWidth / 2, currentY, { align: "center" });
+      currentY += 10;
 
       const diagnosis = generateDiagnosis(
         cycleData.cycleDays,
@@ -347,12 +347,12 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         if (!cleanText) return;
         
         const lines = doc.splitTextToSize(cleanText, pageWidth - 28);
-        if (currentY + lines.length * 4 > 270) {
+        if (currentY + lines.length * 5 > 275) {
           doc.addPage();
           currentY = 20;
         }
         doc.text(lines, 14, currentY);
-        currentY += lines.length * 4 + 3;
+        currentY += lines.length * 5 + 3;
       });
 
       // New page for discursive synthesis
@@ -369,10 +369,53 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       const synthesis = generateDiscursiveSynthesis();
       const synthesisParts = synthesis.split("\n");
       
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
+      let insideConclusionBox = false;
+      let conclusionText = "";
       
       synthesisParts.forEach((line) => {
+        // Handle conclusion box markers
+        if (line.includes("CONCLUSÃO_BOX_START")) {
+          insideConclusionBox = true;
+          conclusionText = "";
+          return;
+        }
+        
+        if (line.includes("CONCLUSÃO_BOX_END")) {
+          insideConclusionBox = false;
+          
+          // Draw conclusion box similar to RESUMO FINANCEIRO
+          if (currentY + 40 > 275) {
+            doc.addPage();
+            currentY = 20;
+          }
+          
+          const boxHeight = 35;
+          doc.setFillColor(254, 243, 199); // Yellow background
+          doc.roundedRect(14, currentY, pageWidth - 28, boxHeight, 3, 3, "F");
+          doc.setDrawColor(251, 191, 36);
+          doc.setLineWidth(0.5);
+          doc.roundedRect(14, currentY, pageWidth - 28, boxHeight, 3, 3, "S");
+          
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(146, 64, 14);
+          doc.text("CONCLUSÃO", pageWidth / 2, currentY + 7, { align: "center" });
+          
+          doc.setFontSize(9);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(33, 37, 41);
+          const conclusionLines = doc.splitTextToSize(conclusionText.trim(), pageWidth - 36);
+          doc.text(conclusionLines, 18, currentY + 14);
+          
+          currentY += boxHeight + 6;
+          return;
+        }
+        
+        if (insideConclusionBox) {
+          conclusionText += line + " ";
+          return;
+        }
+        
         // Clean formatting characters
         const cleanLine = line
           .replace(/[═─│┌┐└┘├┤┬┴┼]/g, "")
@@ -383,25 +426,32 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         
         // Check for section headers (all uppercase words)
         if (cleanLine.match(/^[A-ZÇÃÉÍÓÚÂÊÔÀÈ\s-]+$/) && cleanLine.length > 3) {
+          doc.setFontSize(10);
           doc.setFont("helvetica", "bold");
           doc.setTextColor(59, 130, 246);
-        } else if (cleanLine.startsWith("CONCLUSÃO")) {
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(33, 37, 41);
+          
+          if (currentY + 8 > 275) {
+            doc.addPage();
+            currentY = 20;
+          }
+          
+          doc.text(cleanLine, 14, currentY);
+          currentY += 6;
         } else {
+          doc.setFontSize(9);
           doc.setFont("helvetica", "normal");
           doc.setTextColor(33, 37, 41);
+          
+          const wrappedLines = doc.splitTextToSize(cleanLine, pageWidth - 28);
+          
+          if (currentY + wrappedLines.length * 5 > 275) {
+            doc.addPage();
+            currentY = 20;
+          }
+          
+          doc.text(wrappedLines, 14, currentY);
+          currentY += wrappedLines.length * 5 + 3;
         }
-
-        const wrappedLines = doc.splitTextToSize(cleanLine, pageWidth - 28);
-        
-        if (currentY + wrappedLines.length * 4 > 275) {
-          doc.addPage();
-          currentY = 20;
-        }
-        
-        doc.text(wrappedLines, 14, currentY);
-        currentY += wrappedLines.length * 4 + 2;
       });
 
       // Footer on all pages
@@ -438,31 +488,15 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       <div className="bg-card rounded-lg p-4 border border-border">
         <h3 className="font-semibold text-foreground mb-4">📄 Relatórios Disponíveis</h3>
         
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="flex justify-center">
           <Button
             onClick={generatePDF}
             disabled={!hasValidData || isGenerating}
-            className="h-auto py-4 flex-col gap-2"
+            className="h-auto py-4 px-8 flex-col gap-2"
           >
             <FileText className="h-6 w-6" />
             <span>Relatório Técnico Individual</span>
             <span className="text-xs opacity-80">PDF completo com análise</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            disabled={historicalEntries.length === 0}
-            className="h-auto py-4 flex-col gap-2"
-            onClick={() => {
-              toast({
-                title: "Em breve",
-                description: "Relatório comparativo será disponibilizado em breve.",
-              });
-            }}
-          >
-            <BarChart3 className="h-6 w-6" />
-            <span>Relatório Comparativo</span>
-            <span className="text-xs opacity-80">Análise histórica</span>
           </Button>
         </div>
       </div>
