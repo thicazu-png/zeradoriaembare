@@ -1,4 +1,9 @@
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, HelpCircle } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   calculateWaterBill,
   calculateCycleData,
@@ -64,7 +69,25 @@ const ComparisonTab = ({ data, historicalEntries }: ComparisonTabProps) => {
           </div>
           
           <div className="bg-primary/10 rounded-lg p-4 border border-primary/20">
-            <p className="text-sm text-muted-foreground mb-1">Valor Técnico Justo</p>
+            <div className="flex items-center gap-1 mb-1">
+              <p className="text-sm text-muted-foreground">Valor Técnico Justo</p>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="text-muted-foreground hover:text-foreground transition-colors">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 text-sm">
+                  <h4 className="font-semibold mb-2">O que é o Valor Técnico Justo?</h4>
+                  <p className="text-muted-foreground">
+                    É o valor calculado aplicando-se a tabela tarifária oficial do SAAE sobre o 
+                    <strong> consumo normalizado para 30 dias</strong>. Isso corrige distorções 
+                    causadas por ciclos de leitura irregulares (maiores ou menores que 30 dias), 
+                    permitindo uma comparação justa com o valor efetivamente cobrado na conta.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </div>
             <p className="text-2xl font-bold text-primary">{formatCurrency(billData.total)}</p>
           </div>
         </div>
