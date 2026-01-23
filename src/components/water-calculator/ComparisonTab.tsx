@@ -81,8 +81,8 @@ const ComparisonTab = ({ data, historicalEntries }: ComparisonTabProps) => {
                   <h4 className="font-semibold mb-2">O que é o Valor Técnico Justo?</h4>
                   <p className="text-muted-foreground">
                     É o valor calculado aplicando-se a tabela tarifária oficial do SAAE sobre o 
-                    <strong> consumo normalizado para 30 dias</strong>. Isso corrige distorções 
-                    causadas por ciclos de leitura irregulares (maiores ou menores que 30 dias), 
+                    <strong> consumo normalizado para 30 dias</strong>, considerando sua média histórica informada. 
+                    Isso corrige distorções causadas por ciclos de leitura irregulares (maiores ou menores que 30 dias), 
                     permitindo uma comparação justa com o valor efetivamente cobrado na conta.
                   </p>
                 </PopoverContent>
