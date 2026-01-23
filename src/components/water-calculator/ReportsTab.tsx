@@ -138,24 +138,20 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
     synthesis += `- Taxa fixa de resíduos: ${formatCurrency(data.fixedFee)}\n`;
     synthesis += `- VALOR TÉCNICO JUSTO TOTAL: ${formatCurrency(billData.total)}\n\n`;
     
-    // Billing comparison - HIGHLIGHT
-    synthesis += `═══════════════════════════════════════════════════════\n`;
-    synthesis += `             RESULTADO DA ANÁLISE - DESTAQUES\n`;
-    synthesis += `═══════════════════════════════════════════════════════\n\n`;
-    
-    synthesis += `► CONSUMO NORMALIZADO (30 dias): ${formatNumber(cycleData.normalizedConsumption, 1)} m³\n`;
-    synthesis += `► VALOR TÉCNICO JUSTO A SER COBRADO: ${formatCurrency(billData.total)}\n`;
-    synthesis += `► VALOR EFETIVAMENTE COBRADO NA CONTA: ${formatCurrency(data.chargedValue)}\n\n`;
+    // Billing comparison - HIGHLIGHT (same format as COMPARAÇÃO COM HISTÓRICO)
+    synthesis += `RESULTADO DA ANÁLISE - DESTAQUES\n`;
+    synthesis += `Consumo Normalizado (30 dias): ${formatNumber(cycleData.normalizedConsumption, 1)} m³. `;
+    synthesis += `Valor Técnico Justo a ser Cobrado: ${formatCurrency(billData.total)}. `;
+    synthesis += `Valor Efetivamente Cobrado na Conta: ${formatCurrency(data.chargedValue)}. `;
+    synthesis += `Diferença: ${formatCurrency(diff)} (${formatNumber(diffPercent, 1)}%).\n\n`;
     
     if (Math.abs(diff) > 1) {
-      synthesis += `► DIFERENÇA: ${formatCurrency(diff)} (${formatNumber(diffPercent, 1)}%)\n\n`;
-      
       if (diff > 0) {
         synthesis += `CONCLUSÃO: O valor cobrado na conta está ${formatCurrency(diff)} ACIMA do valor técnico justo. `;
-        synthesis += `Esta diferença de ${formatNumber(diffPercent, 1)}% pode decorrer de:\n`;
-        synthesis += `1. Ciclo de faturamento superior a 30 dias (${cycleData.cycleDays} dias neste caso)\n`;
-        synthesis += `2. Inclusão de taxas ou multas não informadas\n`;
-        synthesis += `3. Erro de cálculo na aplicação da tarifa progressiva\n\n`;
+        synthesis += `Esta diferença de ${formatNumber(diffPercent, 1)}% pode decorrer de: `;
+        synthesis += `(1) Ciclo de faturamento superior a 30 dias (${cycleData.cycleDays} dias neste caso); `;
+        synthesis += `(2) Inclusão de taxas ou multas não informadas; `;
+        synthesis += `(3) Erro de cálculo na aplicação da tarifa progressiva. `;
         synthesis += `Recomenda-se verificar a composição detalhada da fatura junto ao SAAE e, `;
         synthesis += `se confirmada a cobrança indevida, solicitar revisão formal.\n`;
       } else {
@@ -166,8 +162,6 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       synthesis += `CONCLUSÃO: O valor cobrado está compatível com o cálculo técnico, `;
       synthesis += `com diferença desprezível de ${formatCurrency(Math.abs(diff))}.\n`;
     }
-    
-    synthesis += `\n═══════════════════════════════════════════════════════\n`;
     
     return synthesis;
   };
@@ -342,7 +336,17 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
       diagnosis.forEach((item) => {
-        const lines = doc.splitTextToSize(item, pageWidth - 28);
+        // Remove formatting characters and clean text
+        const cleanText = item
+          .replace(/[•►◆]/g, "-")
+          .replace(/[═─│┌┐└┘├┤┬┴┼]/g, "")
+          .replace(/\*\*/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        
+        if (!cleanText) return;
+        
+        const lines = doc.splitTextToSize(cleanText, pageWidth - 28);
         if (currentY + lines.length * 4 > 270) {
           doc.addPage();
           currentY = 20;
@@ -369,24 +373,27 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       doc.setFont("helvetica", "normal");
       
       synthesisParts.forEach((line) => {
-        if (line.startsWith("═") || line.includes("RESULTADO") || line.includes("DESTAQUES")) {
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(146, 64, 14);
-        } else if (line.startsWith("►")) {
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(22, 163, 74);
-        } else if (line.startsWith("CONCLUSÃO")) {
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(33, 37, 41);
-        } else if (line.match(/^[A-ZÇÃÉÍÓÚÂÊÔÀÈ\s]+$/)) {
+        // Clean formatting characters
+        const cleanLine = line
+          .replace(/[═─│┌┐└┘├┤┬┴┼]/g, "")
+          .replace(/[►•◆]/g, "")
+          .trim();
+        
+        if (!cleanLine) return;
+        
+        // Check for section headers (all uppercase words)
+        if (cleanLine.match(/^[A-ZÇÃÉÍÓÚÂÊÔÀÈ\s-]+$/) && cleanLine.length > 3) {
           doc.setFont("helvetica", "bold");
           doc.setTextColor(59, 130, 246);
+        } else if (cleanLine.startsWith("CONCLUSÃO")) {
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(33, 37, 41);
         } else {
           doc.setFont("helvetica", "normal");
           doc.setTextColor(33, 37, 41);
         }
 
-        const wrappedLines = doc.splitTextToSize(line, pageWidth - 28);
+        const wrappedLines = doc.splitTextToSize(cleanLine, pageWidth - 28);
         
         if (currentY + wrappedLines.length * 4 > 275) {
           doc.addPage();
@@ -394,7 +401,7 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         }
         
         doc.text(wrappedLines, 14, currentY);
-        currentY += wrappedLines.length * 4 + (line === "" ? 2 : 1);
+        currentY += wrappedLines.length * 4 + 2;
       });
 
       // Footer on all pages
