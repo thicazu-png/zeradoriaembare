@@ -191,6 +191,20 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       const pageWidth = doc.internal.pageSize.getWidth();
       let currentY = 20;
 
+      // Helper function to get colors for diagnosis types
+      const getColorForType = (type: string): [number, number, number] => {
+        switch (type) {
+          case "success": return [34, 139, 34]; // Green
+          case "warning": return [218, 165, 32]; // Yellow/Gold
+          case "danger": return [220, 53, 69]; // Red
+          case "money": return [218, 165, 32]; // Yellow/Gold
+          case "info": return [59, 130, 246]; // Blue
+          default: return [33, 37, 41]; // Dark gray
+        }
+      };
+
+      // ============ PAGE 1: HEADER + USER + DIAGNOSIS + FINANCIAL SUMMARY ============
+      
       // Header
       doc.setFontSize(16);
       doc.setFont("helvetica", "bold");
@@ -204,24 +218,166 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       doc.setFont("helvetica", "normal");
       doc.setTextColor(108, 117, 125);
       doc.text(`Gerado em: ${new Date().toLocaleDateString("pt-BR")} às ${new Date().toLocaleTimeString("pt-BR")}`, pageWidth / 2, currentY, { align: "center" });
-      currentY += 10;
+      currentY += 8;
 
-      // User info box
+      // User info box - more compact
       doc.setFillColor(240, 249, 255);
-      doc.roundedRect(14, currentY, pageWidth - 28, 24, 3, 3, "F");
-      doc.setFontSize(11);
+      doc.roundedRect(14, currentY, pageWidth - 28, 18, 3, 3, "F");
+      doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(33, 37, 41);
-      doc.text("IDENTIFICAÇÃO DO USUÁRIO", 20, currentY + 7);
-      doc.setFontSize(10);
+      doc.text("IDENTIFICAÇÃO", 20, currentY + 6);
+      doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
-      doc.text(`Nome: ${data.userName || "Não informado"}`, 20, currentY + 14);
-      doc.text(`CDC-DV (Matrícula): ${data.cdcDv || "Não informado"}`, 20, currentY + 20);
-      currentY += 30;
+      doc.text(`Nome: ${data.userName || "Não informado"}  |  CDC-DV: ${data.cdcDv || "Não informado"}`, 20, currentY + 13);
+      currentY += 24;
+
+      // Compact cycle info
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(33, 37, 41);
+      doc.text(`Período: ${data.previousReadingDate?.toLocaleDateString("pt-BR")} a ${data.currentReadingDate?.toLocaleDateString("pt-BR")} (${cycleData.cycleDays} dias)  |  Consumo Real: ${formatNumber(cycleData.consumption, 1)} m³  |  Normalizado: ${formatNumber(cycleData.normalizedConsumption, 1)} m³`, 14, currentY);
+      currentY += 8;
+
+      // Diagnosis section - compact format
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(59, 130, 246);
+      doc.text("DIAGNÓSTICO TÉCNICO AUTOMÁTICO", 14, currentY);
+      currentY += 6;
+
+      const diagnosis = generateDiagnosis(
+        cycleData.cycleDays,
+        cycleData.normalizedConsumption,
+        historicalAverage.monthlyAverage,
+        data.chargedValue,
+        billData.total
+      );
+
+      diagnosis.forEach((diagItem) => {
+        const cleanText = diagItem.message.replace(/\s+/g, " ").trim();
+        if (!cleanText) return;
+        
+        const [r, g, b] = getColorForType(diagItem.type);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(r, g, b);
+        
+        const wrappedLines = doc.splitTextToSize(`• ${cleanText}`, pageWidth - 28);
+        doc.text(wrappedLines, 14, currentY);
+        currentY += wrappedLines.length * 4 + 1;
+      });
+
+      currentY += 4;
+
+      // Financial summary - HIGHLIGHTED BOX (more compact)
+      doc.setFillColor(254, 243, 199);
+      doc.roundedRect(14, currentY, pageWidth - 28, 38, 3, 3, "F");
+      doc.setDrawColor(251, 191, 36);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(14, currentY, pageWidth - 28, 38, 3, 3, "S");
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(146, 64, 14);
+      doc.text("RESUMO FINANCEIRO", pageWidth / 2, currentY + 6, { align: "center" });
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(33, 37, 41);
+      let summaryY = currentY + 12;
+      doc.text(`Água: ${formatCurrency(billData.waterValue)}  |  Esgoto: ${formatCurrency(billData.sewerValue)}  |  Taxa: ${formatCurrency(data.fixedFee)}`, 20, summaryY);
+      summaryY += 6;
+
+      doc.setFont("helvetica", "bold");
+      doc.text(`VALOR TÉCNICO: ${formatCurrency(billData.total)}`, 20, summaryY);
+      doc.text(`VALOR COBRADO: ${formatCurrency(data.chargedValue)}`, 110, summaryY);
+      summaryY += 6;
+
+      const diff = data.chargedValue - billData.total;
+      const diffPercent = billData.total > 0 ? (diff / billData.total) * 100 : 0;
+      doc.setTextColor(diff > 0 ? 185 : 22, diff > 0 ? 28 : 163, diff > 0 ? 28 : 74);
+      doc.text(`DIFERENÇA: ${formatCurrency(diff)} (${formatNumber(diffPercent, 1)}%)`, 20, summaryY);
+
+      currentY += 44;
+
+      // Evolution chart (if historical data exists)
+      if (historicalChartData.length > 0) {
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(59, 130, 246);
+        doc.text("EVOLUÇÃO DO CONSUMO", 14, currentY);
+        currentY += 6;
+
+        // Draw chart axes
+        const chartX = 20;
+        const chartY = currentY + 5;
+        const chartWidth = pageWidth - 40;
+        const chartHeight = 45;
+
+        // Background
+        doc.setFillColor(250, 250, 250);
+        doc.rect(chartX, chartY, chartWidth, chartHeight, "F");
+
+        // Find max value for scaling
+        const maxConsumo = Math.max(...historicalChartData.map(d => Math.max(d.consumo, d.normalizado)), 1);
+        const barWidth = (chartWidth - 10) / (historicalChartData.length * 2 + 1);
+
+        // Draw bars
+        historicalChartData.forEach((entry, i) => {
+          const x = chartX + 5 + i * barWidth * 2;
+          
+          // Consumo bar (primary color)
+          const consumoHeight = (entry.consumo / maxConsumo) * (chartHeight - 15);
+          doc.setFillColor(59, 130, 246);
+          doc.rect(x, chartY + chartHeight - 10 - consumoHeight, barWidth * 0.8, consumoHeight, "F");
+
+          // Normalizado bar (lighter)
+          const normHeight = (entry.normalizado / maxConsumo) * (chartHeight - 15);
+          doc.setFillColor(147, 197, 253);
+          doc.rect(x + barWidth * 0.9, chartY + chartHeight - 10 - normHeight, barWidth * 0.8, normHeight, "F");
+
+          // Month label
+          doc.setFontSize(6);
+          doc.setTextColor(108, 117, 125);
+          doc.text(entry.month, x + barWidth * 0.5, chartY + chartHeight - 3, { align: "center" });
+        });
+
+        // Average line
+        if (historicalAverage.monthlyAverage > 0) {
+          const avgY = chartY + chartHeight - 10 - (historicalAverage.monthlyAverage / maxConsumo) * (chartHeight - 15);
+          doc.setDrawColor(220, 53, 69);
+          doc.setLineWidth(0.3);
+          doc.setLineDashPattern([2, 2], 0);
+          doc.line(chartX, avgY, chartX + chartWidth, avgY);
+          doc.setLineDashPattern([], 0);
+          doc.setFontSize(6);
+          doc.setTextColor(220, 53, 69);
+          doc.text(`Média: ${formatNumber(historicalAverage.monthlyAverage, 1)}`, chartX + chartWidth - 2, avgY - 2, { align: "right" });
+        }
+
+        // Legend
+        doc.setFontSize(7);
+        doc.setFillColor(59, 130, 246);
+        doc.rect(chartX, chartY + chartHeight + 2, 8, 3, "F");
+        doc.setTextColor(33, 37, 41);
+        doc.text("Consumo Real", chartX + 10, chartY + chartHeight + 5);
+        
+        doc.setFillColor(147, 197, 253);
+        doc.rect(chartX + 50, chartY + chartHeight + 2, 8, 3, "F");
+        doc.text("Normalizado 30d", chartX + 60, chartY + chartHeight + 5);
+
+        currentY += chartHeight + 15;
+      }
+
+      // ============ PAGE 2: DETAILED TABLES ============
+      doc.addPage();
+      currentY = 20;
 
       // Indicators section
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
+      doc.setTextColor(59, 130, 246);
       doc.text("INDICADORES DO CICLO", 14, currentY);
       currentY += 6;
 
@@ -259,6 +415,7 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
       // Tariff breakdown
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
+      doc.setTextColor(59, 130, 246);
       doc.text("DETALHAMENTO TARIFÁRIO PROGRESSIVO", 14, currentY);
       currentY += 6;
 
@@ -278,97 +435,9 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         styles: { fontSize: 9 },
       });
 
-      currentY = (doc as any).lastAutoTable.finalY + 8;
+      currentY = (doc as any).lastAutoTable.finalY + 10;
 
-      // Financial summary - HIGHLIGHTED BOX
-      doc.setFillColor(254, 243, 199); // Yellow background
-      doc.roundedRect(14, currentY, pageWidth - 28, 50, 3, 3, "F");
-      doc.setDrawColor(251, 191, 36);
-      doc.setLineWidth(0.5);
-      doc.roundedRect(14, currentY, pageWidth - 28, 50, 3, 3, "S");
-
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(146, 64, 14);
-      doc.text("RESUMO FINANCEIRO - VALORES EM DESTAQUE", pageWidth / 2, currentY + 7, { align: "center" });
-
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(33, 37, 41);
-      let summaryY = currentY + 15;
-      doc.text(`Valor da Água: ${formatCurrency(billData.waterValue)}`, 20, summaryY);
-      doc.text(`Valor do Esgoto: ${formatCurrency(billData.sewerValue)}`, 110, summaryY);
-      summaryY += 6;
-      doc.text(`Taxa Fixa (Resíduos): ${formatCurrency(data.fixedFee)}`, 20, summaryY);
-      summaryY += 8;
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.text(`VALOR TÉCNICO JUSTO: ${formatCurrency(billData.total)}`, 20, summaryY);
-      doc.text(`VALOR COBRADO: ${formatCurrency(data.chargedValue)}`, 110, summaryY);
-      summaryY += 8;
-
-      const diff = data.chargedValue - billData.total;
-      const diffPercent = billData.total > 0 ? (diff / billData.total) * 100 : 0;
-      doc.setTextColor(diff > 0 ? 185 : 22, diff > 0 ? 28 : 163, diff > 0 ? 28 : 74);
-      doc.text(`DIFERENÇA: ${formatCurrency(diff)} (${formatNumber(diffPercent, 1)}%)`, 20, summaryY);
-
-      currentY += 56;
-
-      // Diagnosis section - same formatting as SÍNTESE DISCURSIVA
-      doc.addPage();
-      currentY = 20;
-      
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(33, 37, 41);
-      doc.text("DIAGNÓSTICO TÉCNICO AUTOMÁTICO", pageWidth / 2, currentY, { align: "center" });
-      currentY += 10;
-
-      const diagnosis = generateDiagnosis(
-        cycleData.cycleDays,
-        cycleData.normalizedConsumption,
-        historicalAverage.monthlyAverage,
-        data.chargedValue,
-        billData.total
-      );
-
-      // Apply colors based on diagnosis type
-      const getColorForType = (type: string): [number, number, number] => {
-        switch (type) {
-          case "success": return [34, 139, 34]; // Green
-          case "warning": return [218, 165, 32]; // Yellow/Gold
-          case "danger": return [220, 53, 69]; // Red
-          case "money": return [218, 165, 32]; // Yellow/Gold
-          case "info": return [59, 130, 246]; // Blue
-          default: return [33, 37, 41]; // Dark gray
-        }
-      };
-
-      diagnosis.forEach((diagItem) => {
-        const cleanText = diagItem.message
-          .replace(/\s+/g, " ")
-          .trim();
-        
-        if (!cleanText) return;
-        
-        const [r, g, b] = getColorForType(diagItem.type);
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(r, g, b);
-        
-        const wrappedLines = doc.splitTextToSize(cleanText, pageWidth - 28);
-        
-        if (currentY + wrappedLines.length * 5 > 275) {
-          doc.addPage();
-          currentY = 20;
-        }
-        
-        doc.text(wrappedLines, 14, currentY);
-        currentY += wrappedLines.length * 5 + 3;
-      });
-
-      // New page for discursive synthesis
+      // ============ PAGE 3: DISCURSIVE SYNTHESIS ============
       doc.addPage();
       currentY = 20;
 
