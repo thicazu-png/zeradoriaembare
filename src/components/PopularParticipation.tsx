@@ -52,12 +52,11 @@ const PopularParticipation = () => {
 
   const fetchSignatureCount = async () => {
     try {
-      const { count, error } = await supabase
-        .from("petition_signatures")
-        .select("*", { count: "exact", head: true });
+      const { data, error } = await supabase
+        .rpc("get_petition_signature_count");
       
-      if (!error && count !== null) {
-        setSignatureCount(count);
+      if (!error && data !== null) {
+        setSignatureCount(Number(data));
       }
     } catch (error) {
       console.error("Error fetching signature count:", error);
