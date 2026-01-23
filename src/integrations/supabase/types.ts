@@ -139,7 +139,37 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_analyses_by_cdc: {
+        Args: { search_cdc: string }
+        Returns: {
+          cdc_dv: string
+          charged_value: number
+          consumption: number
+          created_at: string
+          current_reading: number
+          current_reading_date: string
+          cycle_days: number
+          daily_consumption: number
+          diagnosis_items: Json
+          difference_absolute: number
+          difference_percent: number
+          fixed_fee: number
+          historical_average: number
+          historical_entries: Json
+          id: string
+          include_sewer: boolean
+          normalized_consumption: number
+          previous_reading: number
+          previous_reading_date: string
+          sewer_value: number
+          tariff_breakdown: Json
+          total_technical_value: number
+          user_name: string
+          volume_anomaly: number
+          water_value: number
+        }[]
+      }
+      get_petition_signature_count: { Args: never; Returns: number }
     }
     Enums: {
       [_ in never]: never

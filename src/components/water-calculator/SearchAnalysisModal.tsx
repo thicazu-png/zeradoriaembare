@@ -66,15 +66,13 @@ const SearchAnalysisModal = () => {
 
     try {
       const { data, error } = await supabase
-        .from("water_analyses")
-        .select("*")
-        .eq("cdc_dv", searchCdc.trim())
-        .order("created_at", { ascending: false })
-        .limit(10);
+        .rpc("get_analyses_by_cdc", { search_cdc: searchCdc.trim() });
 
       if (error) throw error;
 
-      setResults((data as unknown as AnalysisResult[]) || []);
+      // Take only the first 10 results
+      const limitedResults = (data as unknown as AnalysisResult[] || []).slice(0, 10);
+      setResults(limitedResults);
       setSelectedAnalysis(null);
     } catch (error) {
       console.error("Error searching analyses:", error);
