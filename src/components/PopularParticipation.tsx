@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowRight, ArrowLeft, Check, Upload, Users, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, ArrowLeft, Check, Upload, Users, X, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -35,6 +36,7 @@ const initialFormData = {
 };
 
 const PopularParticipation = () => {
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -429,10 +431,17 @@ const PopularParticipation = () => {
             </span>
           </div>
 
-          <Button variant="association" onClick={() => setIsDialogOpen(true)} className="group">
-            ✍️ Assinar Abaixo-Assinado
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-          </Button>
+          <div className="flex flex-col gap-2 w-full">
+            <Button variant="association" onClick={() => setIsDialogOpen(true)} className="group w-full">
+              ✍️ Assinar Abaixo-Assinado
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            </Button>
+            <Button variant="outline" onClick={() => navigate("/calculadora-agua")} className="group w-full bg-background/80">
+              <Calculator className="w-4 h-4 mr-2" />
+              Faça seu Cálculo
+              <ArrowRight className="w-4 h-4 ml-auto transition-transform group-hover:translate-x-0.5" />
+            </Button>
+          </div>
         </div>
       </div>
 
