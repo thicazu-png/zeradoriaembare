@@ -120,15 +120,25 @@ const AnalysisTab = ({ data, historicalEntries }: AnalysisTabProps) => {
       </div>
 
       <div className="bg-card rounded-lg p-4 border border-border">
-        <h3 className="font-semibold text-foreground mb-4">🔍 Diagnóstico Automático</h3>
+        <h3 className="font-semibold text-foreground mb-4">Diagnóstico Automático</h3>
         
         {diagnosis.length > 0 ? (
           <div className="space-y-3">
-            {diagnosis.map((item, index) => (
-              <div key={index} className="flex gap-3 p-3 bg-muted/50 rounded-lg">
-                <p className="text-sm text-foreground leading-relaxed">{item}</p>
-              </div>
-            ))}
+            {diagnosis.map((item, index) => {
+              const colorClass = {
+                success: "text-green-600 border-green-500/30 bg-green-500/10",
+                warning: "text-amber-600 border-amber-500/30 bg-amber-500/10",
+                danger: "text-destructive border-destructive/30 bg-destructive/10",
+                money: "text-amber-600 border-amber-500/30 bg-amber-500/10",
+                info: "text-blue-600 border-blue-500/30 bg-blue-500/10",
+              }[item.type] || "text-foreground bg-muted/50";
+              
+              return (
+                <div key={index} className={`flex gap-3 p-3 rounded-lg border ${colorClass}`}>
+                  <p className="text-sm leading-relaxed">{item.message}</p>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-4">

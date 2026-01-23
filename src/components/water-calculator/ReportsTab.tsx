@@ -333,46 +333,39 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         billData.total
       );
 
-      // Apply same formatting as SÍNTESE DISCURSIVA DA ANÁLISE
-      diagnosis.forEach((item) => {
-        // Remove formatting characters and clean text
-        const cleanText = item
-          .replace(/[•►◆]/g, "")
-          .replace(/[═─│┌┐└┘├┤┬┴┼]/g, "")
-          .replace(/\*\*/g, "")
+      // Apply colors based on diagnosis type
+      const getColorForType = (type: string): [number, number, number] => {
+        switch (type) {
+          case "success": return [34, 139, 34]; // Green
+          case "warning": return [218, 165, 32]; // Yellow/Gold
+          case "danger": return [220, 53, 69]; // Red
+          case "money": return [218, 165, 32]; // Yellow/Gold
+          case "info": return [59, 130, 246]; // Blue
+          default: return [33, 37, 41]; // Dark gray
+        }
+      };
+
+      diagnosis.forEach((diagItem) => {
+        const cleanText = diagItem.message
           .replace(/\s+/g, " ")
           .trim();
         
         if (!cleanText) return;
         
-        // Check for section headers (all uppercase words)
-        if (cleanText.match(/^[A-ZÇÃÉÍÓÚÂÊÔÀÈ\s-]+$/) && cleanText.length > 3) {
-          doc.setFontSize(10);
-          doc.setFont("helvetica", "bold");
-          doc.setTextColor(59, 130, 246); // Blue color for headers
-          
-          if (currentY + 8 > 275) {
-            doc.addPage();
-            currentY = 20;
-          }
-          
-          doc.text(cleanText, 14, currentY);
-          currentY += 6;
-        } else {
-          doc.setFontSize(9);
-          doc.setFont("helvetica", "normal");
-          doc.setTextColor(33, 37, 41);
-          
-          const wrappedLines = doc.splitTextToSize(cleanText, pageWidth - 28);
-          
-          if (currentY + wrappedLines.length * 5 > 275) {
-            doc.addPage();
-            currentY = 20;
-          }
-          
-          doc.text(wrappedLines, 14, currentY);
-          currentY += wrappedLines.length * 5 + 3;
+        const [r, g, b] = getColorForType(diagItem.type);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(r, g, b);
+        
+        const wrappedLines = doc.splitTextToSize(cleanText, pageWidth - 28);
+        
+        if (currentY + wrappedLines.length * 5 > 275) {
+          doc.addPage();
+          currentY = 20;
         }
+        
+        doc.text(wrappedLines, 14, currentY);
+        currentY += wrappedLines.length * 5 + 3;
       });
 
       // New page for discursive synthesis
