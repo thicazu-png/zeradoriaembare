@@ -11,7 +11,7 @@ import ComparisonTab from "@/components/water-calculator/ComparisonTab";
 import AnalysisTab from "@/components/water-calculator/AnalysisTab";
 import ReportsTab from "@/components/water-calculator/ReportsTab";
 import SaveAnalysisButton from "@/components/water-calculator/SaveAnalysisButton";
-import SearchAnalysisModal from "@/components/water-calculator/SearchAnalysisModal";
+
 
 import type { ResidenceData, HistoricalEntry } from "@/lib/waterTariff";
 
@@ -112,7 +112,6 @@ const WaterCalculator = () => {
 
           <div className="mt-4 flex flex-wrap gap-2 justify-center">
             <SaveAnalysisButton data={residenceData} historicalEntries={historicalEntries} />
-            <SearchAnalysisModal />
           </div>
 
           <div className="mt-6 p-4 bg-muted/50 rounded-lg text-center">
