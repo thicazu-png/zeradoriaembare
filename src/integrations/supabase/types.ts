@@ -50,6 +50,90 @@ export type Database = {
         }
         Relationships: []
       }
+      water_analyses: {
+        Row: {
+          cdc_dv: string
+          charged_value: number
+          consumption: number
+          created_at: string
+          current_reading: number
+          current_reading_date: string
+          cycle_days: number
+          daily_consumption: number
+          diagnosis_items: Json
+          difference_absolute: number
+          difference_percent: number
+          fixed_fee: number
+          historical_average: number | null
+          historical_entries: Json
+          id: string
+          include_sewer: boolean
+          normalized_consumption: number
+          previous_reading: number
+          previous_reading_date: string
+          sewer_value: number
+          tariff_breakdown: Json
+          total_technical_value: number
+          user_name: string
+          volume_anomaly: number | null
+          water_value: number
+        }
+        Insert: {
+          cdc_dv: string
+          charged_value: number
+          consumption: number
+          created_at?: string
+          current_reading: number
+          current_reading_date: string
+          cycle_days: number
+          daily_consumption: number
+          diagnosis_items?: Json
+          difference_absolute: number
+          difference_percent: number
+          fixed_fee: number
+          historical_average?: number | null
+          historical_entries?: Json
+          id?: string
+          include_sewer?: boolean
+          normalized_consumption: number
+          previous_reading: number
+          previous_reading_date: string
+          sewer_value: number
+          tariff_breakdown?: Json
+          total_technical_value: number
+          user_name: string
+          volume_anomaly?: number | null
+          water_value: number
+        }
+        Update: {
+          cdc_dv?: string
+          charged_value?: number
+          consumption?: number
+          created_at?: string
+          current_reading?: number
+          current_reading_date?: string
+          cycle_days?: number
+          daily_consumption?: number
+          diagnosis_items?: Json
+          difference_absolute?: number
+          difference_percent?: number
+          fixed_fee?: number
+          historical_average?: number | null
+          historical_entries?: Json
+          id?: string
+          include_sewer?: boolean
+          normalized_consumption?: number
+          previous_reading?: number
+          previous_reading_date?: string
+          sewer_value?: number
+          tariff_breakdown?: Json
+          total_technical_value?: number
+          user_name?: string
+          volume_anomaly?: number | null
+          water_value?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
