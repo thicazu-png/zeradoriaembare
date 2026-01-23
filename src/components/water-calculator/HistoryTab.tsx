@@ -62,8 +62,16 @@ const HistoryTab = ({ entries, onChange }: HistoryTabProps) => {
             <Input
               id="monthYear"
               value={newEntry.monthYear}
-              onChange={(e) => setNewEntry({ ...newEntry, monthYear: e.target.value })}
+              onChange={(e) => {
+                let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                if (value.length > 6) value = value.slice(0, 6);
+                if (value.length >= 2) {
+                  value = value.slice(0, 2) + "/" + value.slice(2);
+                }
+                setNewEntry({ ...newEntry, monthYear: value });
+              }}
               placeholder="MM/AAAA"
+              maxLength={7}
               className="h-9"
             />
           </div>

@@ -333,12 +333,11 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         billData.total
       );
 
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
+      // Apply same formatting as SÍNTESE DISCURSIVA DA ANÁLISE
       diagnosis.forEach((item) => {
         // Remove formatting characters and clean text
         const cleanText = item
-          .replace(/[•►◆]/g, "-")
+          .replace(/[•►◆]/g, "")
           .replace(/[═─│┌┐└┘├┤┬┴┼]/g, "")
           .replace(/\*\*/g, "")
           .replace(/\s+/g, " ")
@@ -346,13 +345,34 @@ const ReportsTab = ({ data, historicalEntries }: ReportsTabProps) => {
         
         if (!cleanText) return;
         
-        const lines = doc.splitTextToSize(cleanText, pageWidth - 28);
-        if (currentY + lines.length * 5 > 275) {
-          doc.addPage();
-          currentY = 20;
+        // Check for section headers (all uppercase words)
+        if (cleanText.match(/^[A-ZÇÃÉÍÓÚÂÊÔÀÈ\s-]+$/) && cleanText.length > 3) {
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(59, 130, 246); // Blue color for headers
+          
+          if (currentY + 8 > 275) {
+            doc.addPage();
+            currentY = 20;
+          }
+          
+          doc.text(cleanText, 14, currentY);
+          currentY += 6;
+        } else {
+          doc.setFontSize(9);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(33, 37, 41);
+          
+          const wrappedLines = doc.splitTextToSize(cleanText, pageWidth - 28);
+          
+          if (currentY + wrappedLines.length * 5 > 275) {
+            doc.addPage();
+            currentY = 20;
+          }
+          
+          doc.text(wrappedLines, 14, currentY);
+          currentY += wrappedLines.length * 5 + 3;
         }
-        doc.text(lines, 14, currentY);
-        currentY += lines.length * 5 + 3;
       });
 
       // New page for discursive synthesis
