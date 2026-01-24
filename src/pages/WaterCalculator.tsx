@@ -80,8 +80,8 @@ const WaterCalculator = () => {
                   key={tab.id}
                   value={tab.id}
                   className="flex flex-col items-center justify-center gap-1 min-h-[60px] text-xs py-3 px-3 rounded-lg font-semibold transition-all duration-200 
-                    bg-white/50 hover:bg-white/80 border border-transparent hover:border-saae-blue/30 hover:shadow-sm
-                    data-[state=active]:bg-saae-blue data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-saae-blue data-[state=active]:scale-[1.02]"
+                    bg-white/50 hover:bg-white/80 border border-transparent hover:border-green-500/30 hover:shadow-sm
+                    data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-green-700 data-[state=active]:scale-[1.02]"
                 >
                   <tab.icon className="h-5 w-5" />
                   <span className="text-[10px] sm:text-xs leading-tight text-center">{tab.label}</span>
