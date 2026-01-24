@@ -54,15 +54,20 @@ const WaterCalculator = () => {
       className="min-h-screen bg-cover bg-center bg-fixed"
     >
       <div className="min-h-screen bg-background/90 backdrop-blur-sm">
-        <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-          <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-              <ArrowLeft className="h-5 w-5" />
+        <header className="sticky top-0 z-50 bg-gradient-to-r from-saae-blue to-saae-blue/90 backdrop-blur-md border-b border-white/20 shadow-lg">
+          <div className="max-w-lg mx-auto px-4 py-4 flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="lg" 
+              onClick={() => navigate("/")}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 rounded-xl h-12 w-12 p-0 shadow-md transition-all duration-200 hover:scale-105"
+            >
+              <ArrowLeft className="h-6 w-6" />
             </Button>
-            <img src={logoSaae} alt="SAAE" className="h-8 w-auto" />
+            <img src={logoSaae} alt="SAAE" className="h-12 w-auto drop-shadow-md" />
             <div className="flex-1">
-              <h1 className="text-sm font-bold text-foreground">Análise de Conta de Água</h1>
-              <p className="text-xs text-muted-foreground">Calculadora Técnica</p>
+              <h1 className="text-base font-bold text-white drop-shadow-sm">Análise de Conta de Água</h1>
+              <p className="text-xs text-white/80">Calculadora Técnica SAAE</p>
             </div>
           </div>
         </header>
