@@ -74,15 +74,17 @@ const WaterCalculator = () => {
 
         <main className="max-w-lg mx-auto px-4 py-4 pb-safe">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full h-auto flex-wrap gap-1 bg-muted/50 p-1.5 rounded-lg">
+            <TabsList className="w-full h-auto grid grid-cols-3 gap-2 bg-white/60 backdrop-blur-md p-3 rounded-xl shadow-md border border-white/40">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
-                  className="flex-1 min-w-[80px] text-xs py-2 px-2 data-[state=active]:bg-background"
+                  className="flex flex-col items-center justify-center gap-1 min-h-[60px] text-xs py-3 px-3 rounded-lg font-semibold transition-all duration-200 
+                    bg-white/50 hover:bg-white/80 border border-transparent hover:border-saae-blue/30 hover:shadow-sm
+                    data-[state=active]:bg-saae-blue data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:border-saae-blue data-[state=active]:scale-[1.02]"
                 >
-                  <tab.icon className="h-3.5 w-3.5 mr-1" />
-                  <span className="hidden sm:inline">{tab.label}</span>
+                  <tab.icon className="h-5 w-5" />
+                  <span className="text-[10px] sm:text-xs leading-tight text-center">{tab.label}</span>
                 </TabsTrigger>
               ))}
             </TabsList>
