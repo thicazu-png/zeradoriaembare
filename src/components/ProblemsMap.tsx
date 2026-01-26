@@ -166,26 +166,37 @@ const ProblemsMap = () => {
                       <p className="text-xs italic mb-3 text-foreground/80">"{selectedProblem.descricao}"</p>
                       
                       {selectedProblem.foto && selectedProblem.foto.includes("http") ? (
-                        <div className="relative group">
-                          <img
-                            src={selectedProblem.foto}
-                            alt="Evidência"
-                            className="w-full h-32 object-cover rounded-md border shadow-sm"
-                          />
-                          <a 
-                            href={selectedProblem.foto} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="absolute bottom-1 right-1 bg-black/50 p-1 rounded text-white hover:bg-black/70"
-                          >
-                            <ExternalLink size={14} />
-                          </a>
-                        </div>
-                      ) : (
-                        <div className="h-10 flex items-center justify-center bg-muted rounded text-[10px] text-muted-foreground">
-                          Sem foto anexa
-                        </div>
-                      )}
+  <div className="relative group mt-2">
+    <img
+      src={selectedProblem.foto}
+      alt="Evidência"
+      // O segredo está nestas duas linhas abaixo:
+      referrerPolicy="no-referrer" 
+      crossOrigin="anonymous"
+      className="w-full h-40 object-cover rounded-md border shadow-sm"
+      onError={(e) => {
+        // Se ainda assim quebrar, ele tenta limpar o link uma última vez
+        const target = e.target as HTMLImageElement;
+        if (!target.src.includes("&sz=w1000")) {
+          target.src = target.src + "&sz=w1000"; // Força o Google a gerar uma miniatura
+        }
+      }}
+    />
+    <a 
+      href={selectedProblem.foto} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="absolute bottom-2 right-2 bg-black/60 p-1.5 rounded-full text-white hover:bg-primary transition-colors"
+      title="Ver em tela cheia"
+    >
+      <ExternalLink size={16} />
+    </a>
+  </div>
+) : (
+  <div className="h-10 flex items-center justify-center bg-muted rounded text-[10px] text-muted-foreground mt-2">
+    Sem foto anexa
+  </div>
+)}
                     </CardContent>
                   </Card>
                 </Overlay>
