@@ -16,7 +16,7 @@ interface Business {
   lng?: number | null;
 }
 
-// ✅ URL ATUALIZADA (f4qtQ/exec)
+// ✅ URL ATUALIZADA
 const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZXkG0BH2k0ZFwOaZTUBc6lkArdSYxMctyMTxglgYL_8hNnJqX_OC19G6qjTmgyF4qtQ/exec";
 
 const categories = ["TODOS", "ALIMENTAÇÃO", "SERVIÇOS", "BELEZA", "OUTROS"];
@@ -66,10 +66,20 @@ const BusinessList = () => {
     });
   };
 
-  // ✅ Função simplificada: O Script já manda o link certo
+  /**
+   * Função para logos (Miniatura sz=w400)
+   */
   const getImageUrl = (logo: string | null | undefined): string | null => {
     if (!logo || logo.includes("Sem logo") || logo.length < 10) return null;
-    return String(logo);
+    const logoStr = String(logo);
+    
+    const match = logoStr.match(/id=([a-zA-Z0-9_-]+)/) || logoStr.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    const fileId = match ? match[1] : null;
+
+    if (fileId) {
+      return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+    }
+    return logoStr;
   };
 
   const getCategoryGroup = (categoria: string | null | undefined): string => {
@@ -123,7 +133,7 @@ const BusinessList = () => {
                 <div key={i} className="bg-white/60 border border-white/50 rounded-2xl p-4 flex flex-col items-center text-center shadow-sm">
                   <div className="h-20 w-20 rounded-full overflow-hidden border-2 border-primary/10 mb-3 bg-muted flex items-center justify-center">
                     {img ? (
-                      <img src={img} alt="Logo" className="h-full w-full object-cover" onError={(e) => e.currentTarget.src = ""} />
+                      <img src={img} alt="Logo" className="h-full w-full object-cover" referrerPolicy="no-referrer" onError={(e) => e.currentTarget.style.display = "none"} />
                     ) : <Store className="h-8 w-8 text-muted-foreground" />}
                   </div>
                   
