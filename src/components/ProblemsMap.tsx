@@ -15,8 +15,8 @@ interface Problem {
   lng?: number;
 }
 
-// ATENÇÃO: Verifique se este é o link da sua ÚLTIMA implantação do Google Script
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec";
+// ✅ URL ATUALIZADA
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZXkG0BH2k0ZFwOaZTUBc6lkArdSYxMctyMTxglgYL_8hNnJqX_OC19G6qjTmgyF4qtQ/exec";
 
 const MAP_CENTER: [number, number] = [-21.966260500240534, -47.93432760869767];
 const DEFAULT_ZOOM = 14;
@@ -29,6 +29,23 @@ const CATEGORY_FILTERS = [
   { value: "perturbacao", label: "🔊 Perturbação", color: "#a855f7" },
   { value: "outros", label: "📍 Outros", color: "#64748b" },
 ];
+
+/**
+ * Função para converter link do Drive em Miniatura estável
+ */
+const getMapImageUrl = (url: string | undefined) => {
+  if (!url || url.includes("Sem foto") || url.length < 10) return null;
+  
+  // Extrai o ID do arquivo (suporta links /d/ ou id=)
+  const match = url.match(/id=([a-zA-Z0-9_-]+)/) || url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  const fileId = match ? match[1] : null;
+
+  if (fileId) {
+    // Endpoint de miniatura: mais rápido e sem bloqueios de redirecionamento
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  }
+  return url;
+};
 
 const getCategoryColor = (categoria: string): string => {
   const cat = categoria?.toLowerCase() || "";
@@ -61,11 +78,9 @@ const ProblemsMap = () => {
         const response = await fetch(`${WEBHOOK_URL}?type=denuncias&t=${new Date().getTime()}`);
         if (!response.ok) throw new Error("Erro ao carregar dados");
         const data = await response.json();
-        
         const validProblems = (Array.isArray(data) ? data : []).filter(
           (p: Problem) => p.lat && p.lng && !isNaN(Number(p.lat)) && !isNaN(Number(p.lng))
         );
-        
         setProblems(validProblems);
       } catch (err) {
         setError("Não foi possível carregar as ocorrências.");
@@ -73,7 +88,6 @@ const ProblemsMap = () => {
         setLoading(false);
       }
     };
-
     fetchProblems();
   }, []);
 
@@ -111,9 +125,7 @@ const ProblemsMap = () => {
               <SelectContent>
                 {CATEGORY_FILTERS.map((filter) => (
                   <SelectItem key={filter.value} value={filter.value}>
-                    <span className="flex items-center gap-2">
-                      {filter.label}
-                    </span>
+                    <span className="flex items-center gap-2">{filter.label}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -165,38 +177,34 @@ const ProblemsMap = () => {
 
                       <p className="text-xs italic mb-3 text-foreground/80">"{selectedProblem.descricao}"</p>
                       
-                      {selectedProblem.foto && selectedProblem.foto.includes("http") ? (
-  <div className="relative group mt-2">
-    <img
-      src={selectedProblem.foto}
-      alt="Evidência"
-      // O segredo está nestas duas linhas abaixo:
-      referrerPolicy="no-referrer" 
-      crossOrigin="anonymous"
-      className="w-full h-40 object-cover rounded-md border shadow-sm"
-      onError={(e) => {
-        // Se ainda assim quebrar, ele tenta limpar o link uma última vez
-        const target = e.target as HTMLImageElement;
-        if (!target.src.includes("&sz=w1000")) {
-          target.src = target.src + "&sz=w1000"; // Força o Google a gerar uma miniatura
-        }
-      }}
-    />
-    <a 
-      href={selectedProblem.foto} 
-      target="_blank" 
-      rel="noopener noreferrer"
-      className="absolute bottom-2 right-2 bg-black/60 p-1.5 rounded-full text-white hover:bg-primary transition-colors"
-      title="Ver em tela cheia"
-    >
-      <ExternalLink size={16} />
-    </a>
-  </div>
-) : (
-  <div className="h-10 flex items-center justify-center bg-muted rounded text-[10px] text-muted-foreground mt-2">
-    Sem foto anexa
-  </div>
-)}
+                      {selectedProblem.foto && selectedProblem.foto.length > 10 ? (
+                        <div className="relative group">
+                          <img
+                            src={getMapImageUrl(selectedProblem.foto) || ""}
+                            alt="Evidência"
+                            referrerPolicy="no-referrer"
+                            className="w-full h-32 object-cover rounded-md border shadow-sm"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              if (selectedProblem.foto && target.src !== selectedProblem.foto) {
+                                target.src = selectedProblem.foto;
+                              }
+                            }}
+                          />
+                          <a 
+                            href={selectedProblem.foto} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="absolute bottom-1 right-1 bg-black/50 p-1 rounded text-white"
+                          >
+                            <ExternalLink size={14} />
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="h-10 flex items-center justify-center bg-muted rounded text-[10px] text-muted-foreground">
+                          Sem foto anexa
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </Overlay>
