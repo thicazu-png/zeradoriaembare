@@ -30,7 +30,7 @@ const occurrenceTypes = [
   { value: "outros", label: "Outros" },
 ];
 
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwTkFHbb6cFQG6d2LkiKhPkIWL9udehfsWxhqSFM77Z_BT0LIuB1GBNpiJJPl1KGfo/exec";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyZXkG0BH2k0ZFwOaZTUBc6lkArdSYxMctyMTxglgYL_8hNnJqX_OC19G6qjTmgyF4qtQ/exec";
 
 const ReportForm = () => {
   const { toast } = useToast();
