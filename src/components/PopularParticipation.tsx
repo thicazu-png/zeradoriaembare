@@ -418,17 +418,10 @@ const PopularParticipation = () => {
             Solicitação de Revisão de Conta de Água – AMBJE
           </h3>
           <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-            <span className="block">Sua assinatura fortalece nossa</span>
-            <span className="block">cobrança por melhorias no Embaré.</span>
+            <span className="block">A AMBJE encaminhará a conta ao SAAE</span>
+            <span className="block">para revisão, não sendo necessário o</span>
+            <span className="block">seu deslocamento até a autarquia.</span>
           </p>
-          
-          {/* Signature Counter */}
-          <div className="flex items-center gap-2 bg-background/80 backdrop-blur-sm rounded-full px-4 py-2 mb-4 border border-primary/20">
-            <Users className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold text-foreground">
-              {signatureCount} {signatureCount === 1 ? "assinatura" : "assinaturas"}
-            </span>
-          </div>
 
           <div className="flex flex-col gap-2 w-full">
             <Button 
@@ -440,8 +433,8 @@ const PopularParticipation = () => {
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </Button>
             <Button variant="outline" onClick={() => navigate("/calculadora-agua")} className="group w-full bg-background/80">
-              <Calculator className="w-4 h-4 mr-2" />
-              Faça seu Cálculo
+              <Calculator className="w-4 h-4" />
+              <span className="flex-1 text-center">Faça seu Cálculo</span>
               <ArrowRight className="w-4 h-4 ml-auto transition-transform group-hover:translate-x-0.5" />
             </Button>
           </div>
