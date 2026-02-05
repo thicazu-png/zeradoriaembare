@@ -8,6 +8,7 @@ import logoGcm from "@/assets/logo-gcm.png";
 import logoOuvidoria from "@/assets/logo-ouvidoria.png";
 import logoSouTransportes from "@/assets/logo-sou-transportes.png";
 import logoSaoCarlosAmbiental from "@/assets/logo-sao-carlos-ambiental.png";
+import logoSamu from "@/assets/logo-samu.jpg";
 
 const ServicesGrid = () => {
   const [busModalOpen, setBusModalOpen] = useState(false);
@@ -35,6 +36,14 @@ const ServicesGrid = () => {
       subtitle: "Polícia Militar",
       bgColor: "bg-police-bg",
       href: "tel:190",
+      isExternal: false,
+    },
+    {
+      imageSrc: logoSamu,
+      title: "Emergência",
+      subtitle: "SAMU",
+      bgColor: "bg-red-50",
+      href: "tel:192",
       isExternal: false,
     },
     {
