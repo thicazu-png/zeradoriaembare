@@ -415,7 +415,7 @@ const PopularParticipation = () => {
             className="h-14 w-auto object-contain mb-3"
           />
           <h3 className="text-lg font-bold text-foreground mb-1">
-            Abaixo-Assinado Contra Abuso SAAE
+            Solicitação de Revisão de Conta de Água – AMBJE
           </h3>
           <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
             <span className="block">Sua assinatura fortalece nossa</span>
@@ -431,8 +431,12 @@ const PopularParticipation = () => {
           </div>
 
           <div className="flex flex-col gap-2 w-full">
-            <Button variant="association" onClick={() => setIsDialogOpen(true)} className="group w-full">
-              ✍️ Assinar Abaixo-Assinado
+            <Button 
+              variant="association" 
+              onClick={() => window.open("https://script.google.com/macros/s/AKfycbzWs-xvHlJSHvbEO61IUazYm-NhJz_jkLedG0AxPNsxq_c7fop27LCTsC4wGWYkp7sz/exec", "_blank")} 
+              className="group w-full"
+            >
+              ✍️ Solicite Aqui!
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </Button>
             <Button variant="outline" onClick={() => navigate("/calculadora-agua")} className="group w-full bg-background/80">
