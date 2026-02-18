@@ -55,7 +55,7 @@ const Footer = () => {
         <div className="relative flex items-center justify-center py-2">
           {/* Version Badge - Left */}
           <span className="absolute left-0 bg-white/30 backdrop-blur-md border border-white/40 rounded-full px-3 py-1 text-[10px] text-slate-600 shadow-sm">
-            v2026.01.09
+            v2026.02.01
           </span>
 
           {/* Developer Credit - Centered */}
